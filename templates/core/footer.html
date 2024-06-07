@@ -1,0 +1,26 @@
+{% load static %}
+
+<section class="footer">
+    <div class="box-container">
+        <div class="box first-box">
+            <h3>CrediTrade</h3>
+            <p>Thank you for visiting our website.</p>
+            <a href="https://www.facebook.com/groups/desiredealers" target="_blank"><img class="fb-group-logo" src="{% static 'images/fbgroup.png' %}" width="250"></a>
+        </div>
+
+        <div class="box">
+            <h3>Quick Links</h3>
+            <a href="{% url 'dashboard' %}"><i class="fas fa-chevron-circle-right"></i> Dashboard</a>
+            <a href="{% url 'profile' %}"><i class="fas fa-chevron-circle-right"></i> Profile</a>
+            <a href="{% url 'delivery_form' %}"><i class="fas fa-chevron-circle-right"></i> Delivery Details</a>
+            <a href="{% url 'delivered' %}"><i class="fas fa-chevron-circle-right"></i> Delivered Orders</a>
+        </div>
+
+        <div class="box">
+            <h3>Contact Info</h3>
+            <p><i class="fas fa-phone fa-rotate-90"></i> +91 798-240-5815</p>
+            <p><i class="fas fa-envelope"></i> amansinghjiit@gmail.com</p>
+            <p><i class="fas fa-map-marked-alt"></i> New Delhi, India-110045</p>
+        </div>
+    </div>
+</section>

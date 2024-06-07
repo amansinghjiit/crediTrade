@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+<div class="table-container">
+    <div class="payment-table">
+        <div class="col-sm-12">
+            <div class="card border-0 rounded-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5>Payments Dashboard</h5>
+                        <a href="{% url 'export_payment_details' %}" class="export-btn">Export</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped border text-center" style="color: #000; background-color: #fff;">
+                            <thead>
+                                <tr class="table-heading fw-semibold" style="background-color: #000; color: #fff;">
+                                    <th>#</th>
+                                    <th>User</th>
+                                    <th>Due (₹)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user_profile in user_profiles %}
+                                    {% if user_profile.amount_due != 0 %}
+                                        <tr>
+                                            <td>{{ user_profile.id }}</td>
+                                            <td><a href="#" class="user-link text-dark fw-medium" data-bs-toggle="modal" data-bs-target="#profileModal{{ user_profile.id }}">{{ user_profile.name }}</a></td>
+                                            <td><a href="#" class="due-amount-link" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal{{ user_profile.id }}" data-user-id="{{ user_profile.id }}"><span class="{% if user_profile.amount_due > 0 %}text-danger{% else %}text-success{% endif %}">{{ user_profile.amount_due|intcomma }}</span></a></td>
+                                            <td><button type="button" class="btn btn-outline-dark btn-sm fw-bold border-2" data-bs-toggle="modal" data-bs-target="#paymentModal{{ user_profile.id }}">Pay</button></td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for user_profile in user_profiles %}
+        <!-- User Payment Details -->
+        <div class="modal fade" id="profileModal{{ user_profile.id }}" tabindex="-1" aria-labelledby="profileModalLabel{{ user_profile.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white border-0">
+                        <h5 class="modal-title fw-semibold" id="profileModalLabel{{ user_profile.id }}">Payment Details</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label text-dark">Phonepe Name:</label>
+                                    <p class="text-black fw-semibold">{{ user_profile.phonepe_name }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-dark">Phonepe Number:</label>
+                                    <p class="text-black fw-semibold">{{ user_profile.phonepe_number }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label text-dark">Account Holder Name:</label>
+                                    <p class="text-black fw-semibold">{{ user_profile.account_holder_name }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-dark">Account Number:</label>
+                                    <p class="text-black fw-semibold">{{ user_profile.account_number }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-dark">IFSC Code:</label>
+                                    <p class="text-black fw-semibold">{{ user_profile.ifsc_code }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="modal fade" id="transactionHistoryModal{{ user_profile.id }}" tabindex="-1" aria-labelledby="transactionHistoryModalLabel{{ user_profile.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white border-0">
+                        <h5 class="modal-title fw-semibold" id="transactionHistoryModalLabel{{ user_profile.id }}"><i class="fas fa-history me-2 fa-sm"></i>Transaction History</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped" style="font-size: 0.9rem; color: #000;">
+                                <thead>
+                                    <tr style="background-color: #000; color: #fff;">
+                                        <th>Date</th>
+                                        <th class="text-center">Description</th>
+                                        <th class="text-end">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transaction in user_profile.transaction_set.all %}
+                                        <tr>
+                                            <td>{{ transaction.date }}</td>
+                                            <td class="text-center">{{ transaction.description }}</td>
+                                            <td class="text-end">
+                                                {% if transaction.transaction_type == 'debit' %}
+                                                    <span class="text-danger">- ₹{{ transaction.amount|intcomma }}</span>
+                                                {% else %}
+                                                    <span class="text-success">₹{{ transaction.amount|intcomma }}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Make Payment -->
+        <div class="modal fade" id="paymentModal{{ user_profile.id }}" tabindex="-1" aria-labelledby="paymentModalLabel{{ user_profile.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-close">
+                <div class="modal-content rounded-3 border-0">
+                    <div class="modal-header bg-dark text-white border-0">
+                        <h5 class="modal-title" id="paymentModalLabel{{ user_profile.id }}">Make Payment</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post" action="{% url 'make_payment' user_profile.id %}">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <input type="hidden" name="user_profile_id" value="{{ user_profile.id }}">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="id_date_{{ user_profile.id }}" class="form-label">Date</label>
+                                    <input type="date" class="form-control text-black fw-semibold" id="id_date_{{ user_profile.id }}" name="date" required>
+                                </div>
+                                <div class="col">
+                                    <label for="id_amount_{{ user_profile.id }}" class="form-label">Amount</label>
+                                    <input type="number" class="form-control text-black fw-semibold" id="id_amount_{{ user_profile.id }}" name="amount" placeholder="0" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="id_type_{{ user_profile.id }}" class="form-label">Type</label>
+                                    <select class="form-select text-black fw-semibold" id="id_type_{{ user_profile.id }}" name="type" required>
+                                        <option value="debit">Debit</option>
+                                        <option value="credit">Credit</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="id_description_{{ user_profile.id }}" class="form-label">Description</label>
+                                    <select class="form-select text-black fw-semibold" id="id_description_{{ user_profile.id }}" name="description" required>
+                                        <option value="Bank Transfer">Bank Transfer</option>
+                                        <option value="UPI">UPI</option>
+                                        <option value="CDM">CDM</option>
+                                        <option value="BULK">BULK</option>
+                                        <option value="Order Delivered">Order Delivered</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-sm bg-danger text-white" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-sm bg-success text-white">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+    {% for user_profile in user_profiles %}
+        let currentDate{{ user_profile.id }} = new Date();
+        let formattedDate{{ user_profile.id }} = currentDate{{ user_profile.id }}.toISOString().split('T')[0];
+        document.getElementById("id_date_{{ user_profile.id }}").value = formattedDate{{ user_profile.id }};
+    {% endfor %}
+</script>
+
+{% endblock %}

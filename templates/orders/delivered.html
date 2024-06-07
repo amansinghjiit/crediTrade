@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Delivered Orders{% endblock %}
+
+{% block content %}
+
+<div class="table-container">
+    <div class="order-table">
+        <div class="col-sm-12">
+            <div class="card border-0 rounded-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3 mx-2"> 
+                        <h5 class="offcanvas-title fw-bolder mb-0" style="font-size: 18px; color: #333; text-transform: uppercase; letter-spacing: 1px;">Delivered Orders</h5>
+                        <div class='d-flex align-items-center search-bar'>
+                            <input class="form-control me-2 search-input border-3 py-1" type="search" placeholder="Search" aria-label="Search" name="q" id="search-input">
+                            <a href="{% url 'export_delivered_orders_csv' %}" class="btn btn-primary btn-new-order">Export</a>
+                        </div>                    
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped text-center border">
+                            <thead>
+                                <tr class="table-heading fw-bolder">
+                                    <th class="table-heading text-nowrap">ID</th>
+                                    <th class="table-heading text-nowrap">Date</th>
+                                    <th class="table-heading text-nowrap">Name</th>
+                                    <th class="table-heading text-nowrap">Model</th>
+                                    <th class="table-heading text-nowrap">Shop</th>
+                                    <th class="table-heading text-nowrap">Return</th>
+                                    <th class="table-heading text-nowrap">Invoice</th>
+                                </tr>
+                            </thead>
+                            <tbody id="search-results">
+                                {% for entry in delivered_orders %}
+                                <tr>
+                                    <td class="text-nowrap">{{ entry.id }}</td>
+                                    <td class="text-nowrap">{{ entry.date }}</td>
+                                    <td class="text-nowrap search-name">{{ entry.name }}</td>
+                                    <td class="text-nowrap search-model">{{ entry.model }}</td>
+                                    <td class="text-nowrap search-shop">{{ entry.shop }}</td>
+                                    <td class="text-nowrap">
+                                        {% if entry.return_amount %}
+                                            ₹{{ entry.return_amount|intcomma }}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <div class="invoice-wrapper d-flex align-items-center justify-content-center">
+                                            {% if entry.invoice %}
+                                            <form action="{% url 'remove_invoice' %}" method="post">
+                                                <div class="d-flex" style="width: 80px;">
+                                                    <a class="view-link" href="{% url 'view_invoice' entry.id %}" target="_blank">
+                                                        <img src="{% static 'images/eye.svg' %}">View
+                                                    </a> 
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="order_id" value="{{ entry.id }}">
+                                                    <button class="remove-invoice"><img src="{% static 'images/3_dots.svg' %}"></button>
+                                                </div>
+                                            </form>
+                                            {% else %}                                    
+                                            <label for="invoice_{{ entry.id }}" class="select-file" onclick="handleFileSelection(event, '{{ entry.id }}')"> <img src="{% static 'images/upload.png' %}">Add File</label>
+                                            <form id="form_{{ entry.id }}" action="{% url 'upload_invoice' %}" method="post" enctype="multipart/form-data" style="display: none;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="order_id" value="{{ entry.id }}">
+                                                <input type="file" id="invoice_{{ entry.id }}" name="invoice" accept=".zip,.pdf,image/*" style="display: none;" onchange="showConfirmationBox('{{ entry.id }}', this)">
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination-container" style="margin:-10px;" id="pagination-container">
+                        {% if delivered_orders.has_other_pages %}
+                        <ul class="pagination justify-content-center">
+                            {% if delivered_orders.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="#" onclick="navigatePage(1)">&laquo;</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo;</span>
+                            </li>
+                            {% endif %}
+                            {% for i in delivered_orders.paginator.page_range %}
+                            {% if i == delivered_orders.number %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ i }}</span>
+                            </li>
+                            {% elif i > delivered_orders.number|add:'-3' and i < delivered_orders.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="#" onclick="navigatePage({{ i }})">{{ i }}</a>
+                            </li>
+                            {% elif i == delivered_orders.number|add:'-3' or i == delivered_orders.number|add:'3' %}
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            {% if delivered_orders.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="#" onclick="navigatePage({{ delivered_orders.paginator.num_pages }})">&raquo;</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&raquo;</span>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        {% endif %}
+                    </div>                                                 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="remove-confirmation" id="removeConfirmation" style="display:none;">
+        <div class="remove-content">
+            <p class="remove-heading">Delete file</p>
+            <p class="remove-description">Are you sure you want to delete this file?</p>
+        </div>
+        <div class="remove-button-wrapper">
+            <button id="delete-btn" class="remove-button primary">Delete</button>
+            <button id="cancel-btn" class="remove-button secondary">Cancel</button>
+            <button id="exit-btn" class="exit-button">&#10006;</button>
+        </div>
+    </div>
+
+    <div class="upload-confirmation" id="uploadConfirmation" style="display:none;">
+        <div class="upload-content">
+            <p class="upload-heading">Upload File</p>
+            <span class="file-name"></span>
+        </div>
+        <div class="upload-button-wrapper">
+            <button id="confirm-button" class="upload-button secondary">Confirm</button>
+            <button id="cancel-button" class="upload-button primary">Cancel</button>
+            <button id="exit-button" class="exit-button">&#10006;</button>
+        </div>
+    </div> 
+</div>  
+{% endblock %}

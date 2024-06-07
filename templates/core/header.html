@@ -1,0 +1,84 @@
+{% load static %}
+
+<header class="header fixed-top w-100 d-flex align-items-center justify-content-center bg-body" id="header">
+    <nav class="nav navbar container">
+        <a href="{% url 'home' %}" class="nav__logo d-flex align-items-center"><img src="{% static 'images/logo.png' %}" alt="Logo"></a>
+
+        {% if user.is_authenticated %}
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list m-0 p-0 list-unstyled">
+                    <li class="nav__item {% if request.path == '/' %}active{% endif %}"><a href="{% url 'home' %}" class="nav__link">Home</a></li>
+                    <li class="nav__item {% if request.path == '/orders/dashboard/' %}active{% endif %}"><a href="{% url 'dashboard' %}" class="nav__link">Dashboard</a></li>
+                    <li class="nav__item {% if request.path == '/profile/' %}active{% endif %}"><a href="{% url 'profile' %}" class="nav__link">Profile</a></li>
+                    <li class="nav__item {% if request.path == '/orders/delivery-form/' %}active{% endif %}"><a href="{% url 'delivery_form' %}" class="nav__link">Delivery Details</a></li>
+                    <li class="nav__item {% if request.path == '/orders/delivered/' %}active{% endif %}"><a href="{% url 'delivered' %}" class="nav__link">Delivered Orders</a></li>
+                    {% if user.is_staff %}
+                        <li class="nav__item {% if request.path == '/orders/payments-dashboard/' %}active{% endif %}"><a href="{% url 'payments_dashboard' %}" class="nav__link">Payments</a></li>
+                    {% endif %}
+                </ul>
+                <i class="ri-close-line nav__close" id="nav-close"></i>
+            </div>
+        {% endif %}
+
+        <div class="nav__actions d-flex align-items-center">
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}"><i class="ri-logout-circle-line nav__logout text-danger"></i></a>
+                <i class="ri-menu-line nav__toggle" id="nav-toggle"></i>
+            {% else %}
+                <i class="ri-user-line nav__login" id="login-btn"></i>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+<div class="login-overlay" id="login-overlay"></div>
+
+<div class="login-card" id="login-card">
+    <div class="close-icon" id="close-icon"><i class="ri-close-fill"></i></div>
+    <div class="form-container">
+        <div class="slide-controls">
+            <input type="radio" name="slide" id="login" checked>
+            <input type="radio" name="slide" id="signup">
+            <label for="login" class="slide login-heading">Login</label>
+            <label for="signup" class="slide signup-heading">Sign Up</label>
+            <div class="slider-tab"></div>
+        </div>
+
+        <div class="form-inner">
+            <form action="{% url 'login' %}" class="login-form" id="login-form" method="post">
+                {% csrf_token %}
+                <div class="field">
+                    <input class='form-fields' type="email" id="login-email" name="email" placeholder="Email" required autocomplete="email">
+                </div>
+                <div class="field">
+                    <input class='form-fields' type="password" id="login-password" name="password" placeholder="Password" required autocomplete="current-password">
+                </div>
+                <div class="pass-link">
+                    <a href="{% url 'password_reset' %}">Forgot password?</a>
+                </div>
+                <div class="field">
+                    <input type="submit" value="Login">
+                </div>
+                <div class="signup-link">
+                    New to our platform? <a href="">Sign Up</a>
+                </div>
+            </form>
+
+            <form action="{% url 'signup' %}" method="post" class="signup-form" id="signup-form">
+                {% csrf_token %}
+                <div class="field">
+                    <input class='form-fields' type="email" id="signup-email" name="email" placeholder="Email" required autocomplete="email">
+                </div>
+                <div class="field">
+                    <input class='form-fields' type="password" id="signup-password" name="password" placeholder="Password" required autocomplete="current-password">
+                </div>
+                <div class="field">
+                    <input class='form-fields' type="text" id="key" name="key" placeholder="Key" required>
+                </div>
+                <div class="field">
+                    <input type="submit" value="Sign Up">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="bg-dark h-100 w-100">
+    <div class="container-fluid pt-4 lr-padding">
+        <div class="row g-4">
+            <div class="col-sm-6 col-xl-3 text-dark">
+                <div class="bg-body rounded d-flex align-items-center justify-content-between p-4">
+                    <i class="fas fa-rupee-sign fa-3x"></i>
+                    <div class="ms-3 text-center">
+                        <p class="mb-2 fw-semibold">Amount Due</p>
+                        <h6 class="mb-0 fw-bolder">{{ amount_due }}</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3 text-dark">
+                <div class="bg-body rounded d-flex align-items-center justify-content-between p-4">
+                    <i class="fas fa-truck fa-3x"></i>
+                    <div class="ms-3 text-center">
+                        <p class="mb-2 fw-semibold">Delivered Today</p>
+                        <h6 class="mb-0 fw-bolder">{{ delivered_today_count }}</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3 text-dark">
+                <div class="bg-body rounded d-flex align-items-center justify-content-between p-4">
+                    <i class="fa fa-chart-area fa-3x"></i>
+                    <div class="ms-3 text-center">
+                        <p class="mb-2 fw-semibold">Pending Orders</p>
+                        <h6 class="mb-0 fw-bolder">{{ pending_orders_count }}</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3 text-dark">
+                <div class="bg-body rounded d-flex align-items-center justify-content-between p-4">
+                    <i class="fa fa-chart-pie fa-3x"></i>
+                    <div class="ms-3 text-center">
+                        <p class="mb-2 fw-semibold">Lifetime Orders</p>
+                        <h6 class="mb-0 fw-bolder">{{ lifetime_orders_count }}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="container-fluid pt-4 lr-padding">
+        <div class="row g-4">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <span class="fw-semibold"> Transaction History </span>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#transactionModal">Show All</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th class="text-center">Description</th>
+                                        <th class="text-end">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transaction in recent_transactions %}
+                                    <tr>
+                                        <td>{{ transaction.date }}</td>
+                                        <td class="text-center">{{ transaction.description }}</td>
+                                        <td class="text-end {% if transaction.transaction_type == 'credit' %}text-danger{% else %}text-success{% endif %}">
+                                            {% if transaction.transaction_type == 'credit' %}-{% endif %}₹{{ transaction.amount }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction History Modal -->
+    <div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white border-0">
+                    <h5 class="modal-title fw-semibold" id="transactionHistoryModalLabel"><i class="fas fa-history me-2 fa-sm"></i>Transaction History</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" style="font-size: 0.9rem; color: #000;">
+                            <thead>
+                                <tr style="background-color: #000; color: #fff;">
+                                    <th>Date</th>
+                                    <th class="text-center">Description</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in transaction_history %}
+                                <tr>
+                                    <td>{{ transaction.date }}</td>
+                                    <td class="text-center">{{ transaction.description }}</td>
+                                    <td class="text-end {% if transaction.transaction_type == 'credit' %}text-danger{% else %}text-success{% endif %}">
+                                        {% if transaction.transaction_type == 'credit' %}-{% endif %}₹{{ transaction.amount }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid pt-4 lr-padding">
+        <div class="row g-4">
+            <!-- Recent Orders -->
+            <div class="col-sm-12 col-xl-6 b-margin">
+                <div class="bg-body text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="fw-semibold text-dark m-0">Recent Orders</h6>
+                        <a href="{% url 'delivered' %}">Show All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table text-start align-middle table-bordered table-hover mb-0">
+                            <thead>
+                                <tr class="table-heading fw-bolder">
+                                    <th class="table-heading">Date</th>
+                                    <th class="table-heading">Name</th>
+                                    <th class="table-heading">Return</th>
+                                </tr>
+                            </thead>
+                            <tbody id="search-results">
+                                {% for entry in recent_orders %}
+                                <tr>
+                                    <td>{{ entry.date }}</td>
+                                    <td>{{ entry.name }}</td>
+                                    <td>
+                                        {% if entry.return_amount %}
+                                            ₹{{ entry.return_amount|intcomma }}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Orders -->
+            <div class="col-sm-12 col-xl-6 mb-4">
+                <div class="bg-body text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="fw-semibold text-dark m-0">Pending Orders</h6>
+                        <a href="{% url 'delivery_form' %}">New Order</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table text-start align-middle table-bordered table-hover mb-0">
+                            <thead>
+                                <tr class="table-heading fw-bolder">
+                                    <th class="table-heading">Name</th>
+                                    <th class="table-heading">OTP</th>
+                                    <th class="table-heading">OBD</th>
+                                </tr>
+                            </thead>
+                            <tbody id="search-results">
+                                {% for order in pending_orders %}
+                                <tr>
+                                    <td>{{ order.name }}</td>
+                                    <td>{{ order.otp }}</td>
+                                    <td>{{ order.obd }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'profile' %}" class="profile-container">
+    {% csrf_token %}
+    <div class="section">
+        <h2 class="section-header">Personal Details</h2>
+        <div class="profile-info">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ user.userprofile.name|default_if_none:'' }}" maxlength="50">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" value="{{ user.email|default_if_none:'' }}" readonly>
+            <label for="whatsapp">WhatsApp:</label>
+            <input type="text" id="whatsapp" name="whatsapp" value="{{ user.userprofile.whatsapp_number|default_if_none:'' }}" maxlength="10">
+        </div>
+    </div>
+    <div class="section">
+        <h2 class="section-header">Account Details</h2>
+        <div class="profile-info">
+            <label for="accountHolderName">Account Holder Name:</label>
+            <input type="text" id="accountHolderName" name="accountHolderName" value="{{ user.userprofile.account_holder_name|default_if_none:'' }}" maxlength="50">
+            <label for="accountNumber">Account Number:</label>
+            <input type="text" id="accountNumber" name="accountNumber" value="{{ user.userprofile.account_number|default_if_none:'' }}" maxlength="50">
+            <label for="ifscCode">IFSC Code:</label>
+            <input type="text" id="ifscCode" name="ifscCode" value="{{ user.userprofile.ifsc_code|default_if_none:'' }}" maxlength="20">
+        </div>
+    </div>
+    <div>
+        <h2 class="section-header">PhonePe Details</h2>
+        <div class="profile-info">
+            <label for="phonepeName">PhonePe Name:</label>
+            <input type="text" id="phonepeName" name="phonepeName" value="{{ user.userprofile.phonepe_name|default_if_none:'' }}" maxlength="50">
+            <label for="phonepeNumber">PhonePe Number:</label>
+            <input type="text" id="phonepeNumber" name="phonepeNumber" value="{{ user.userprofile.phonepe_number|default_if_none:'' }}" maxlength="10">
+        </div>
+    </div>
+    <button type="submit" class="save-changes-button fw-semibold">Save Changes</button>
+</form>
+{% endblock %}

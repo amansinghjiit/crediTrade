@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}CrediTrade{% endblock %}
+
+{% block content %}
+ <div class="landing-page d-flex flex-column justify-content-center align-items-center">
+    <div class="social">
+        <a href="https://www.instagram.com/dd_amansingh/" class="text-dark" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/917982405815" class="text-dark" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://x.com/ddamansing" class="text-dark twitter-icon" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+            </svg>
+        </a>
+        <a href="https://www.facebook.com/a5499/" class="text-dark" target="_blank"><i class="fab fa-facebook"></i></a>
+    </div>    
+    
+    <h1 class="welcome-message">Welcome To CrediTrade</h1>
+    <p class="intro-text">Your one-stop destination for all things related to credit cards. Discover the latest deals and explore smart ways to use your credit cards effectively.</p>
+    <div class="cta-buttons">
+        <button {% if not user.is_authenticated %} id="animated-login-btn" {% else %} onclick="window.location.href='{% url 'dashboard' %}'" {% endif %} class="animated-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+            </svg>
+            <span class="btn-text">
+                {% if not user.is_authenticated %}
+                    L O G I N
+                {% else %}
+                    D A S H B O A R D
+                {% endif %}
+            </span>
+            <span class="circle"></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+            </svg>
+        </button> 
+    </div>  
+ </div>
+   
+ <!-- About -->
+ {% include "core/about.html" %}
+
+ <!-- Footer -->
+ {% include "core/footer.html" %}
+ 
+{% endblock %}

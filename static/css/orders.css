@@ -1,0 +1,446 @@
+/*=============== DELIVERY FORM ===============*/
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap");
+
+.wrapper {
+  width: 90%;
+  max-width: 450px;
+  background: var(--white);
+  color: #333;
+  border-radius: 10px;
+  padding: 30px 40px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), 0 0 0 1px #737478;
+  font-family: "Montserrat", sans-serif;
+  position: absolute;
+  top: 12vh;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 86vh;
+}
+
+.wrapper h1 {
+  font-size: 20px;
+  font-weight: var(--font-semi-bold);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.input-box {
+  position: relative;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.input-box input,
+.input-box select {
+  width: 100%;
+  border: 1px solid hsl(230, 12%, 40%);
+  border-radius: 20px;
+  font-size: 15px;
+  color: #737478;
+  padding: 19px;
+  outline: none;
+  box-shadow: 0 0 0 1px #ccc;
+  font-weight: bold;
+}
+
+.input-box input::placeholder,
+.input-box select::placeholder {
+  color: hsl(230, 12%, 40%);
+}
+
+.input-box input:focus,
+.input-box select:focus {
+  border: 2px solid #3b5998;
+  box-shadow: 0 0 5px rgba(59, 89, 152, 0.2);
+  color: var(--black);
+}
+
+.input-box input.filled,
+.input-box select.filled {
+  color: var(--black);
+  background: #E8F0FE;
+}
+
+.input-box select option {
+  background-color: var(--white);
+  color: #737478;
+}
+
+.wrapper .btn {
+  width: 100%;
+  height: 40px;
+  background-color: var(--blue);
+  border: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--white);
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+.wrapper .btn:hover {
+  background: hsl(230, 97%, 44%);
+}
+
+.wrapper .btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 4px rgba(30, 144, 255, 0.2);
+}
+
+.edit-form {
+  font-size: 15px;
+  color: #555;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.edit-form a {
+  color: var(--blue);
+}
+
+.edit-form a:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 767px) {
+  .wrapper {
+    width: 100%;
+    height: 100%;
+    border:none;
+    border-radius:0;
+    box-shadow: none;
+    padding-inline:7vw;
+    top:10vh;
+    background: var(--dark);
+  }
+
+  .wrapper h1 {
+    color:var(--white);
+  }
+
+  .input-box input,
+  .input-box select {
+    padding: 18px 15px;
+    font-size: 14px;
+    background: var(--white);
+    border: none;
+    border-radius: 12px;
+  }
+
+  .wrapper .btn {
+    height: 50px;
+    border-radius:12px;
+    margin-top:8px;
+  }
+  
+  .edit-form{
+    color: lightgrey;
+  }
+}
+
+/*=============== PENDING + DELIVERED ORDERS ===============*/
+.table-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.order-table, .payment-table{
+  width: 98%;
+  background-color: var(--white);
+  color: #333;
+  border-radius: 10px;
+  border-collapse: collapse;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  font-family: "Montserrat", sans-serif;
+  position: absolute;
+  top: 12vh;
+  overflow-x: hidden;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.action span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--dark);
+  background-color: var(--white);
+  margin-right: 5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.action span:hover {
+  background-color: var(--dark);
+  border-color: var(--white);
+}
+
+.action span img {
+  width: 15px;
+  transition: all 0.3s ease;
+}
+
+.action span:hover img, .action span:hover svg {
+  filter: invert(1);
+}
+
+.btn-new-order, .export-btn {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--white);
+  background-color: #007bff;
+  border: 2px solid #007bff;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-new-order:hover, .export-btn:hover {
+  background-color: #0056b3;
+  color: var(--white);
+}
+
+.fixed-column {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: var(--white);
+}
+
+.select-file {
+  background-color: var(--white);
+  border: 2px solid #2583ef;
+  color: #2583ef;
+  padding: 5.075px 9px;
+  text-align: center;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s, color 0.3s;
+  width: 95px;
+}
+
+.select-file img {
+  height: 15px;
+  width: 15px;
+  margin-right: 6px;
+}
+
+.select-file:hover {
+  background-color: #2583ef;
+  color: var(--white);
+}
+
+.select-file:hover img {
+  filter: brightness(0) invert(1);
+}
+
+.view-link{
+  font-size: 14px;
+  color: #0b7b56;
+  cursor: pointer;
+  font-weight:bold;
+  border: 2px solid #0b7b56;
+  padding: 3px 5px;
+  display: flex;
+  gap:2px;
+}
+
+.remove-invoice {
+  color: #0b7b56;
+  cursor: pointer;
+  font-weight:bold;
+  background: transparent;
+  border: 2px solid #0b7b56;
+  padding: 5.5px 0;
+  margin-left: -1px;
+}
+
+.view-link:hover, .remove-invoice:hover {
+  background:#0b7b56;
+  color:var(--white);
+}
+
+.view-link:hover img, .remove-invoice:hover img {
+  filter: brightness(0) invert(1);
+}
+
+.remove-confirmation, .upload-confirmation {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: fit-content;
+  background-color: #212845;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 30px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+.remove-content, .upload-content {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.remove-heading, .upload-heading {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.remove-description, .file-name{
+  font-weight: 100;
+  color: var(--white);
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.remove-button-wrapper, .upload-button-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.remove-button, .upload-button {
+  width: 50%;
+  height: 35px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.primary {
+  background-color: #FC000A;
+  color: var(--white);
+}
+
+.secondary {
+  background-color: var(--white);
+  color:var(--black);
+}
+
+.exit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  color: var(--white);
+  padding: 3px 7px;
+  background: transparent;
+}
+
+.exit-button:hover {
+  color: black;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 3px 7px;
+  border-radius: 50%;
+}
+
+@media (max-width: 767px) {
+  .table td,
+  .table th {
+      padding: 12px;
+  }
+
+  .order-table, .payment-table{
+      width: 100%;
+      border-radius:0;
+      top: 11vh;
+  }
+
+  .remove-confirmation, .upload-confirmation {
+    width: 90vw;
+  }
+}
+
+/*=============== PAGINATION ===============*/
+.pagination-container {
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.pagination .page-item .page-link {
+  color: #007bff;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 3px;
+  padding: 8px 12px;
+  margin: 0 3px;
+  transition: all 0.3s;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+  color:var(--white);
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #6c757d;
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.pagination .page-link:hover {
+  background-color: #e9ecef;
+}
+
+.pagination .page-item:not(.disabled) .page-link:hover {
+  color: #0056b3;
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+
+.pagination .page-link:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+  border-radius: 5px;
+}
+
+.pagination .page-item.disabled .page-link {
+  cursor: not-allowed;
+}
+
+.pagination .page-item.disabled .page-link:hover {
+  background-color: #f8f9fa;
+  color: #6c757d;
+}

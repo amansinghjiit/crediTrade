@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pending Orders{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <div class="order-table">
+        <div class="col-sm-12">
+            <div class="card border-0 rounded-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3 mx-2">  
+                        <h5 class="offcanvas-title fw-bolder mb-0" style="font-size: 18px; color: #333; text-transform: uppercase; letter-spacing: 1px;">Pending Orders</h5>
+                        <div class="text-nowrap">
+                            <a href="{% url 'export_pending_orders_csv' %}" class="export-btn me-1">Export</a>
+                            <a href="{% url 'delivery_form' %}" class="btn-new-order">New Order</a>
+                        </div>
+                    </div>                
+                    <div class="table-responsive">
+                        <table class="table table-striped text-center border">
+                            <thead>
+                                <tr class="table-heading fw-bolder">
+                                    <th class="table-heading text-nowrap">Name</th>
+                                    <th class="table-heading text-nowrap">Tracking</th>
+                                    <th class="table-heading text-nowrap">OTP</th>
+                                    <th class="table-heading text-nowrap">OBD</th>
+                                    <th class="table-heading text-nowrap">Shop</th>
+                                    <th class="table-heading text-nowrap">Status</th>
+                                    <th class="table-heading text-nowrap">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in pending_orders %}
+                                <tr>
+                                    <td class="text-nowrap">{{ entry.name }}</td>
+                                    <td class="text-nowrap">{{ entry.tracking }}</td>
+                                    <td class="text-nowrap">{{ entry.otp }}</td>
+                                    <td class="text-nowrap">{{ entry.obd }}</td>
+                                    <td class="text-nowrap">{{ entry.shop }}</td>
+                                    <td class="text-nowrap">
+                                        <span class="badge {% if entry.status == 'Delivered' %}bg-success{% elif entry.status == 'Cancelled' %}bg-danger{% else %}bg-warning{% endif %}">
+                                            {{ entry.status }}
+                                        </span>
+                                    </td>
+                                    <td class="action text-nowrap d-flex align-items-center justify-content-center">
+                                        <a class="delete" href="#" order-id="{{ entry.id }}"><span><img src="{% static 'images/delete.svg' %}"></span></a>
+                                        <a class="edit" href="edit/{{ entry.id }}"><span><img src="{% static 'images/edit.svg' %}"></span></a>
+                                        <span class="copy">
+                                            <img class="clipboard" src="{% static 'images/copy.svg' %}">
+                                            <svg class="checkmark" style="display:none;" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18" x="0" y="0" viewBox="0 0 24 24" style="enable-background:new 0 0 512 512" xml:space="preserve"><g><path d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z" fill="currentColor" data-original="#000000"></path></g></svg>
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="remove-confirmation" id="removeConfirmation" style="display:none;">
+        <div class="remove-content">
+            <p class="remove-heading">Delete entry</p>
+            <p class="remove-description">Are you sure you want to delete this order?</p>
+        </div>
+        <div class="remove-button-wrapper">
+            <button id= "delete-btn" class="remove-button primary">Delete</button>
+            <button id= "cancel-btn" class="remove-button secondary">Cancel</button>
+            <button id = "exit-btn" class="exit-button">&#10006;</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
