@@ -18,20 +18,22 @@ class PendingOrder(models.Model):
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending', editable=True)
     
-    SHOP_CHOICES = [
-        ('', 'Shop'),
-        ('Jagdamba', 'Jagdamba 766015'),
-        ('Rabi', 'Rabi Furnitures 766015'),
-        ('Pansari', 'Pansari 767001'),
+    PIN_CHOICES = [
+        ('', 'Pin'),
+        ('Jagdamba 766015', 'Jagdamba 766015'),
+        ('Rabi 766015', 'Rabi Furnitures 766015'),
+        ('Pansari 767001', 'Pansari 767001'),
+        ('228001 / 228159', '228001 / 228159'),
+        ('Delhi 110091', 'Delhi 110091'),
     ]
-    shop = models.CharField(max_length=20, choices=SHOP_CHOICES, default='')
+    pin = models.CharField(max_length=20, choices=PIN_CHOICES, default='')
 
 class DeliveredOrder(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
     name = models.CharField(max_length=25)
     model = models.CharField(max_length=25)
-    shop = models.CharField(max_length=20)
+    pin = models.CharField(max_length=20)
     invoice = models.FileField(upload_to='invoices/', validators=[validate_size], blank=True)
     return_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 

@@ -26,7 +26,7 @@
                                     <th class="table-heading text-nowrap">Date</th>
                                     <th class="table-heading text-nowrap">Name</th>
                                     <th class="table-heading text-nowrap">Model</th>
-                                    <th class="table-heading text-nowrap">Shop</th>
+                                    <th class="table-heading text-nowrap">Pin</th>
                                     <th class="table-heading text-nowrap">Return</th>
                                     <th class="table-heading text-nowrap">Invoice</th>
                                 </tr>
@@ -38,7 +38,7 @@
                                     <td class="text-nowrap">{{ entry.date }}</td>
                                     <td class="text-nowrap search-name">{{ entry.name }}</td>
                                     <td class="text-nowrap search-model">{{ entry.model }}</td>
-                                    <td class="text-nowrap search-shop">{{ entry.shop }}</td>
+                                    <td class="text-nowrap search-pin">{{ entry.pin }}</td>
                                     <td class="text-nowrap">
                                         {% if entry.return_amount %}
                                             ₹{{ entry.return_amount|intcomma }}

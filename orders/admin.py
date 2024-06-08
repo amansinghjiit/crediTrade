@@ -21,8 +21,8 @@ class PendingOrderAdmin(GetUserProfileNameMixin, ExportCSVActionMixin, admin.Mod
     search_fields = ('user_profile__name', 'name', 'tracking', 'model')
     list_per_page = 100
     list_display = (
-        'get_user_profile_name', 'name', 'tracking', 'otp', 'obd', 'model', 'shop')
-    list_filter = ('model', 'shop')
+        'get_user_profile_name', 'name', 'tracking', 'otp', 'obd', 'model', 'pin')
+    list_filter = ('model', 'pin')
     actions = ['mark_as_delivered', 'export_orders_csv']
     csv_export_url_name = 'export_pending_orders_csv'
 
@@ -37,9 +37,9 @@ class DeliveredOrderAdmin(GetUserProfileNameMixin, ExportCSVActionMixin, admin.M
     search_fields = ('user_profile__name', 'name', 'model')
     list_per_page = 100
     list_display = (
-        'get_user_profile_name', 'date', 'name', 'model', 'shop', 'get_invoice_status', 'return_amount'
+        'get_user_profile_name', 'date', 'name', 'model', 'pin', 'get_invoice_status', 'return_amount'
     )
-    list_filter = ('date', 'shop')
+    list_filter = ('date', 'pin')
     list_editable = ('return_amount',)
     actions = ['export_orders_csv']
     csv_export_url_name = 'export_delivered_orders_csv'

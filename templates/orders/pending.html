@@ -24,7 +24,7 @@
                                     <th class="table-heading text-nowrap">Tracking</th>
                                     <th class="table-heading text-nowrap">OTP</th>
                                     <th class="table-heading text-nowrap">OBD</th>
-                                    <th class="table-heading text-nowrap">Shop</th>
+                                    <th class="table-heading text-nowrap">Pin</th>
                                     <th class="table-heading text-nowrap">Status</th>
                                     <th class="table-heading text-nowrap">Actions</th>
                                 </tr>
@@ -36,7 +36,7 @@
                                     <td class="text-nowrap">{{ entry.tracking }}</td>
                                     <td class="text-nowrap">{{ entry.otp }}</td>
                                     <td class="text-nowrap">{{ entry.obd }}</td>
-                                    <td class="text-nowrap">{{ entry.shop }}</td>
+                                    <td class="text-nowrap">{{ entry.pin }}</td>
                                     <td class="text-nowrap">
                                         <span class="badge {% if entry.status == 'Delivered' %}bg-success{% elif entry.status == 'Cancelled' %}bg-danger{% else %}bg-warning{% endif %}">
                                             {{ entry.status }}

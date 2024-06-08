@@ -11,7 +11,7 @@ def handle_pending_order_status(sender, instance, **kwargs):
             user_profile=instance.user_profile,
             name=instance.name,
             model=instance.model,
-            shop=instance.shop
+            pin=instance.pin
         )
         instance.delete()
 

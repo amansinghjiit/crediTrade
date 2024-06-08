@@ -104,7 +104,7 @@ def delivered_orders_view(request):
         delivered_orders = delivered_orders.filter(
             Q(name__icontains=query) |
             Q(model__icontains=query) |
-            Q(shop__icontains=query)
+            Q(pin__icontains=query)
         )
 
     page_number = request.GET.get('page')
@@ -121,12 +121,12 @@ def upload_invoice(request):
         if not validate_size(invoice, request):
             return redirect('delivered')
 
-        shop = order.shop.lower().replace(" ", "_")
+        pin = order.pin.lower().replace(" ", "_")
         order_date = order.date
         y, m, d = order_date.year, order_date.strftime("%m"), order_date.strftime("%d")
         original_filename, original_extension = os.path.splitext(invoice.name)
         invoice_name = f"{order.name.replace(' ', '_')}_{order_id}{original_extension}"
-        destination_dir = f'invoices/{shop}/{y}/{m}/{d}'
+        destination_dir = f'invoices/{pin}/{y}/{m}/{d}'
         destination_path = os.path.join(destination_dir, invoice_name)
         saved_path = default_storage.save(destination_path, invoice)
         order.invoice.name = saved_path
@@ -173,11 +173,11 @@ def export_pending_orders_csv(request):
     response['Content-Disposition'] = 'attachment; filename=pending_orders.csv'
 
     writer = csv.writer(response)
-    writer.writerow(['Name', 'Tracking', 'OTP', 'OBD', 'Model', 'Shop'])
+    writer.writerow(['Name', 'Tracking', 'OTP', 'OBD', 'Model', 'Pin'])
 
     pending_orders = PendingOrder.objects.all()
     for order in pending_orders:
-        writer.writerow([order.name, order.tracking, order.otp, order.obd, order.model, order.shop])
+        writer.writerow([order.name, order.tracking, order.otp, order.obd, order.model, order.pin])
     return response
 
 @login_required_message
@@ -186,7 +186,7 @@ def export_delivered_orders_csv(request):
     response['Content-Disposition'] = 'attachment; filename=delivered_orders.csv'
 
     writer = csv.writer(response)
-    writer.writerow(['User', 'Date', 'Name', 'Model', 'Shop', 'Invoice', 'Return'])
+    writer.writerow(['User', 'Date', 'Name', 'Model', 'Pin', 'Invoice', 'Return'])
 
     delivered_orders = DeliveredOrder.objects.all().order_by('-id')
     for order in delivered_orders:
@@ -196,7 +196,7 @@ def export_delivered_orders_csv(request):
             formatted_date,
             order.name,
             order.model,
-            order.shop,
+            order.pin,
             '1' if order.invoice else '0',
             order.return_amount
         ])

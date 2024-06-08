@@ -52,8 +52,8 @@
         $('#search-results tr').each(function() {
           const name = $(this).find('.search-name').text().toLowerCase();
           const model = $(this).find('.search-model').text().toLowerCase();
-          const shop = $(this).find('.search-shop').text().toLowerCase();
-          if (name.indexOf(searchTerm) === -1 && model.indexOf(searchTerm) === -1 && shop.indexOf(searchTerm) === -1) {
+          const pin = $(this).find('.search-pin').text().toLowerCase();
+          if (name.indexOf(searchTerm) === -1 && model.indexOf(searchTerm) === -1 && pin.indexOf(searchTerm) === -1) {
             $(this).hide();
           } else {
             $(this).show();
