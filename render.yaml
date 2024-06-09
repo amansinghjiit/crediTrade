@@ -4,15 +4,15 @@ services:
     name: crediTrade
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "python -m gunicorn crediTrade.asgi:application -k uvicorn.workers.UvicornWorker"
+    startCommand: "python -m gunicorn crediTrade.asgi:application -c gunicorn.conf.py"
     envVars:
       - key: DJANGO_SECRET_KEY
-        value: 'Fg|s2PFZ~1PyYypXuu4_&hR^-CG$}R!xb]6??QDB:}Pi67m@doNe[G]uh4y#H!}W`cYF'
+        value: "Fg|s2PFZ~1PyYypXuu4_&hR^-CG$}R!xb]6??QDB:}Pi67m@doNe[G]uh4y#H!}W`cYF"
       - key: DEBUG
-        value: 'False'
+        value: "False"
       - key: ALLOWED_HOSTS
-        value: 'creditrade.onrender.com'
+        value: "creditrade.onrender.com"
       - key: EMAIL_HOST_USER
-        value: 'amannick2@gmail.com'
+        value: "amannick2@gmail.com"
       - key: EMAIL_HOST_PASSWORD
-        value: 'kdjprmmjkemaoobw'
+        value: "kdjprmmjkemaoobw"
