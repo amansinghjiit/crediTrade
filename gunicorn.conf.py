@@ -7,8 +7,8 @@ accesslog = '-'
 capture_output = True
 worker_class = 'uvicorn.workers.UvicornWorker'
 workers = 2
-timeout = 60
-graceful_timeout = 60
+timeout = 120
+graceful_timeout = 120
 worker_connections = 500
 preload_app = True
 
