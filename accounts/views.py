@@ -19,7 +19,7 @@ def signup(request):
         password = request.POST.get('password')
         key = request.POST.get('key')
 
-        if key != 'DDAMAN4323':
+        if key != '1212':
             messages.error(request, 'Invalid key')
         else:
             try:
