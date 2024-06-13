@@ -71,9 +71,12 @@ def login(request):
         username = email.split('@')[0] 
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
+        ip_address = request.META.get('REMOTE_ADDR', None)
         
         if user is not None:
             auth_login(request, user)
+            user.userprofile.last_login_ip = ip_address
+            user.userprofile.save()
             messages.success(request, 'Login successful')
             return redirect('dashboard')
         else:
