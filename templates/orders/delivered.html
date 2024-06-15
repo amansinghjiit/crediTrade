@@ -22,7 +22,9 @@
                         <table class="table table-striped text-center border">
                             <thead>
                                 <tr class="table-heading fw-bolder">
-                                    <th class="table-heading text-nowrap">ID</th>
+									{% if user.is_staff %}
+										<th class="table-heading text-nowrap">ID</th>
+									{% endif %}
                                     <th class="table-heading text-nowrap">Date</th>
                                     <th class="table-heading text-nowrap">Name</th>
                                     <th class="table-heading text-nowrap">Model</th>

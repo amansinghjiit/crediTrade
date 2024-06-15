@@ -24,6 +24,9 @@ def dashboard(request):
         delivered_today_count = DeliveredOrder.objects.filter(date=timezone.now().date()).count()
         pending_orders_count = PendingOrder.objects.count()
         lifetime_orders_count = DeliveredOrder.objects.count()
+        recent_transactions = Transaction.objects.all().order_by('-id')[:5]
+        transaction_history = Transaction.objects.all().order_by('-id')
+        
     else:
         user_profile = request.user.userprofile
         recent_orders = DeliveredOrder.objects.filter(user_profile=user_profile).order_by('-id')[:6]
@@ -32,9 +35,9 @@ def dashboard(request):
         delivered_today_count = DeliveredOrder.objects.filter(user_profile=user_profile, date=timezone.now().date()).count()
         pending_orders_count = PendingOrder.objects.filter(user_profile=user_profile).count()
         lifetime_orders_count = DeliveredOrder.objects.filter(user_profile=user_profile).count()
-
-    recent_transactions = Transaction.objects.filter(user_profile=request.user.userprofile).order_by('-id')[:5]
-    transaction_history = Transaction.objects.filter(user_profile=request.user.userprofile).order_by('-id')
+        recent_transactions = Transaction.objects.filter(user_profile=user_profile).order_by('-id')[:5]
+        transaction_history = Transaction.objects.filter(user_profile=user_profile).order_by('-id')
+        
     return render(request, 'orders/dashboard.html', {
         'recent_orders': recent_orders,
         'amount_due': amount_due,
