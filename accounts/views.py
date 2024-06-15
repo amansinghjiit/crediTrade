@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
@@ -11,6 +12,10 @@ from django.contrib.auth.views import PasswordResetConfirmView
 from .forms import CustomSetPasswordForm
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_str
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 def signup(request):
     if request.method == 'POST':
@@ -19,7 +24,7 @@ def signup(request):
         password = request.POST.get('password')
         key = request.POST.get('key')
 
-        if key != '1212':
+        if key != os.environ.get('SIGNUP_KEY'):
             messages.error(request, 'Invalid key')
         else:
             try:
