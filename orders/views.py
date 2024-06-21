@@ -239,8 +239,12 @@ def make_payment(request, user_id):
 
 @staff_member_required
 def transaction_history(request, user_profile_id):
+    user_profile = get_object_or_404(UserProfile, id=user_profile_id)
     user_transactions = Transaction.objects.filter(user_profile_id=user_profile_id).order_by('-date', '-id')
-    return render(request, 'orders/payments_dashboard.html', {'user_transactions': user_transactions, 'user_profile_id': user_profile_id})
+    return render(request, 'orders/payments_dashboard.html', {
+        'user_profile': user_profile,
+        'user_transactions': user_transactions
+    })
 
 @staff_member_required
 def export_payment_details(request):

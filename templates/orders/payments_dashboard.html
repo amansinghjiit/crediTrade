@@ -102,18 +102,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for transaction in user_profile.transaction_set.all %}
-                                        <tr>
-                                            <td>{{ transaction.date }}</td>
-                                            <td class="text-center">{{ transaction.description }}</td>
-                                            <td class="text-end">
-                                                {% if transaction.transaction_type == 'debit' %}
-                                                    <span class="text-danger">- ₹{{ transaction.amount|intcomma }}</span>
-                                                {% else %}
-                                                    <span class="text-success">₹{{ transaction.amount|intcomma }}</span>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
+                                    {% for transaction in user_transactions %}
+                                        {% if transaction.user_profile.id == user_profile.id %}
+                                            <tr>
+                                                <td>{{ transaction.date }}</td>
+                                                <td class="text-center">{{ transaction.description }}</td>
+                                                <td class="text-end">
+                                                    {% if transaction.transaction_type == 'debit' %}
+                                                        <span class="text-danger">- ₹{{ transaction.amount|intcomma }}</span>
+                                                    {% else %}
+                                                        <span class="text-success">₹{{ transaction.amount|intcomma }}</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
                                     {% endfor %}
                                 </tbody>
                             </table>
