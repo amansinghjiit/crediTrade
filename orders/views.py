@@ -24,8 +24,8 @@ def dashboard(request):
         delivered_today_count = DeliveredOrder.objects.filter(date=timezone.now().date()).count()
         pending_orders_count = PendingOrder.objects.count()
         lifetime_orders_count = DeliveredOrder.objects.count()
-        recent_transactions = Transaction.objects.all().order_by('-id')[:5]
-        transaction_history = Transaction.objects.all().order_by('-id')
+        recent_transactions = Transaction.objects.all().order_by('-date')[:5]
+        transaction_history = Transaction.objects.all().order_by('-date')
         
     else:
         user_profile = request.user.userprofile
@@ -35,8 +35,8 @@ def dashboard(request):
         delivered_today_count = DeliveredOrder.objects.filter(user_profile=user_profile, date=timezone.now().date()).count()
         pending_orders_count = PendingOrder.objects.filter(user_profile=user_profile).count()
         lifetime_orders_count = DeliveredOrder.objects.filter(user_profile=user_profile).count()
-        recent_transactions = Transaction.objects.filter(user_profile=user_profile).order_by('-id')[:5]
-        transaction_history = Transaction.objects.filter(user_profile=user_profile).order_by('-id')
+        recent_transactions = Transaction.objects.filter(user_profile=user_profile).order_by('-date')[:5]
+        transaction_history = Transaction.objects.filter(user_profile=user_profile).order_by('-date')
         
     return render(request, 'orders/dashboard.html', {
         'recent_orders': recent_orders,
@@ -239,7 +239,7 @@ def make_payment(request, user_id):
 
 @staff_member_required
 def transaction_history(request, user_profile_id):
-    user_transactions = Transaction.objects.filter(user_profile_id=user_profile_id)
+    user_transactions = Transaction.objects.filter(user_profile_id=user_profile_id).order_by('-date')
     return render(request, 'orders/payments_dashboard.html', {'user_transactions': user_transactions, 'user_profile_id': user_profile_id})
 
 @staff_member_required
