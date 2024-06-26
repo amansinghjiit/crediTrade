@@ -17,28 +17,22 @@
                         <table class="table table-striped border text-center" style="color: #000; background-color: #fff;">
                             <thead>
                                 <tr class="table-heading fw-semibold" style="background-color: #000; color: #fff;">
-                                    <th>#</th>
                                     <th>User</th>
                                     <th>Due (₹)</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-							<tbody>
-								{% with 1 as counter %}
-									{% for user_profile in user_profiles %}
-										{% if user_profile.amount_due != 0 %}
-											<tr>
-												<td>{{ counter }}</td>
-												<td><a href="#" class="user-link text-dark fw-medium" data-bs-toggle="modal" data-bs-target="#profileModal{{ user_profile.id }}">{{ user_profile.name }}</a></td>
-												<td><a href="#" class="due-amount-link" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal{{ user_profile.id }}" data-user-id="{{ user_profile.id }}"><span class="{% if user_profile.amount_due > 0 %}text-danger{% else %}text-success{% endif %}">{{ user_profile.amount_due|intcomma }}</span></a></td>
-												<td><button type="button" class="btn btn-outline-dark btn-sm fw-bold border-2" data-bs-toggle="modal" data-bs-target="#paymentModal{{ user_profile.id }}">Pay</button></td>
-											</tr>
-											{% with counter|add:1 as counter %}
-											{% endwith %}
-										{% endif %}
-									{% endfor %}
-								{% endwith %}
-							</tbody>
+                            <tbody>
+                                {% for user_profile in user_profiles %}
+                                    {% if user_profile.amount_due != 0 %}
+                                        <tr>
+                                            <td><a href="#" class="user-link text-dark fw-medium" data-bs-toggle="modal" data-bs-target="#profileModal{{ user_profile.id }}">{{ user_profile.name }}</a></td>
+                                            <td><a href="#" class="due-amount-link" data-bs-toggle="modal" data-bs-target="#transactionHistoryModal{{ user_profile.id }}" data-user-id="{{ user_profile.id }}"><span class="{% if user_profile.amount_due > 0 %}text-danger{% else %}text-success{% endif %}">{{ user_profile.amount_due|intcomma }}</span></a></td>
+                                            <td><button type="button" class="btn btn-outline-dark btn-sm fw-bold border-2" data-bs-toggle="modal" data-bs-target="#paymentModal{{ user_profile.id }}">Pay</button></td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
                         </table>
                     </div>
                 </div>
