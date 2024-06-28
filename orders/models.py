@@ -25,6 +25,8 @@ class PendingOrder(models.Model):
         ('Pansari 767001', 'Pansari 767001'),
         ('228001 / 228159', '228001 / 228159'),
         ('Delhi 110091', 'Delhi 110091'),
+        ('416118' , '416118'),
+        ('364002' , '364002'),
         ('Other', 'Other'),
     ]
     pin = models.CharField(max_length=20, choices=PIN_CHOICES, default='')
