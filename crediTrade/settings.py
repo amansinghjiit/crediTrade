@@ -3,7 +3,6 @@ from pathlib import Path
 from django.contrib.auth import get_user_model
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -35,6 +34,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'rediss://red-cpv6gqtumphs73c6i9q0:kyRimU5ymzEEoKfZGJbQ4q0xYa2Tf9aU@singapore-redis.render.com:6379',  # Use your external Redis URL
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
 
 ROOT_URLCONF = 'crediTrade.urls'
 
