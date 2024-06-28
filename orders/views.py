@@ -14,10 +14,8 @@ from .models import PendingOrder, DeliveredOrder, UserProfile, Transaction
 from .utils import paginate_queryset, login_required_message, validate_size
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.files.storage import default_storage
-from django.views.decorators.cache import cache_page
 
 @login_required_message
-@cache_page(60 * 10)
 def dashboard(request):
     if request.user.is_staff:
         recent_orders = DeliveredOrder.objects.all().order_by('-id')[:6]
@@ -65,7 +63,6 @@ def handle_form_submission(request, instance=None):
         return render(request, 'orders/delivery_form.html', {'form': form})
 
 @login_required_message
-@cache_page(60 * 60 * 24)
 def delivery_form_view(request):
     if request.method == 'POST':
         return handle_form_submission(request)
@@ -99,7 +96,6 @@ def edit_entry(request, id):
         return render(request, 'orders/delivery_form.html', {'form': form})
 
 @login_required_message
-@cache_page(60 * 10)
 def delivered_orders_view(request):
     if request.user.is_staff:
         delivered_orders = DeliveredOrder.objects.all().order_by('-id')

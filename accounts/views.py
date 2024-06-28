@@ -12,7 +12,6 @@ from django.contrib.auth.views import PasswordResetConfirmView
 from .forms import CustomSetPasswordForm
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_str
-from django.views.decorators.cache import cache_page
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -101,7 +100,6 @@ def logout(request):
     return redirect('home')
 
 @login_required_message
-@cache_page(60 * 10)
 def profile(request):
     user_profile = request.user.userprofile
     

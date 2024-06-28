@@ -35,16 +35,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'rediss://red-cpv6gqtumphs73c6i9q0:kyRimU5ymzEEoKfZGJbQ4q0xYa2Tf9aU@singapore-redis.render.com:6379',  # Use your external Redis URL
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
-}
-
 ROOT_URLCONF = 'crediTrade.urls'
 
 TEMPLATES = [
