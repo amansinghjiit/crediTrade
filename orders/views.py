@@ -75,6 +75,16 @@ def delivery_form_view(request):
 def pending_orders_view(request):
     if request.user.is_staff:
         pending_orders = PendingOrder.objects.all().order_by('-id')
+    elif request.user.username == 'sumeet2796':
+        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['Jagdamba 766015', 'Rabi 766015', 'Pansari 767001'])).order_by('-id')
+    elif request.user.username == 'flirtoxiz':
+        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='228001 / 228159')).order_by('-id')
+    elif request.user.username == 'makwanas2334':
+        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='364002')).order_by('-id')
+    elif request.user.username == 'mhetarashu':
+        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='416118')).order_by('-id')
+    elif request.user.username == 'kr.somesh007':
+        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='110091')).order_by('-id')
     else:
         pending_orders = PendingOrder.objects.filter(user_profile=request.user.userprofile).order_by('-id')
     return render(request, 'orders/pending.html', {'pending_orders': pending_orders})
