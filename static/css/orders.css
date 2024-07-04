@@ -371,14 +371,19 @@
 @media (max-width: 767px) {
   .table td,
   .table th {
-      padding: 6px;
-      font-size: 14px;
+    padding: 10px;
+    vertical-align: middle;
   }
 
   .order-table, .payment-table{
       width: 100%;
       border-radius:0;
       top: 11vh;
+  }
+
+  .del-table thead tr th, .del-table tbody tr td{
+    padding: 8px;
+    font-size: 14px;
   }
 
   .select-file {
@@ -409,16 +414,6 @@
   .remove-confirmation, .upload-confirmation {
     width: 90vw;
   }
-
-  .action span {
-    width: 25px;
-    height: 25px;
-    margin-right: 4px;
-  }
-  
-  .action span img {
-    width: 12px;
-  } 
 }
 
 /*=============== PAGINATION ===============*/

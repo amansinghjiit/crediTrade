@@ -23,7 +23,7 @@ def login_required_message(function):
         return function(request, *args, **kwargs)
     return wrapper
 
-def paginate_queryset(queryset, page_number, per_page=50):
+def paginate_queryset(queryset, page_number, per_page=100):
     paginator = Paginator(queryset, per_page)
     try:
         paginated_queryset = paginator.page(page_number)
