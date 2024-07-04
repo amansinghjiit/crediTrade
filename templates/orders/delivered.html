@@ -52,7 +52,7 @@
                                             <form action="{% url 'remove_invoice' %}" method="post">
                                                 <div class="d-flex" style="width: 80px;">
                                                     <a class="view-link" href="{% url 'view_invoice' entry.id %}" target="_blank">
-                                                        <img src="{% static 'images/eye.svg' %}">View
+                                                        <img class="eye-btn" src="{% static 'images/eye.svg' %}">View
                                                     </a> 
                                                     {% csrf_token %}
                                                     <input type="hidden" name="order_id" value="{{ entry.id }}">

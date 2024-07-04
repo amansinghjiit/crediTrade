@@ -257,7 +257,8 @@
   border: 2px solid #0b7b56;
   padding: 3px 5px;
   display: flex;
-  gap:2px;
+  align-items: center;
+  gap:3px;
 }
 
 .remove-invoice {
@@ -370,7 +371,8 @@
 @media (max-width: 767px) {
   .table td,
   .table th {
-      padding: 12px;
+      padding: 6px;
+      font-size: 14px;
   }
 
   .order-table, .payment-table{
@@ -379,9 +381,44 @@
       top: 11vh;
   }
 
+  .select-file {
+    padding: 5.075px 9px;
+    font-size: 10px;
+    width: 80px;
+  }
+  
+  .select-file img {
+    height: 12px;
+    width: 12px;
+    margin-right: 4px;
+  }
+  
+  .view-link{
+    font-size: 11px;
+    padding: 1px 8px;
+  }
+
+  .eye-btn{
+    width: 10px;
+  }
+  
+  .remove-invoice {
+    padding: 3.5px 0;
+  }
+
   .remove-confirmation, .upload-confirmation {
     width: 90vw;
   }
+
+  .action span {
+    width: 25px;
+    height: 25px;
+    margin-right: 4px;
+  }
+  
+  .action span img {
+    width: 12px;
+  } 
 }
 
 /*=============== PAGINATION ===============*/
