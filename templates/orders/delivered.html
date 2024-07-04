@@ -22,7 +22,7 @@
                         <table class="table del-table table-striped text-center border">
                             <thead>
                                 <tr class="table-heading fw-bolder">
-									<th class="table-heading text-nowrap">ID</th>
+									<th class="table-heading text-nowrap">#</th>
                                     <th class="table-heading text-nowrap">Date</th>
                                     <th class="table-heading text-nowrap">Name</th>
                                     <th class="table-heading text-nowrap">Model</th>
@@ -35,7 +35,7 @@
                                 {% for entry in delivered_orders %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
-                                    <td class="text-nowrap">{{ entry.date }}</td>
+                                    <td class="text-nowrap">{{ entry.date|date:"d M" }}</td>
                                     <td class="text-nowrap search-name">{{ entry.name }}</td>
                                     <td class="text-nowrap search-model">{{ entry.model }}</td>
                                     <td class="text-nowrap search-pin">{{ entry.pin }}</td>
