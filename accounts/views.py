@@ -18,7 +18,7 @@ load_dotenv()
 
 def signup(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        email = request.POST.get('email').lower()
         username = email.split('@')[0] 
         password = request.POST.get('password')
         key = request.POST.get('key')
@@ -71,7 +71,7 @@ def activate_account(request, uidb64, token):
 
 def login(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        email = request.POST.get('email').lower()
         username = email.split('@')[0] 
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
