@@ -71,7 +71,7 @@
                                 <tbody>
                                     {% for transaction in recent_transactions %}
                                     <tr>
-                                        <td>{{ transaction.date }}</td>
+                                        <td>{{ transaction.date|date:"d M" }}</td>
                                         <td class="text-center">{{ transaction.description }}</td>
                                         <td class="text-end {% if transaction.transaction_type == 'credit' %}text-danger{% else %}text-success{% endif %}">
                                             {% if transaction.transaction_type == 'credit' %}-{% endif %}₹{{ transaction.amount }}
@@ -108,7 +108,7 @@
                             <tbody>
                                 {% for transaction in transaction_history %}
                                 <tr>
-                                    <td>{{ transaction.date }}</td>
+                                    <td>{{ transaction.date|date:"d M" }}</td>
                                     <td class="text-center">{{ transaction.description }}</td>
                                     <td class="text-end {% if transaction.transaction_type == 'credit' %}text-danger{% else %}text-success{% endif %}">
                                         {% if transaction.transaction_type == 'credit' %}-{% endif %}₹{{ transaction.amount }}
@@ -144,7 +144,7 @@
                             <tbody id="search-results">
                                 {% for entry in recent_orders %}
                                 <tr>
-                                    <td>{{ entry.date }}</td>
+                                    <td>{{ entry.date|date:"d M" }}</td>
                                     <td>{{ entry.name }}</td>
                                     <td>
                                         {% if entry.return_amount %}

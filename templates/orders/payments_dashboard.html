@@ -102,7 +102,7 @@
                                 <tbody>
                                     {% for transaction in user_profile.transaction_set.all|dictsort:"date" %}
                                         <tr>
-                                            <td>{{ transaction.date }}</td>
+                                            <td>{{ transaction.date|date:"d M" }}</td>
                                             <td class="text-center">{{ transaction.description }}</td>
                                             <td class="text-end">
                                                 {% if transaction.transaction_type == 'debit' %}
