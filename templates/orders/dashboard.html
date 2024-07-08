@@ -144,9 +144,9 @@
                             <tbody id="search-results">
                                 {% for entry in recent_orders %}
                                 <tr>
-                                    <td>{{ entry.date|date:"d M" }}</td>
+                                    <td class="text-nowrap">{{ entry.date|date:"d M" }}</td>
                                     <td>{{ entry.name }}</td>
-                                    <td>
+                                    <td class="text-nowrap">
                                         {% if entry.return_amount %}
                                             ₹{{ entry.return_amount|intcomma }}
                                         {% else %}
