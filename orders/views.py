@@ -182,26 +182,30 @@ def view_invoice(request, order_id):
 
 @login_required_message
 def export_pending_orders_csv(request):
+    user_profile = request.user.userprofile
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=pending_orders.csv'
-
     writer = csv.writer(response)
     writer.writerow(['Name', 'Tracking', 'OTP', 'OBD', 'Model', 'Pin'])
-
-    pending_orders = PendingOrder.objects.all()
+    if request.user.is_superuser:
+        pending_orders = PendingOrder.objects.all()
+    else:
+        pending_orders = PendingOrder.objects.filter(user_profile=user_profile)
     for order in pending_orders:
         writer.writerow([order.name, order.tracking, order.otp, order.obd, order.model, order.pin])
     return response
 
 @login_required_message
 def export_delivered_orders_csv(request):
+    user_profile = request.user.userprofile
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=delivered_orders.csv'
-
     writer = csv.writer(response)
     writer.writerow(['User', 'Date', 'Name', 'Model', 'Pin', 'Invoice', 'Return'])
-
-    delivered_orders = DeliveredOrder.objects.all().order_by('-id')
+    if request.user.is_superuser:
+        delivered_orders = DeliveredOrder.objects.all().order_by('-id')
+    else:
+        delivered_orders = DeliveredOrder.objects.filter(user_profile=user_profile).order_by('-id')
     for order in delivered_orders:
         formatted_date = order.date.strftime('%d %B')
         writer.writerow([
