@@ -1,5 +1,6 @@
+import csv
 from django.contrib import admin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.urls import reverse
 from .signals import handle_pending_order_status
 from .models import PendingOrder, DeliveredOrder, Transaction
@@ -12,9 +13,15 @@ class GetUserProfileNameMixin:
 
 class ExportCSVActionMixin:
     def export_orders_csv(self, request, queryset):
-        url = reverse(self.csv_export_url_name)
-        return HttpResponseRedirect(url)
-    
+        fields = [field for field in self.list_display if field != 'get_user_profile_name']
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{self.model._meta.model_name}.csv"'
+        writer = csv.writer(response)
+        writer.writerow(fields)
+        for obj in queryset:
+            writer.writerow([getattr(obj, field, '') for field in fields])
+        return response
+
     export_orders_csv.short_description = "Export as CSV"
 
 class PendingOrderAdmin(GetUserProfileNameMixin, ExportCSVActionMixin, admin.ModelAdmin):
@@ -38,18 +45,12 @@ class DeliveredOrderAdmin(GetUserProfileNameMixin, ExportCSVActionMixin, admin.M
     search_fields = ('user_profile__name', 'name', 'model')
     list_per_page = 50
     list_display = (
-        'get_user_profile_name', 'date', 'name', 'model', 'pin', 'get_invoice_status', 'return_amount'
+        'get_user_profile_name', 'date', 'name', 'model', 'pin', 'return_amount'
     )
     list_filter = ('date', 'pin')
     list_editable = ('return_amount',)
     actions = ['export_orders_csv']
     csv_export_url_name = 'export_delivered_orders_csv'
-
-    def get_invoice_status(self, obj):
-        return '1' if obj.invoice else '0'
-
-    get_invoice_status.short_description = 'Invoice'
-
 class TransactionAdmin(GetUserProfileNameMixin, admin.ModelAdmin):
     search_fields = ('user_profile__name',)
     list_per_page = 100
