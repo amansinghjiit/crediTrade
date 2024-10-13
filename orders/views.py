@@ -77,13 +77,11 @@ def pending_orders_view(request):
     if request.user.is_staff:
         pending_orders = PendingOrder.objects.all().order_by('-id')
     elif request.user.username == 'sumeet2796':
-        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['Jagdamba 766015', 'Rabi 766015', 'Pansari 767001'])).order_by('-id')
+        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['Jagdamba 766015', 'Rabi 766015','Wholesale 492001'])).order_by('-id')
     elif request.user.username == 'flirtoxiz':
         pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='228001 / 228159')).order_by('-id')
-    elif request.user.username == 'makwanas2334':
-        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='364002')).order_by('-id')
     elif request.user.username == 'mhetarashu':
-        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='416118')).order_by('-id')
+        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='416118 / 416115')).order_by('-id')
     elif request.user.username == 'kr.somesh007':
         pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='110091')).order_by('-id')
     else:
@@ -109,7 +107,9 @@ def edit_entry(request, id):
 @login_required_message
 def delivered_orders_view(request):
     if request.user.is_staff:
-        delivered_orders = DeliveredOrder.objects.all().order_by('-id')
+        delivered_orders = DeliveredOrder.objects.all().order_by('-id') 
+    elif request.user.username == 'sumeet2796':
+        delivered_orders = DeliveredOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['Jagdamba 766015', 'Rabi 766015','Wholesale 492001'])).order_by('-id')
     else:
         delivered_orders = DeliveredOrder.objects.filter(user_profile=request.user.userprofile).order_by('-id')
     
@@ -124,7 +124,6 @@ def delivered_orders_view(request):
     page_number = request.GET.get('page')
     delivered_orders_paginated, num_pages = paginate_queryset(delivered_orders, page_number)
     return render(request, 'orders/delivered.html', {'delivered_orders': delivered_orders_paginated, 'num_pages': num_pages, 'query': query})
-
 @login_required_message
 def upload_invoice(request):
     if request.method == 'POST':
@@ -165,7 +164,7 @@ def remove_invoice(request):
 @login_required_message
 def view_invoice(request, order_id):
     delivered_order = get_object_or_404(DeliveredOrder, id=order_id)
-
+    
     if delivered_order.invoice:
         try:
             invoice_url = f'https://zuhirawsoerfaijwzsuf.supabase.co/storage/v1/object/public/creditrade/{delivered_order.invoice.name}'
