@@ -1,5 +1,6 @@
 import csv
 import os
+import re
 from pathlib import Path
 from mimetypes import guess_type
 from decimal import Decimal
@@ -130,16 +131,12 @@ def upload_invoice(request):
         order_id = request.POST.get('order_id')
         order = get_object_or_404(DeliveredOrder, pk=order_id)
         invoice = request.FILES.get('invoice')
-        
         if not validate_size(invoice, request):
             return redirect('delivered')
-
-        pin = order.pin.lower().replace(" ", "_")
-        order_date = order.date
-        y, m, d = order_date.year, order_date.strftime("%m"), order_date.strftime("%d")
+        pin = re.sub(r'[ /]+', '_', order.pin.lower())
         original_filename, original_extension = os.path.splitext(invoice.name)
         invoice_name = f"{order.name.replace(' ', '_')}_{order_id}{original_extension}"
-        destination_dir = f'invoices/{pin}/{y}/{m}/{d}'
+        destination_dir = pin
         destination_path = os.path.join(destination_dir, invoice_name)
         saved_path = default_storage.save(destination_path, invoice)
         order.invoice.name = saved_path
@@ -168,9 +165,10 @@ def remove_invoice(request):
 @login_required_message
 def view_invoice(request, order_id):
     delivered_order = get_object_or_404(DeliveredOrder, id=order_id)
+
     if delivered_order.invoice:
         try:
-            invoice_url = default_storage.url(delivered_order.invoice.name)
+            invoice_url = f'https://zuhirawsoerfaijwzsuf.supabase.co/storage/v1/object/public/creditrade/{delivered_order.invoice.name}'
             response = redirect(invoice_url)
             response['Content-Disposition'] = f'inline; filename="{os.path.basename(delivered_order.invoice.name)}"'
             return response
@@ -178,6 +176,7 @@ def view_invoice(request, order_id):
             messages.error(request, f"Error retrieving invoice: {e}")
     else:
         messages.error(request, "Invoice not found")
+
     return redirect('delivered')
 
 @login_required_message
