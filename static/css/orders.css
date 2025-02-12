@@ -122,7 +122,8 @@
   }
 
   .input-box input,
-  .input-box select {
+  .input-box select,
+  .input-box select option {
     padding: 18px 15px;
     font-size: 14px;
     background: var(--white);
