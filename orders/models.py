@@ -9,7 +9,7 @@ class PendingOrder(models.Model):
     tracking = models.CharField(max_length=15)
     otp = models.CharField(max_length=6)
     obd = models.CharField(max_length=4, help_text='Last 4 digits of phone number')
-    model = models.CharField(max_length=25, null=True, blank=True)
+    model = models.CharField(max_length=50, null=True, blank=True)
     
     STATUS_CHOICES = [
         ('Delivered', 'Delivered'),
@@ -34,7 +34,7 @@ class DeliveredOrder(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
     name = models.CharField(max_length=25)
-    model = models.CharField(max_length=25)
+    model = models.CharField(max_length=50)
     pin = models.CharField(max_length=20)
     invoice = models.FileField(upload_to='invoices/', validators=[validate_size], blank=True)
     return_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
