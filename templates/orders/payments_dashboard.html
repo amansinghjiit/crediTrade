@@ -133,7 +133,7 @@
                         <h5 class="modal-title" id="paymentModalLabel{{ user_profile.id }}">Make Payment</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="post" action="{% url 'make_payment' user_profile.id %}">
+                    <form method="post" action="{% url 'make_payment' user_profile.id %}" onsubmit="disableSubmitButton(this)">
                         {% csrf_token %}
                         <div class="modal-body">
                             <input type="hidden" name="user_profile_id" value="{{ user_profile.id }}">
@@ -185,6 +185,15 @@
         let formattedDate{{ user_profile.id }} = currentDate{{ user_profile.id }}.toISOString().split('T')[0];
         document.getElementById("id_date_{{ user_profile.id }}").value = formattedDate{{ user_profile.id }};
     {% endfor %}
+
+    const disableSubmitButton = (form) => {
+        const button = form.querySelector("button[type='submit']");
+        if (button) {
+            button.disabled = true;  
+            button.textContent = "Processing";  
+            button.style.opacity = "0.6";
+        }
+    };    
 </script>
 
 {% endblock %}
