@@ -1,10 +1,11 @@
 import os
+import logging
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
+from django.core.cache import cache
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 SPREADSHEET_ID = "1uXF3d9sXBKtiFPRR9efKlCsAz3kKzfqa7G67LXpIZi0"
 RANGE_NAME = 'Sheet1!A1:A20'
 
@@ -49,16 +50,37 @@ SERVICE_ACCOUNT_INFO = {
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
 def authenticate_gsheets():
-    credentials = service_account.Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO, scopes=SCOPES)
-    if credentials.expired and credentials.refresh_token:
-        credentials.refresh(Request())
-    return build('sheets', 'v4', credentials=credentials)
+    try:
+        credentials = service_account.Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO, scopes=SCOPES)
+        if credentials.expired and credentials.refresh_token:
+            credentials.refresh(Request())
+        return build('sheets', 'v4', credentials=credentials)
+    except Exception as e:
+        logger.error("Error authenticating with Google Sheets API: %s", e)
+        raise
 
 def get_models():
-    service = authenticate_gsheets()
-    result = service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME).execute()
-    return [row[0] for row in result.get('values', [])] if result.get('values', []) else []
+    try:
+        cached_models = cache.get('models_cache')
+        if cached_models:
+            return cached_models
+
+        service = authenticate_gsheets()
+        result = service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME).execute()
+        models = [row[0] for row in result.get('values', [])] if result.get('values', []) else []
+        cache.set('models_cache', models, timeout=3600)
+        return models
+    except Exception as e:
+        logger.error("Error fetching models from Google Sheets: %s", e)
+        raise
 
 if __name__ == '__main__':
-    get_models()
+    try:
+        models = get_models()
+        print(models)
+    except Exception as e:
+        logger.error("Failed to get models: %s", e)
