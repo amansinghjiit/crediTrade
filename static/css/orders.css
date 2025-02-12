@@ -105,7 +105,7 @@
   text-decoration: underline;
 }
 
-@media screen and (max-width: 1284px) {
+@media screen and (max-width: 767px) {
   .wrapper {
     width: 100%;
     height: 100%;
@@ -123,7 +123,7 @@
 
   .input-box input,
   .input-box select,
-  .input-box select option{
+  .input-box select option {
     padding: 18px 15px;
     font-size: 14px;
     background: var(--white);

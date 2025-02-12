@@ -1,31 +1,18 @@
 {% extends "base.html" %}
-
 {% load static %}
 
-{% block title %}Update Delivery Details{% endblock %}
+{% block title %}Update Delivery{% endblock %}
 
 {% block content %}
 <div class="wrapper">
-  <h1>Update Delivery Details</h1>
+  <h1>Update Delivery</h1>
   <form method="post" id="delivery-form">
     {% csrf_token %}
-    <div class="input-box">{{ form.name }}</div>
-    <div class="input-box">{{ form.tracking }}</div>
-    <div class="input-box">{{ form.otp }}</div>
-    <div class="input-box">{{ form.obd }}</div>
-    <div class="input-box">
-      <select name="model" id="id_model">
-        {% for value, display in form.model.field.choices %}
-          <option value="{{ value }}" {% if value == form.model.value %}selected{% endif %}>
-            {{ display }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="input-box">{{ form.pin }}</div>
+    {% for field in form %}
+      <div class="input-box">{{ field }}</div>
+    {% endfor %}
     <button class="btn" type="submit">Submit</button>
   </form>
-
-  <p class="edit-form fw-semibold">Need to make changes?<a href="{% url 'pending' %}">Edit here</a></p>
+  <p class="edit-form fw-semibold">Need changes? <a href="{% url 'pending' %}">Edit here</a></p>
 </div>
 {% endblock %}

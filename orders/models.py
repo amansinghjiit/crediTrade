@@ -2,6 +2,11 @@ from django.db import models
 from django.utils import timezone
 from accounts.models import UserProfile
 from .utils import validate_size
+from .models_fetching import get_models
+
+def get_model_choices():
+    models_list = get_models()
+    return [('', 'Model')] + [(model, model) for model in models_list]
 
 class PendingOrder(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -9,8 +14,8 @@ class PendingOrder(models.Model):
     tracking = models.CharField(max_length=15)
     otp = models.CharField(max_length=6)
     obd = models.CharField(max_length=4, help_text='Last 4 digits of phone number')
-    model = models.CharField(max_length=50, null=True, blank=True)
-    
+    model = models.CharField(max_length=50, choices=get_model_choices(), blank=True, null=True)
+        
     STATUS_CHOICES = [
         ('Delivered', 'Delivered'),
         ('Pending', 'Pending'),
