@@ -16,7 +16,7 @@
     <div class="input-box">
       <select name="model" id="id_model">
         {% for value, display in form.model.field.choices %}
-          <option value="{{ value }}" {% if value == form.model.value %}selected{% endif %}>
+          <option class="select-model-box" value="{{ value }}" {% if value == form.model.value %}selected{% endif %}>
             {{ display }}
           </option>
         {% endfor %}
