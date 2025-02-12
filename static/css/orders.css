@@ -32,8 +32,7 @@
 }
 
 .input-box input,
-.input-box select,
-.model-box {
+.input-box select {
   width: 100%;
   border: 1px solid hsl(230, 12%, 40%);
   border-radius: 20px;
@@ -46,27 +45,24 @@
 }
 
 .input-box input::placeholder,
-.input-box select::placeholder,
-.model-box::placeholder {
+.input-box select::placeholder {
   color: hsl(230, 12%, 40%);
 }
 
 .input-box input:focus,
-.input-box select:focus,
-.model-box:focus {
+.input-box select:focus {
   border: 2px solid #3b5998;
   box-shadow: 0 0 5px rgba(59, 89, 152, 0.2);
   color: var(--black);
 }
 
 .input-box input.filled,
-.input-box select.filled,
-.model-box.filled {
+.input-box select.filled {
   color: var(--black);
   background: #E8F0FE;
 }
 
-.input-box select option, .model-box {
+.input-box select option {
   background-color: var(--white);
   color: #737478;
 }
@@ -109,7 +105,7 @@
   text-decoration: underline;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1284px) {
   .wrapper {
     width: 100%;
     height: 100%;
@@ -127,7 +123,7 @@
 
   .input-box input,
   .input-box select,
-  .model-box {
+  .input-box select option{
     padding: 18px 15px;
     font-size: 14px;
     background: var(--white);
