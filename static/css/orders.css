@@ -33,7 +33,7 @@
 
 .input-box input,
 .input-box select,
-.input-box select option {
+.select-model-box {
   width: 100%;
   border: 1px solid hsl(230, 12%, 40%);
   border-radius: 20px;
@@ -46,26 +46,26 @@
 }
 
 .input-box input::placeholder,
-.input-box select::placeholder {
+.input-box select::placeholder,
+.select-model-box::placeholder {
   color: hsl(230, 12%, 40%);
 }
 
 .input-box input:focus,
-.input-box select:focus
-.input-box select option:focus {
+.input-box select:focus,
+.select-model-box:focus {
   border: 2px solid #3b5998;
   box-shadow: 0 0 5px rgba(59, 89, 152, 0.2);
   color: var(--black);
 }
 
 .input-box input.filled,
-.input-box select.filled,
-.input-box select option.filled {
+.input-box select.filled
+.select-model-box.filled {
   color: var(--black);
   background: #E8F0FE;
 }
 
-.input-box select,
 .input-box select option {
   background-color: var(--white);
   color: #737478;
@@ -126,8 +126,15 @@
   }
 
   .input-box input,
-  .input-box select,
-  .input-box select option {
+  .input-box select {
+    padding: 18px 15px;
+    font-size: 14px;
+    background: var(--white);
+    border: none;
+    border-radius: 12px;
+  }
+
+  .select-model-box{
     padding: 18px 15px;
     font-size: 14px;
     background: var(--white);
