@@ -53,6 +53,9 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
+CACHE_KEY = "models_cache"
+CACHE_TIMEOUT = 3600  # 1 hour (in seconds)
+
 def authenticate_gsheets():
     try:
         credentials = service_account.Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO, scopes=SCOPES)
@@ -63,20 +66,24 @@ def authenticate_gsheets():
         logger.error("Error authenticating with Google Sheets API: %s", e)
         raise
 
-def get_models():
+def fetch_latest_models():
     try:
-        cached_models = cache.get('models_cache')
-        if cached_models:
-            return cached_models
-
         service = authenticate_gsheets()
         result = service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME).execute()
         models = [row[0] for row in result.get('values', [])] if result.get('values', []) else []
-        cache.set('models_cache', models, timeout=3600)
+        cache.set(CACHE_KEY, models, timeout=CACHE_TIMEOUT)
         return models
     except Exception as e:
         logger.error("Error fetching models from Google Sheets: %s", e)
         raise
+
+def get_models():
+    models = cache.get(CACHE_KEY)
+    if models is None:
+        logger.info("Cache expired or not found. Fetching fresh data...")
+        return fetch_latest_models()
+    logger.info("Returning data from cache.")
+    return models
 
 if __name__ == '__main__':
     try:
