@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}Order Insights{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="sidebar-container d-flex flex-column h-100">
+        <div class="sidebar-filter d-flex flex-column shadow-sm">
+            <h5 class="text-center fw-bold">FILTER ORDERS</h5>
+            <form method="GET">
+                <div>
+                    <input type="text" id="dateRange" name="date_range" placeholder="Select date" value="{{ selected_date_range|default:'' }}">
+                </div>            
+                <div>
+                    <select id="modelFilter" name="model">
+                        <option value="all" {% if not selected_model or selected_model == "all" %}selected{% endif %}>All Models</option>
+                        {% for model in models %}
+                            <option value="{{ model }}" {% if selected_model == model %}selected{% endif %}>{{ model }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <select id="pinFilter" name="pin">
+                        <option value="all" {% if not selected_pin or selected_pin == "all" %}selected{% endif %}>All Pins</option>
+                        {% for pin in pins %}
+                            <option value="{{ pin }}" {% if selected_pin == pin %}selected{% endif %}>{{ pin }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <select id="userFilter" name="user">
+                        <option value="all" {% if not selected_user or selected_user == "all" %}selected{% endif %}>All Users</option>
+                        {% for user in users %}
+                            <option value="{{ user }}" {% if selected_user == user %}selected{% endif %}>{{ user }}</option>
+                        {% endfor %}
+                    </select>
+                </div>                
+                <div class="d-flex justify-content-center gap-2 mt-2">
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                    <a href="{% url 'order_insights' %}" class="btn btn-secondary">Reset</a>
+                </div>           
+            </form>
+        </div>
+        <div class="sidebar-stats d-flex flex-column shadow-sm">
+        </div>        
+    </div>
+
+    <div class="main-content d-flex flex-column">
+        <div class="main-header d-flex align-items-center justify-content-between">
+            <span class="main-header-title">ORDERS</span>
+            <span id="selectedCount" class="d-none text-muted fw-semibold small"></span>
+            <form id="updateAmountForm" method="POST" action="{% url 'update_return_amount' %}" class="d-flex align-items-center">
+                {% csrf_token %}
+                <input type="hidden" id="selectedOrdersInput" name="selected_orders">  
+                <div class="input-group input-group-sm shadow-sm rounded" style="max-width: 250px;">
+                    <input type="number" id="returnAmountInput" name="return_amount" 
+                           class="form-control border-2 border-dark rounded-start" 
+                           placeholder="Return" min="0" style="width: 100px;">
+                    <button type="button" class="btn btn-primary border-2 border-dark shadow-none rounded-end" data-bs-toggle="modal" data-bs-target="#confirmationModal">Update</button>
+                </div>
+            </form>                          
+        </div>
+        
+        <div class="main-body">
+            <div class="table-responsive">
+                <table  class="insights-table table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll" class="order-checkbox form-check-input border border-secondary"></th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Model</th>
+                            <th>Return</th>
+                            <th>Pin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td><input type="checkbox" class="order-checkbox form-check-input border border-secondary" name="selected_orders" value="{{ order.id }}"></td>
+                                <td class="text-nowrap">{{ order.date|date:"j M" }}</td>
+                                <td class="text-nowrap">{{ order.name }}</td>
+                                <td class="text-nowrap">{{ order.model }}</td>
+                                <td class="{% if order.return_amount > 0 %}text-success fw-semibold{% endif %} text-nowrap">{{ order.return_amount|floatformat:0 }}</td>                                
+                                <td class="text-nowrap">{{ order.pin }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">No orders found</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!--Pagination-->
+            <div id="pagination-container">
+                {% if orders.has_other_pages %}
+                <ul class="pagination justify-content-center">
+                    <!-- Previous Page -->
+                    {% if orders.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_model != 'all' %}&model={{ selected_model }}{% endif %}{% if selected_pin != 'all' %}&pin={{ selected_pin }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}" aria-label="First">
+                                &laquo;
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ orders.previous_page_number }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_model != 'all' %}&model={{ selected_model }}{% endif %}{% if selected_pin != 'all' %}&pin={{ selected_pin }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}" aria-label="Previous">
+                                &lsaquo;
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">&lsaquo;</span>
+                        </li>
+                    {% endif %}
+            
+                    <!-- Page Numbers -->
+                    {% for i in orders.paginator.page_range %}
+                        {% if i == orders.number %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ i }}</span>
+                        </li>
+                        {% elif i > orders.number|add:'-3' and i < orders.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_model != 'all' %}&model={{ selected_model }}{% endif %}{% if selected_pin != 'all' %}&pin={{ selected_pin }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}">{{ i }}</a>
+                        </li>
+                        {% elif i == orders.number|add:'-3' or i == orders.number|add:'3' %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+            
+                    <!-- Next Page -->
+                    {% if orders.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ orders.next_page_number }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_model != 'all' %}&model={{ selected_model }}{% endif %}{% if selected_pin != 'all' %}&pin={{ selected_pin }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}" aria-label="Next">
+                                &rsaquo;
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ orders.paginator.num_pages }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_model != 'all' %}&model={{ selected_model }}{% endif %}{% if selected_pin != 'all' %}&pin={{ selected_pin }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}" aria-label="Last">
+                                &raquo;
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&rsaquo;</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;</span>
+                        </li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+            </div>     
+        </div>
+    </div>
+</div>
+
+<!-- Update Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-light border-0">
+                <h5 class="modal-title fw-semibold text-dark" id="confirmationModalLabel">Confirm Update</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center text-secondary fs-6">
+                Are you sure you want to update <span id="selectedRowsCount">0</span> row(s)?
+            </div>                    
+            <div class="modal-footer border-0 d-flex justify-content-center">
+                <button type="button" class="btn btn-outline-dark px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary px-4 rounded-pill" form="updateAmountForm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let selectedDates = "{{ selected_date_range|default:'' }}".split(" to ");    
+        selectedDates = (selectedDates.length === 2 && selectedDates[0] && selectedDates[1]) ? selectedDates.map(date => date.trim()) : [];
+        flatpickr("#dateRange", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            defaultDate: selectedDates,
+            allowInput: false,
+            theme: "light"
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+        const selectAllCheckbox = document.getElementById("selectAll");
+        const checkboxes = document.querySelectorAll(".order-checkbox");
+        const form = document.getElementById("updateAmountForm");
+
+        selectAllCheckbox.addEventListener("change", function() {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+
+        form.addEventListener("submit", function() {
+            let selectedOrders = [];
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedOrders.push(checkbox.value);
+                }
+            });
+    
+            selectedOrdersInput.value = selectedOrders.join(",");
+        });
+
+        //shows no. of selected rows
+        const selectedCountSpan = document.getElementById("selectedCount");
+        const selectedRowsCount = document.getElementById("selectedRowsCount");
+        updateSelectedCount = () => {
+            const count = document.querySelectorAll(".order-checkbox:checked:not(#selectAll)").length;
+            selectedCountSpan.textContent = `${count} ROWS SELECTED`;
+            selectedRowsCount.textContent = count;
+            selectedCountSpan.classList.toggle("d-none", count === 0);
+        };
+        checkboxes.forEach(cb => cb.addEventListener("change", updateSelectedCount));
+        selectAll?.addEventListener("change", () => (checkboxes.forEach(cb => cb.checked = selectAll.checked), updateSelectedCount()));
+        
+        
+        // Change background color of selected rows
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener("change", function() {
+                this.closest("tr").classList.toggle("table-info", this.checked);
+            });
+        });
+        
+        selectAllCheckbox.addEventListener("change", function() {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+                checkbox.closest("tr").classList.toggle("table-info", this.checked);
+            });
+        });
+
+        // Prevent form submission on Enter keypress
+        const confirmButton = document.getElementById("confirmUpdateButton");
+        form.addEventListener("keydown", (event) => event.key === "Enter" && event.preventDefault());
+    });    
+</script>
+{% endblock %}

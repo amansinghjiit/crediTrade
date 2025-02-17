@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'storages',
     'accounts',
     'orders',
+    'analytics',
 ]
 
 MIDDLEWARE = [
@@ -133,4 +134,3 @@ CACHES = {
         },
     }
 }
-

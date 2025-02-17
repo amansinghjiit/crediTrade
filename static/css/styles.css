@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
 @import url('orders.css');
+@import url('analytics.css');
 
 :root {
   --blue: hsl(230, 75%, 56%);
@@ -123,6 +124,42 @@ img {
   color: var(--blue);
 }
 
+/* Dropdown */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown:focus-within .dropdown-menu {
+  max-height: 200px;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu .dropdown-item {
+  padding: 10px 15px;
+  color: var(--black);
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background: var(--blue);
+  color: var(--white);
+}
+
 /*=============== Navigation for Mobile ===============*/
 @media screen and (max-width: 1024px) {
   .nav__menu {
@@ -157,6 +194,22 @@ img {
   /* Show menu */
   .show-menu {
     top: 0;
+  }
+
+  /* Dropdown */
+  .dropdown-menu {
+    position: static;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.4s ease;
+    border-radius: 0;
+  }
+
+  .dropdown.show .dropdown-menu {
+    max-height: 300px;
+    opacity: 1;
+    visibility: visible;
   }
 }
 
