@@ -9,7 +9,7 @@
     <div class="sidebar-container d-flex flex-column h-100">
         <div class="sidebar-filter d-flex flex-column shadow-sm">
             <h5 class="text-center fw-bold">FILTER ORDERS</h5>
-            <form method="GET">
+            <form method="GET" class="filter-form">
                 <div>
                     <input type="text" id="dateRange" name="date_range" placeholder="Select date" value="{{ selected_date_range|default:'' }}">
                 </div>            
@@ -37,13 +37,13 @@
                         {% endfor %}
                     </select>
                 </div>                
-                <div class="d-flex justify-content-center gap-2 mt-2">
+                <div class="filter-btns">
                     <button type="submit" class="btn btn-primary">Apply</button>
                     <a href="{% url 'order_insights' %}" class="btn btn-secondary">Reset</a>
                 </div>           
             </form>
         </div>
-        <div class="sidebar-stats d-flex flex-column shadow-sm">
+        <div class="sidebar-stats shadow-sm">
         </div>        
     </div>
 
@@ -54,11 +54,11 @@
             <form id="updateAmountForm" method="POST" action="{% url 'update_return_amount' %}" class="d-flex align-items-center">
                 {% csrf_token %}
                 <input type="hidden" id="selectedOrdersInput" name="selected_orders">  
-                <div class="input-group input-group-sm shadow-sm rounded" style="max-width: 250px;">
+                <div class="input-group input-group-sm shadow-sm rounded flex-nowrap" style="max-width: 250px;">
                     <input type="number" id="returnAmountInput" name="return_amount" 
                            class="form-control border-2 border-dark rounded-start" 
                            placeholder="Return" min="0" style="width: 100px;">
-                    <button type="button" class="btn btn-primary border-2 border-dark shadow-none rounded-end" data-bs-toggle="modal" data-bs-target="#confirmationModal">Update</button>
+                    <button type="button" class="btn btn-primary border-1 border-dark shadow-none rounded-end" data-bs-toggle="modal" data-bs-target="#confirmationModal">Update</button>
                 </div>
             </form>                          
         </div>

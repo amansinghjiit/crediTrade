@@ -22,11 +22,11 @@
 }
 
 .sidebar-filter {
-    height: 58%;
+    height: 54%;
 }
 
 .sidebar-stats {
-    height: 42%;
+    height: 46%;
 }
 
 .sidebar-filter h5 {
@@ -56,6 +56,12 @@
     color: black;
 }
 
+.filter-btns {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
 .sidebar-filter .btn {
     width: 100%;
     padding: 8px;
@@ -81,6 +87,11 @@
 
 .sidebar-filter .btn-secondary:hover {
     background: #94A3B8;
+}
+
+.sidebar-stats{
+    display: flex;
+    flex-direction: column;
 }
 
 .main-content {
@@ -163,32 +174,43 @@
     }
 
     .sidebar-container {
-        width: 82%;
-        margin: 10px auto;
+        width: 100%;
     }
 
     .sidebar-filter {
         height: auto;
-        padding: 8vw;
+        padding: 3vw;
+        border-radius: 0;
     }
 
-    .sidebar-stats {
-        display: none !important;
+    .filter-form{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap:0.5rem;
     }
 
-    .sidebar-filter h5 {
-        letter-spacing: 0.5px;
-    }
-
-    .sidebar-filter input,
-    .sidebar-filter select {
-        padding: 14px 10px;
+    .sidebar-filter input,.sidebar-filter select {
+        width: 33vw;
+        height: 6vh;
+        border-radius: 8px;
         font-size: 12px;
+        margin-bottom: 0;
+    }
+
+    .filter-btns {
+        flex-direction: row;
+        gap:0.2rem;
+    }
+
+    #pinFilter,#userFilter,.sidebar-filter h5, .sidebar-stats {
+        display: none;
     }
 
     .sidebar-filter .btn {
-        padding: 12px;
-        font-size: 12px;
+        padding: 2vh 3vw;
+        font-size: 1.5vw;
         font-weight: bold;
     }
 
@@ -209,8 +231,8 @@
     }
 
     .insights-table th, .insights-table td {
-        padding: 1px 6px 1px 6px;
-        font-size: 12px;
+        padding: 4px 10px;
+        font-size: 14px;
     }
 
     .insights-table th:first-child,
