@@ -69,7 +69,7 @@ def order_insights(request):
         .order_by('-date')
     )
     
-    paginator = Paginator(orders, 20)
+    paginator = Paginator(orders, 100)
     page_obj = paginator.get_page(page_number)
 
     models = DeliveredOrder.objects.values('model').annotate(latest_date=Max('date')).order_by('-latest_date').values_list('model', flat=True)

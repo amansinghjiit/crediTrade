@@ -223,7 +223,7 @@
         const selectedRowsCount = document.getElementById("selectedRowsCount");
         updateSelectedCount = () => {
             const count = document.querySelectorAll(".order-checkbox:checked:not(#selectAll)").length;
-            selectedCountSpan.textContent = `${count} ROWS SELECTED`;
+            selectedCountSpan.textContent = `${count} SELECTED`;
             selectedRowsCount.textContent = count;
             selectedCountSpan.classList.toggle("d-none", count === 0);
         };
