@@ -175,7 +175,7 @@
     }
 
     .sidebar-filter {
-        padding: 2.5vw;
+        padding: 3vw;
         border-radius: 0;
         background: #6366F1;
     }
@@ -197,11 +197,11 @@
     }
 
     .sidebar-filter input {
-        min-width: 160px;
+        min-width: 30vw;
     }
 
     .sidebar-filter select {
-        min-width: 140px;
+        min-width: 20vw;
     }
 
     .filter-btns {
