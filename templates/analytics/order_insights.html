@@ -43,7 +43,26 @@
                 </div>           
             </form>
         </div>
-        <div class="sidebar-stats shadow-sm">
+        <div id="sidebar-stats" class="sidebar-stats p-3">
+            <div class="table-responsive rounded-3" style="max-height: 300px; overflow: auto; scrollbar-width: thin;">
+                <table class="table table-bordered table-hover table-sm align-middle text-center small">
+                    <thead class="table-dark text-light">
+                        <tr>
+                            <th class="py-1 px-2">Model</th>
+                            <th class="py-1 px-2">Quantity</th>
+                            <th class="py-1 px-2">Return</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statsTableBody"></tbody>
+                    <tfoot class="table-light fw-bold">
+                        <tr>
+                            <th class="py-1 px-2">Total</th>
+                            <th class="py-1 px-2" id="totalQuantity">0</th>
+                            <th class="py-1 px-2" id="totalReturn">₹0</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>        
     </div>
 
@@ -248,6 +267,57 @@
         // Prevent form submission on Enter keypress
         const confirmButton = document.getElementById("confirmUpdateButton");
         form.addEventListener("keydown", (event) => event.key === "Enter" && event.preventDefault());
-    });    
+
+        //selected orders summary
+        const statsTableBody = document.getElementById("statsTableBody");
+        const totalQuantity = document.getElementById("totalQuantity");
+        const totalReturn = document.getElementById("totalReturn");
+    
+        function updateSidebarTable() {
+            let modelStats = {};
+            let totalQty = 0;
+            let totalRet = 0;
+    
+            checkboxes.forEach((checkbox) => {
+                if (checkbox.checked && checkbox.value !== "on") {
+                    let row = checkbox.closest("tr");
+                    let model = row.cells[3].textContent.trim();
+                    let returnAmount = parseFloat(row.cells[4].textContent.trim()) || 0;
+    
+                    if (!modelStats[model]) {
+                        modelStats[model] = { quantity: 1, return: returnAmount };
+                    } else {
+                        modelStats[model].quantity += 1;
+                        modelStats[model].return += returnAmount;
+                    }
+    
+                    totalQty += 1;
+                    totalRet += returnAmount;
+                }
+            });
+    
+            statsTableBody.innerHTML = "";
+            for (let model in modelStats) {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `<td>${model}</td><td>${modelStats[model].quantity}</td><td>₹${modelStats[model].return}</td>`;
+                statsTableBody.appendChild(tr);
+            }
+    
+            totalQuantity.textContent = totalQty;
+            totalReturn.textContent = `₹${totalRet}`;
+        }
+    
+        checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener("change", updateSidebarTable);
+        });
+
+        document.getElementById("selectAll").addEventListener("change", function () {
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = this.checked;
+            });
+            updateSidebarTable();
+        });
+    });  
+          
 </script>
 {% endblock %}
