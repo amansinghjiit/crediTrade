@@ -175,9 +175,9 @@
     }
 
     .sidebar-filter {
-        padding: 10px;
+        padding: 12px;
         border-radius: 0;
-        background: #6366F1;
+        background: linear-gradient(135deg, #4A5568, #3b424f);
     }
 
     .filter-form {
@@ -191,9 +191,10 @@
     .sidebar-filter input, .sidebar-filter select {
         height: 37px;
         font-size: 14px;
-        padding: 0.4rem 0.6rem;
+        padding: 0.2rem 0.6rem;
         border: 1px solid #bbb;
         margin-bottom: 0;
+        border-radius: 4px;
     }
 
     .sidebar-filter input {
@@ -215,7 +216,6 @@
         content: "\f00c";
         font-weight: 900;
         font-size:14px;
-        padding: 0.6rem;
     }
 
     .filter-btns .btn-secondary::before {
@@ -223,11 +223,17 @@
         content: "\f00d";
         font-weight: 900;
         font-size:14px;
-        padding: 0.6rem;
+        border-radius: 4px;
     }
 
     .filter-btns .btn-primary, .filter-btns .btn-secondary {
         font-size: 0;
+        border-radius: 4px;
+        padding: 0.5rem 0;
+    }
+
+    .filter-btns .btn-primary{
+        background:#198754;
     }
 
     #pinFilter, #userFilter, .sidebar-filter h5, .sidebar-stats {
