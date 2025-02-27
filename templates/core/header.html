@@ -7,9 +7,11 @@
         {% if user.is_authenticated %}
             <div class="nav__menu" id="nav-menu">
                 <ul class="nav__list m-0 p-0 list-unstyled">
-                    <li class="nav__item {% if request.path == '/' %}active{% endif %}"><a href="{% url 'home' %}" class="nav__link">Home</a></li>
+                    {% if not user.is_staff %}
+                        <li class="nav__item {% if request.path == '/' %}active{% endif %}"><a href="{% url 'home' %}" class="nav__link">Home</a></li>
+                        <li class="nav__item {% if request.path == '/profile/' %}active{% endif %}"><a href="{% url 'profile' %}" class="nav__link">Profile</a></li>
+                    {% endif %}
                     <li class="nav__item {% if request.path == '/orders/dashboard/' %}active{% endif %}"><a href="{% url 'dashboard' %}" class="nav__link">Dashboard</a></li>
-                    <li class="nav__item {% if request.path == '/profile/' %}active{% endif %}"><a href="{% url 'profile' %}" class="nav__link">Profile</a></li>
                     <li class="nav__item {% if request.path == '/orders/delivery-form/' %}active{% endif %}"><a href="{% url 'delivery_form' %}" class="nav__link">Delivery Details</a></li>
                     <li class="nav__item {% if request.path == '/orders/delivered/' %}active{% endif %}"><a href="{% url 'delivered' %}" class="nav__link">Delivered Orders</a></li>
                     {% if user.is_staff %}
@@ -17,7 +19,7 @@
                         <li class="nav__item dropdown {% if request.path|slice:":10" == '/analytics' %}active{% endif %}">
                             <a class="nav__link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Analytics</a>
                             <ul class="dropdown-menu"><li><a class="dropdown-item nav__link" href="{% url 'order_insights' %}">Order Insights</a></li></ul>
-                        </li>                                                
+                        </li>                                            
                     {% endif %}
                 </ul>
                 <i class="ri-close-line nav__close" id="nav-close"></i>
