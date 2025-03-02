@@ -1,19 +1,19 @@
 {
     "name": "Creditrade",
     "short_name": "Creditrade",
-    "description": "Creditrade.in",
+    "description": "Unlock the power of your credit cards",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",
     "icons": [
       {
-        "src": "/static/images/logo.png",
+        "src": "/static/images/ddicon.png",
         "sizes": "192x192",
         "type": "image/png"
       },
       {
-        "src": "/static/images/logo.png",
+        "src": "/static/images/splash_screen.png",
         "sizes": "512x512",
         "type": "image/png"
       }
