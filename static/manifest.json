@@ -1,8 +1,8 @@
 {
-    "name": "Creditrade",
-    "short_name": "Creditrade",
+    "name": "CrediTrade",
+    "short_name": "CrediTrade",
     "description": "Unlock the power of your credit cards",
-    "start_url": "/",
+    "start_url": "/orders/dashboard/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",
@@ -13,7 +13,7 @@
         "type": "image/png"
       },
       {
-        "src": "/static/images/splash_screen.png",
+        "src": "/static/images/logo.png",
         "sizes": "512x512",
         "type": "image/png"
       }
