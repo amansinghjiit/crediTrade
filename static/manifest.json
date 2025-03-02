@@ -2,7 +2,7 @@
     "name": "CrediTrade",
     "short_name": "CrediTrade",
     "description": "Unlock the power of your credit cards",
-    "start_url": "/orders/dashboard/",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",
