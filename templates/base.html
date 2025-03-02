@@ -5,6 +5,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <meta name="theme-color" content="#000000">
   <link rel="icon" href="{% static 'images/ddfavicon.png' %}" type="image/x-icon">
   <title>{% block title %}{% endblock %}</title>
 
@@ -78,6 +80,14 @@
         }
       });
     };
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/static/serviceworker.js')
+          .then(registration => console.log('Service Worker registered'))
+          .catch(error => console.log('Service Worker registration failed:', error));
+      });
+    }
   </script>  
 </body>
 </html>
