@@ -17,9 +17,12 @@
                     {% if user.is_staff %}
                         <li class="nav__item {% if request.path == '/orders/payments-dashboard/' %}active{% endif %}"><a href="{% url 'payments_dashboard' %}" class="nav__link">Payments</a></li>
                         <li class="nav__item dropdown {% if request.path|slice:":10" == '/analytics' %}active{% endif %}">
-                            <a class="nav__link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Analytics</a>
-                            <ul class="dropdown-menu"><li><a class="dropdown-item nav__link" href="{% url 'order_insights' %}">Order Insights</a></li></ul>
-                        </li>                                            
+                            <a class="nav__link dropdown-toggle" href="#" role="button" id="analyticsDropdown" data-bs-toggle="dropdown" aria-expanded="false">Analytics</a>
+                            <ul class="dropdown-menu" aria-labelledby="analyticsDropdown">
+                                <li><a class="dropdown-item nav__link {% if request.path == '/order_insights/' %}active{% endif %}" href="{% url 'order_insights' %}">Order Insights</a></li>
+                                <li><a class="dropdown-item nav__link {% if request.path == '/ledger/' %}active{% endif %}" href="{% url 'ledger' %}">Ledger</a></li>
+                            </ul>
+                        </li>                                        
                     {% endif %}
                 </ul>
                 <i class="ri-close-line nav__close" id="nav-close"></i>

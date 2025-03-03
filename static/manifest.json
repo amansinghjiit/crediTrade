@@ -1,11 +1,12 @@
 {
+  "id": "in.creditrade",
   "name": "CrediTrade",
   "short_name": "CrediTrade",
   "description": "CrediTrade empowers users to leverage their credit cards to order products for retailers across e-commerce platforms, maximizing card discounts. Earn commissions while enjoying real-time analytics, secure payments, and a user-friendly dashboard for seamless trading and management.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1a73e8",
-  "theme_color": "#1a73e8",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
   "orientation": "portrait",
   "lang": "en-US",
   "dir": "ltr",
@@ -69,5 +70,8 @@
   "categories": [
     "finance",
     "business"
-  ]
+  ],
+  "launch_handler": {
+    "client_mode": "auto"
+  }
 }

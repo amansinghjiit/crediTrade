@@ -1,12 +1,16 @@
 from django.shortcuts import render
-from orders.models import DeliveredOrder
-from django.db.models import Q
+from accounts.models import UserProfile
+from orders.models import DeliveredOrder,Transaction
+from django.db.models import Q,Sum
 from django.utils.dateparse import parse_date
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.db.models import Max  
 from django.core.paginator import Paginator
 from django.contrib.admin.views.decorators import staff_member_required
+from io import BytesIO
+from django.http import HttpResponse
+from .pdf_utils import generate_pdf
 
 @staff_member_required
 def order_insights(request):
@@ -126,3 +130,142 @@ def update_return_amount(request):
             messages.success(request, f"{updated_rows} rows updated!")
     
     return redirect(request.META.get('HTTP_REFERER'))
+
+from datetime import datetime
+@staff_member_required
+def ledger(request):
+    date_range = request.GET.get("date_range", "").strip()
+    selected_user = request.GET.get("user", "all")
+    selected_description = request.GET.get("description", "all")
+    page_number = request.GET.get("page", 1)
+    export_pdf = request.GET.get("export_pdf", False)
+
+    filters = Q()
+    start_date, end_date = None, None
+
+    if date_range:
+        dates = date_range.split(" to ")
+        try:
+            start_date = datetime.strptime(dates[0].strip(), "%Y-%m-%d").date() if dates[0] else None
+            end_date = datetime.strptime(dates[1].strip(), "%Y-%m-%d").date() if len(dates) > 1 and dates[1] else None
+        except ValueError:
+            start_date, end_date = None, None  
+
+        if start_date and end_date:
+            filters &= Q(date__range=(start_date, end_date))
+        elif start_date:
+            filters &= Q(date=start_date)
+
+    users = (
+        UserProfile.objects.annotate(latest_transaction=Max("transaction__date"))
+        .order_by("-latest_transaction")
+        .values_list("name", "whatsapp_number", "user__username")
+    )
+
+    user_options = []
+    username_map = {}
+
+    for name, whatsapp, username in users:
+        display_value = f"{name} - {whatsapp}" if name and whatsapp else name or whatsapp or username
+        user_options.append(display_value)
+        username_map[display_value] = username  
+
+    if selected_user != "all":
+        username = username_map.get(selected_user)
+        if username:
+            filters &= Q(user_profile__user__username=username)
+            
+    if selected_description != "all":
+        filters &= Q(description=selected_description)
+
+    # **Opening Balance Calculation**
+    user_filter = Q(user_profile__user__username=username) if selected_user != "all" else Q()
+    past_transactions = Transaction.objects.filter(user_filter & Q(date__lt=start_date)) if start_date else Transaction.objects.none()
+    total_debit_before = past_transactions.filter(transaction_type="debit").aggregate(Sum("amount"))["amount__sum"] or 0
+    total_credit_before = past_transactions.filter(transaction_type="credit").aggregate(Sum("amount"))["amount__sum"] or 0
+    opening_balance = total_credit_before - total_debit_before
+
+    # **Transactions in selected range**
+    transactions = Transaction.objects.filter(filters).order_by("-date", "id")
+    total_debit = transactions.filter(transaction_type="debit").aggregate(Sum("amount"))["amount__sum"] or 0
+    total_credit = transactions.filter(transaction_type="credit").aggregate(Sum("amount"))["amount__sum"] or 0
+
+    # **Running Balance Calculation**
+    balance = opening_balance
+    for transaction in transactions:
+        if transaction.transaction_type == "credit":
+            balance += transaction.amount
+        elif transaction.transaction_type == "debit":
+            balance -= transaction.amount
+        transaction.balance = balance  
+
+    # **Closing Balance Calculation**
+    closing_balance = balance
+    
+    if selected_user != "all":
+        username = username_map.get(selected_user)
+        if username:
+            filters &= Q(user_profile__user__username=username)
+            
+            # Fetch WhatsApp number
+            user_profile = UserProfile.objects.filter(user__username=username).first()
+            whatsapp_number = user_profile.whatsapp_number if user_profile else None
+        else:
+            whatsapp_number = None
+    else:
+        whatsapp_number = None
+
+        
+    orders = DeliveredOrder.objects.filter(filters).order_by("-date")
+
+    if export_pdf:
+        # Create a BytesIO buffer for the PDF
+        buffer = BytesIO()
+
+        # Generate the PDF
+        generate_pdf(
+            transactions, 
+            opening_balance, 
+            closing_balance, 
+            total_debit, 
+            total_credit, 
+            username, 
+            whatsapp_number,  # Now defined
+            start_date, 
+            end_date, 
+            orders,  # Pass the orders data
+            buffer  # Pass the buffer
+        )
+
+        # Prepare the HTTP response
+        response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{username}_transaction_statement.pdf"'
+        return response
+
+    
+    paginator = Paginator(transactions, 10)
+    page_obj = paginator.get_page(page_number)
+    
+    description_options = [
+        "Bank Transfer",
+        "UPI",
+        "CC Payment",
+        "CDM",
+        "BULK",
+        "Order Delivered",
+    ]
+
+    context = {
+        "transactions": page_obj,
+        "total_debit": total_debit,
+        "total_credit": total_credit,
+        "opening_balance": opening_balance,
+        "closing_balance": closing_balance,
+        "user_options": user_options,
+        "selected_user": selected_user,
+        "selected_date_range": date_range,
+        "description_options": description_options,
+        "selected_description": selected_description, 
+    }
+
+    return render(request, "analytics/ledger.html", context)
