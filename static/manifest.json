@@ -1,22 +1,73 @@
 {
-    "name": "CrediTrade",
-    "short_name": "CrediTrade",
-    "description": "Unlock the power of your credit cards",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#000000",
-    "icons": [
-      {
-        "src": "/static/images/ddicon.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "/static/images/logo.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ]
-  }
-  
+  "name": "CrediTrade",
+  "short_name": "CrediTrade",
+  "description": "CrediTrade empowers users to leverage their credit cards to order products for retailers across e-commerce platforms, maximizing card discounts. Earn commissions while enjoying real-time analytics, secure payments, and a user-friendly dashboard for seamless trading and management.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a73e8",
+  "theme_color": "#1a73e8",
+  "orientation": "portrait",
+  "lang": "en-US",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/static/images/ddicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/ddicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/static/images/phoness1.webp",
+      "sizes": "720x1280",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Mobile Home"
+    },
+    {
+      "src": "/static/images/phoness2.webp",
+      "sizes": "720x1280",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Dashboard"
+    },
+    {
+      "src": "/static/images/phoness3.webp",
+      "sizes": "720x1280",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Delivery Form"
+    },
+    {
+      "src": "/static/images/phoness4.webp",
+      "sizes": "720x1280",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Profile"
+    },
+    {
+      "src": "/static/images/pcss1.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Desktop Home"
+    }
+  ],
+  "categories": [
+    "finance",
+    "business"
+  ]
+}

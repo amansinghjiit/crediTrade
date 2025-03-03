@@ -4,9 +4,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="display" content="standalone">
+  <meta name="orientation" content="portrait">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-title" content="CrediTrade">
+  <meta name="application-name" content="CrediTrade">  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1a73e8">
+  <meta name="keywords" content="CrediTrade, credits, trading, platform, trade credits, credit trading platform, buying credits, selling credits, credit marketplace, credit exchange, asset-backed trading, receivables trading, invoice trading, trade finance, credit risk management, working capital solutions, liquidity management, financial instruments trading, debt trading, how to trade credits online, best platform for credit trading, secure credit trading marketplace, benefits of trading credits, risks of credit trading, trading credits for small businesses, increase working capital through credit trading, manage credit risk with CrediTrade, find buyers for trade credits, sell receivables on CrediTrade, how to value trade credits, online credit trading for [your target industry], alternative finance solutions, business finance, financial services, investment platform, asset management, supply chain finance, B2B marketplace, financial technology (FinTech), digital finance, online trading, alternative investments, credit card rewards, earn rewards with credit card, cashback credit card, credit card points, credit card benefits, rewards platform, maximize credit card rewards, best rewards credit cards, credit card offers, credit card incentives, earn money with credit cards, credit card loyalty programs, credit card affiliate programs, credit card rewards system">
+  <meta name="description" content="Trade credits securely with CrediTrade! Buy, sell, and manage your trade credits efficiently. Discover the best platform for credit exchange and finance solutions.">
+  <meta name="author" content="Aman Singh">
+
   <link rel="manifest" href="{% static 'manifest.json' %}">
-  <meta name="theme-color" content="#000000">
   <link rel="icon" href="{% static 'images/ddfavicon.png' %}" type="image/x-icon">
   <title>{% block title %}{% endblock %}</title>
 
@@ -84,8 +93,19 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/static/serviceworker.js')
-          .then(registration => console.log('Service Worker registered'))
-          .catch(error => console.log('Service Worker registration failed:', error));
+          .then(reg => {
+            reg.update();
+            setInterval(() => reg.update(), 24 * 60 * 60 * 1000);
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+              window.location.reload();
+            });
+          })
+          .catch(err => console.error('Service Worker registration failed:', err));
+        navigator.serviceWorker.addEventListener('message', event => {
+          if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
+            window.location.reload();
+          }
+        });
       });
     }
   </script>  
