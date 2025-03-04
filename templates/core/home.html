@@ -6,7 +6,7 @@
 {% block content %}
 <div class="landing-page position-relative overflow-hidden d-flex align-items-center justify-content-center">
     <div id="particles-js" class="position-absolute top-0 left-0 w-100 h-100 z-0"></div>
-    <div class="container h-100 d-flex flex-column px-5 justify-content-between">
+    <div class="container h-100 d-flex flex-columnjustify-content-between">
         <div class="social">
             <a href="https://www.instagram.com/dd_amansingh/" class="text-dark" target="_blank"><i class="fab fa-instagram"></i></a>
             <a href="https://wa.me/917982405815" class="text-dark" target="_blank"><i class="fab fa-whatsapp"></i></a>
@@ -48,9 +48,9 @@
                             <path d="M6 14a6 6 0 0 0 6 6v-2a4 4 0 0 1-4-4H6zm-2-2a8 8 0 0 0 8 8v-2a6 6 0 0 1-6-6H4zm12-6a6 6 0 0 1-6 6v-2a4 4 0 0 0 4-4h2zm2-2a8 8 0 0 1-8 8v-2a6 6 0 0 0 6-6h2z" fill="#e5e7eb"/>
                         </svg>
                     </div>
-                    <div class="card-number">5289 1234 5678 9012</div>
+                    <div class="card-number text-nowrap">5289 1279 8240 5815</div>
                     <div class="card-details">
-                        <div class="card-holder">John Doe</div>
+                        <div class="card-holder">Aman Singh</div>
                         <div class="card-expiry">12/27</div>
                     </div>
                     <div class="card-logo">
@@ -109,6 +109,9 @@
 .landing-page {
     min-height: 90vh;
     background: linear-gradient(145deg, #000 0%, #0a0a23 100%);
+}
+.landing-page .container{
+    padding:0 60px;
 }
 .welcome-message {
     font: 700 2.8rem 'Helvetica Neue', Arial, sans-serif;
@@ -261,9 +264,7 @@
     100% { transform: scale(1); }
 }
 @media (max-width: 768px) {
-    .landing-page { padding-bottom: 20px; }
-    .container { padding: 15px; }
-    .content-wrapper { padding: 0; margin-top: 50px; }
+    .landing-page .container { padding: 0 0.8rem; }
     .welcome-message { font-size: 2rem; }
     .intro-text { font-size: .95rem; max-width: 100%; }
     .animated-button {
@@ -289,5 +290,6 @@
     .card-details { font-size: .95rem; }
     .card-logo { bottom: 15px; right: 15px; }
     .social { display: none; }
+}
 </style>
 {% endblock %}
