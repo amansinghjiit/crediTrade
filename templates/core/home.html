@@ -4,140 +4,290 @@
 {% block title %}CrediTrade{% endblock %}
 
 {% block content %}
- <div class="landing-page d-flex flex-column justify-content-center align-items-center">
-    <div id="particles-js" style="position: absolute; width: 100%; height: 100%; background: transparent; z-index: 1;"></div>
-    <div class="social">
-        <a href="https://www.instagram.com/dd_amansingh/" class="text-dark" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="https://wa.me/917982405815" class="text-dark" target="_blank"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://x.com/ddamansing" class="text-dark twitter-icon" target="_blank">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
-            </svg>
-        </a>
-        <a href="https://www.facebook.com/a5499/" class="text-dark" target="_blank"><i class="fab fa-facebook"></i></a>
-    </div>    
-    
-    <h1 class="welcome-message">Welcome To CrediTrade</h1>
-    <p class="intro-text">Your one-stop destination for all things related to credit cards. Discover the latest deals and explore smart ways to use your credit cards effectively.</p>
-    <div class="cta-buttons">
-        <button {% if not user.is_authenticated %} id="animated-login-btn" {% else %} onclick="window.location.href='{% url 'dashboard' %}'" {% endif %} class="animated-button">
-            <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
-                <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-            </svg>
-            <span class="btn-text">
-                {% if not user.is_authenticated %}
-                    L O G I N
-                {% else %}
-                    D A S H B O A R D
-                {% endif %}
-            </span>
-            <span class="circle"></span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
-                <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
-            </svg>
-        </button> 
-    </div>  
- </div>
-   
- <!-- About -->
- {% include "core/about.html" %}
+<div class="landing-page position-relative overflow-hidden d-flex align-items-center justify-content-center">
+    <div id="particles-js" class="position-absolute top-0 left-0 w-100 h-100 z-0"></div>
+    <div class="container h-100 d-flex flex-column px-5 justify-content-between">
+        <div class="social">
+            <a href="https://www.instagram.com/dd_amansingh/" class="text-dark" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/917982405815" class="text-dark" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://x.com/ddamansing" class="text-dark twitter-icon" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+                </svg>
+            </a>
+            <a href="https://www.facebook.com/a5499/" class="text-dark" target="_blank"><i class="fab fa-facebook"></i></a>
+        </div>
+        <div class="content-wrapper row align-items-center justify-content-center flex-grow-1">
+            <div class="col-lg-6 col-12 text-center text-lg-start order-2 order-lg-1">
+                <h1 class="welcome-message">Welcome to CrediTrade</h1>
+                <p class="intro-text">Your one-stop destination for mastering credit cards with exclusive deals and smart insights.</p>
+                <div class="cta-buttons mt-3">
+                    <button {% if not user.is_authenticated %} id="animated-login-btn" {% else %} onclick="window.location.href='{% url 'dashboard' %}'" {% endif %} class="animated-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                            <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                        </svg>
+                        <span class="btn-text">
+                            {% if not user.is_authenticated %}
+                                Get Started
+                            {% else %}
+                                Dashboard
+                            {% endif %}
+                        </span>
+                        <span class="circle"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                            <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-6 col-12 d-flex justify-content-center order-1 order-lg-2 mb-4 mb-lg-0">
+                <div class="credit-card">
+                    <div class="card-chip"></div>
+                    <div class="card-contactless">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 14a6 6 0 0 0 6 6v-2a4 4 0 0 1-4-4H6zm-2-2a8 8 0 0 0 8 8v-2a6 6 0 0 1-6-6H4zm12-6a6 6 0 0 1-6 6v-2a4 4 0 0 0 4-4h2zm2-2a8 8 0 0 1-8 8v-2a6 6 0 0 0 6-6h2z" fill="#e5e7eb"/>
+                        </svg>
+                    </div>
+                    <div class="card-number">5289 1234 5678 9012</div>
+                    <div class="card-details">
+                        <div class="card-holder">John Doe</div>
+                        <div class="card-expiry">12/27</div>
+                    </div>
+                    <div class="card-logo">
+                        <svg width="48" height="32" viewBox="0 0 40 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="2" y="2" width="16" height="20" rx="2" fill="#0057FF"/>
+                            <rect x="22" y="2" width="16" height="20" rx="2" fill="#003087"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "core/about.html" %}
+{% include "core/footer.html" %}
 
- <!-- Footer -->
- {% include "core/footer.html" %}
-
- <!-- Particle.js Library -->
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script>
-    // Particle.js Configuration
     particlesJS('particles-js', {
         particles: {
-            number: {
-                value: 80,
-                density: {
-                    enable: true,
-                    value_area: 800
-                }
-            },
-            color: {
-                value: '#ffffff'
-            },
-            shape: {
-                type: 'circle',
-                stroke: {
-                    width: 0,
-                    color: '#000000'
-                }
-            },
-            opacity: {
-                value: 0.5,
-                random: true,
-                anim: {
-                    enable: true,
-                    speed: 1,
-                    opacity_min: 0.1,
-                    sync: false
-                }
-            },
-            size: {
-                value: 3,
-                random: true,
-                anim: {
-                    enable: true,
-                    speed: 2,
-                    size_min: 0.1,
-                    sync: false
-                }
-            },
-            line_linked: {
-                enable: true,
-                distance: 150,
-                color: '#ffffff',
-                opacity: 0.4,
-                width: 1
-            },
-            move: {
-                enable: true,
-                speed: 3,
-                direction: 'none',
-                random: true,
-                straight: false,
-                out_mode: 'out',
-                bounce: false,
-                attract: {
-                    enable: false,
-                    rotateX: 600,
-                    rotateY: 1200
-                }
-            }
+            number: { value: 80, density: { enable: true, value_area: 800 } },
+            color: { value: '#00cccc' },
+            shape: { type: 'circle', stroke: { width: 0, color: '#000000' } },
+            opacity: { value: 0.5, random: true, anim: { enable: false, speed: 1, opacity_min: 0.1, sync: false } },
+            size: { value: 3, random: true, anim: { enable: false, speed: 40, size_min: 0.1, sync: false } },
+            line_linked: { enable: true, distance: 150, color: '#00cccc', opacity: 0.4, width: 1 },
+            move: { enable: true, speed: 3, direction: 'none', random: false, straight: false, out_mode: 'out', bounce: false, attract: { enable: false, rotateX: 600, rotateY: 1200 } }
         },
         interactivity: {
             detect_on: 'canvas',
-            events: {
-                onhover: {
-                    enable: true,
-                    mode: 'bubble'
-                },
-                onclick: {
-                    enable: true,
-                    mode: 'push'
-                },
-                resize: true
+            events: { 
+                onhover: { enable: false }, 
+                onclick: { enable: false },
+                resize: true 
             },
-            modes: {
-                bubble: {
-                    distance: 200,
-                    size: 6,
-                    duration: 2,
-                    opacity: 0.8,
-                    speed: 3
-                },
-                push: {
-                    particles_nb: 4
-                }
+            modes: { 
+                grab: { distance: 400, line_linked: { opacity: 1 } }, 
+                bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 }, 
+                repulse: { distance: 200, duration: 0.4 }, 
+                push: { particles_nb: 4 }, 
+                remove: { particles_nb: 2 } 
             }
         },
         retina_detect: true
     });
+
+    VanillaTilt.init(document.querySelector("#tilt-card"), {
+        max: 10,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.5,
+    });
 </script>
- 
+
+<style>
+.landing-page {
+    min-height: 90vh;
+    background: linear-gradient(145deg, #000 0%, #0a0a23 100%);
+}
+.welcome-message {
+    font: 700 2.8rem 'Helvetica Neue', Arial, sans-serif;
+    color: #fff;
+    margin-bottom: 1rem;
+    letter-spacing: -.5px;
+    text-shadow: 0 2px 8px rgba(0, 87, 255, .3);
+}
+.intro-text {
+    font: 1.1rem/1.5 'Helvetica Neue', Arial, sans-serif;
+    color: #d1d5db;
+    max-width: 480px;
+    margin-bottom: 1.5rem;
+}
+.credit-card {
+    width: 400px;
+    height: 250px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d44 100%);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .4), inset 0 1px 2px rgba(255, 255, 255, .1);
+    position: relative;
+    transition: all .3s ease;
+    overflow: hidden;
+}
+.credit-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, .5);
+}
+.card-chip {
+    width: 50px;
+    height: 35px;
+    background: linear-gradient(45deg, #d4af37, #f9e79f);
+    border-radius: 6px;
+    margin-bottom: 28px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
+}
+.card-contactless {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}
+.card-number {
+    font: 1.4rem 'Courier New', monospace;
+    color: #fff;
+    letter-spacing: 4px;
+    margin-bottom: 28px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .5), 0 0 1px rgba(255, 255, 255, .2);
+}
+.card-details {
+    display: flex;
+    justify-content: space-between;
+    color: #e5e7eb;
+    font: 500 1.1rem 'Helvetica Neue', Arial, sans-serif;
+    text-transform: uppercase;
+}
+.card-holder, .card-expiry {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .3);
+}
+.card-logo {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.animated-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 16px 36px;
+    border: 4px solid transparent;
+    font: 600 16px 'Helvetica Neue', Arial, sans-serif;
+    border-radius: 100px;
+    color: #1a1a1a;
+    box-shadow: 0 0 0 2px #fff;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all .6s cubic-bezier(.23,1,.32,1);
+}
+.animated-button svg {
+    position: absolute;
+    width: 24px;
+    fill: #1a1a1a;
+    z-index: 9;
+    transition: all .8s cubic-bezier(.23,1,.32,1);
+}
+.animated-button .arr-1 { right: 16px; }
+.animated-button .arr-2 { left: -25%; }
+.animated-button .circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 20px;
+    height: 20px;
+    background: #cfd8dc;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all .8s cubic-bezier(.23,1,.32,1);
+}
+.animated-button .btn-text {
+    position: relative;
+    z-index: 1;
+    transform: translateX(-12px);
+    transition: all .8s cubic-bezier(.23,1,.32,1);
+}
+.animated-button:hover {
+    box-shadow: 0 0 0 12px transparent;
+    border-radius: 12px;
+}
+.animated-button:hover .arr-1 { right: -25%; }
+.animated-button:hover .arr-2 { left: 16px; }
+.animated-button:hover .btn-text { transform: translateX(12px); }
+.animated-button:active {
+    scale: .95;
+    box-shadow: 0 0 0 4px #fff;
+}
+.animated-button:hover .circle {
+    width: 220px;
+    height: 220px;
+    opacity: 1;
+}
+.social {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.social i, .social svg {
+    font-size: 2rem;
+    color: #fff;
+    opacity: .8;
+    transition: all .3s ease;
+}
+.social a:hover .fa-instagram { color: #E1306C; }
+.social a:hover .fa-whatsapp { color: #25D366; }
+.social .twitter-icon:hover svg path { fill: #1da1f2; }
+.social a:hover .fa-facebook { color: #1877F2; }
+.social i:hover, .social svg:hover {
+    transform: scale(1.2);
+    animation: bounce .4s linear;
+}
+@keyframes bounce {
+    40% { transform: scale(1.4); }
+    60% { transform: scale(.8); }
+    80% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+@media (max-width: 768px) {
+    .landing-page { padding-bottom: 20px; }
+    .container { padding: 15px; }
+    .content-wrapper { padding: 0; margin-top: 50px; }
+    .welcome-message { font-size: 2rem; }
+    .intro-text { font-size: .95rem; max-width: 100%; }
+    .animated-button {
+        padding: 12px 28px;
+        font-size: 14px;
+        max-width: 280px;
+        margin: 0 auto;
+    }
+    .animated-button .arr-1 { right: 12px; }
+    .animated-button .btn-text { transform: translateX(-8px); }
+    .animated-button:hover .btn-text { transform: translateX(8px); }
+    .animated-button:hover .circle { width: 180px; height: 180px; }
+    .credit-card {
+        width: 340px;
+        height: 200px;
+        padding: 20px;
+        margin: 0 auto 1.5rem;
+    }
+    .card-chip { width: 44px; height: 32px; }
+    .card-contactless { top: 20px; right: 20px; }
+    .card-contactless svg { width: 20px; height: 20px; }
+    .card-number { font-size: 1.2rem; letter-spacing: 3px; }
+    .card-details { font-size: .95rem; }
+    .card-logo { bottom: 15px; right: 15px; }
+    .social { display: none; }
+</style>
 {% endblock %}
