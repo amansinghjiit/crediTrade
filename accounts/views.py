@@ -13,8 +13,26 @@ from .forms import CustomSetPasswordForm
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_str
 from dotenv import load_dotenv
+from accounts.models import UserProfile
 
 load_dotenv()
+
+def home(request):
+    if request.user.is_authenticated:
+        user_profile = UserProfile.objects.get(user=request.user)
+        context = {
+            'user_profile': user_profile,
+            'is_authenticated': True
+        }
+    else:
+        context = {
+            'user_profile': {
+                'name': 'User',
+                'whatsapp_number': '7982405815'
+            },
+            'is_authenticated': False
+        }
+    return render(request, 'core/home.html', context)
 
 def signup(request):
     if request.method == 'POST':

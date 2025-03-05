@@ -48,9 +48,16 @@
                             <path d="M6 14a6 6 0 0 0 6 6v-2a4 4 0 0 1-4-4H6zm-2-2a8 8 0 0 0 8 8v-2a6 6 0 0 1-6-6H4zm12-6a6 6 0 0 1-6 6v-2a4 4 0 0 0 4-4h2zm2-2a8 8 0 0 1-8 8v-2a6 6 0 0 0 6-6h2z" fill="#e5e7eb"/>
                         </svg>
                     </div>
-                    <div class="card-number text-nowrap">5289 1279 8240 5815</div>
+                    <div class="card-number text-nowrap">
+                        5289 12{% if user_profile.whatsapp_number and user_profile.whatsapp_number != '' %}{{ user_profile.whatsapp_number|slice:":2" }} {{ user_profile.whatsapp_number|slice:"2:6" }} {{ user_profile.whatsapp_number|slice:"6:" }}{% else %}79 8240 5815{% endif %}</div>
                     <div class="card-details">
-                        <div class="card-holder">Aman Singh</div>
+                        <div class="card-holder">
+                            {% if user_profile.name and user_profile.name != '' %}
+                                {{ user_profile.name.split.0 }}
+                            {% else %}
+                                User
+                            {% endif %}
+                        </div>
                         <div class="card-expiry">12/27</div>
                     </div>
                     <div class="card-logo">
