@@ -36,24 +36,17 @@
       "sizes": "720x1280",
       "type": "image/webp",
       "form_factor": "narrow",
-      "label": "Mobile Home"
+      "label": "Dashboard"
     },
     {
       "src": "/static/images/phoness2.webp",
       "sizes": "720x1280",
       "type": "image/webp",
       "form_factor": "narrow",
-      "label": "Dashboard"
-    },
-    {
-      "src": "/static/images/phoness3.webp",
-      "sizes": "720x1280",
-      "type": "image/webp",
-      "form_factor": "narrow",
       "label": "Delivery Form"
     },
     {
-      "src": "/static/images/phoness4.webp",
+      "src": "/static/images/phoness3.webp",
       "sizes": "720x1280",
       "type": "image/webp",
       "form_factor": "narrow",

@@ -4,6 +4,194 @@
 {% block title %}CrediTrade{% endblock %}
 
 {% block content %}
+
+<style>
+    .landing-page {
+        min-height: 90svh;
+        background: linear-gradient(145deg, #000 0%, #0a0a23 100%);
+    }
+    .landing-page .container{
+        padding:0 60px;
+    }
+    .welcome-message {
+        font: 700 2.8rem 'Helvetica Neue', Arial, sans-serif;
+        color: #fff;
+        margin-bottom: 1rem;
+        letter-spacing: -.5px;
+        text-shadow: 0 2px 8px rgba(0, 87, 255, .3);
+    }
+    .intro-text {
+        font: 1.1rem/1.5 'Helvetica Neue', Arial, sans-serif;
+        color: #d1d5db;
+        max-width: 480px;
+        margin-bottom: 1.5rem;
+    }
+    .credit-card {
+        width: 400px;
+        height: 250px;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d44 100%);
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, .4), inset 0 1px 2px rgba(255, 255, 255, .1);
+        position: relative;
+        transition: all .3s ease;
+        overflow: hidden;
+    }
+    .credit-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, .5);
+    }
+    .card-chip {
+        width: 50px;
+        height: 35px;
+        background: linear-gradient(45deg, #d4af37, #f9e79f);
+        border-radius: 6px;
+        margin-bottom: 28px;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
+    }
+    .card-contactless {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+    }
+    .card-number {
+        font: 1.4rem 'Courier New', monospace;
+        color: #fff;
+        letter-spacing: 4px;
+        margin-bottom: 28px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, .5), 0 0 1px rgba(255, 255, 255, .2);
+    }
+    .card-details {
+        display: flex;
+        justify-content: space-between;
+        color: #e5e7eb;
+        font: 500 1.1rem 'Helvetica Neue', Arial, sans-serif;
+        text-transform: uppercase;
+    }
+    .card-holder, .card-expiry {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, .3);
+    }
+    .card-logo {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .animated-button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 16px 36px;
+        border: 4px solid transparent;
+        font: 600 16px 'Helvetica Neue', Arial, sans-serif;
+        border-radius: 100px;
+        color: #1a1a1a;
+        box-shadow: 0 0 0 2px #fff;
+        cursor: pointer;
+        overflow: hidden;
+        transition: all .6s cubic-bezier(.23,1,.32,1);
+    }
+    .animated-button svg {
+        position: absolute;
+        width: 24px;
+        fill: #1a1a1a;
+        z-index: 9;
+        transition: all .8s cubic-bezier(.23,1,.32,1);
+    }
+    .animated-button .arr-1 { right: 16px; }
+    .animated-button .arr-2 { left: -25%; }
+    .animated-button .circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: 20px;
+        height: 20px;
+        background: #cfd8dc;
+        border-radius: 50%;
+        opacity: 0;
+        transition: all .8s cubic-bezier(.23,1,.32,1);
+    }
+    .animated-button .btn-text {
+        position: relative;
+        z-index: 1;
+        transform: translateX(-12px);
+        transition: all .8s cubic-bezier(.23,1,.32,1);
+    }
+    .animated-button:hover {
+        box-shadow: 0 0 0 12px transparent;
+        border-radius: 12px;
+    }
+    .animated-button:hover .arr-1 { right: -25%; }
+    .animated-button:hover .arr-2 { left: 16px; }
+    .animated-button:hover .btn-text { transform: translateX(12px); }
+    .animated-button:active {
+        scale: .95;
+        box-shadow: 0 0 0 4px #fff;
+    }
+    .animated-button:hover .circle {
+        width: 220px;
+        height: 220px;
+        opacity: 1;
+    }
+    .social {
+        position: absolute;
+        bottom: 2rem;
+        left: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .social i, .social svg {
+        font-size: 2rem;
+        color: #fff;
+        opacity: .8;
+        transition: all .3s ease;
+    }
+    .social a:hover .fa-instagram { color: #E1306C; }
+    .social a:hover .fa-whatsapp { color: #25D366; }
+    .social .twitter-icon:hover svg path { fill: #1da1f2; }
+    .social a:hover .fa-facebook { color: #1877F2; }
+    .social i:hover, .social svg:hover {
+        transform: scale(1.2);
+        animation: bounce .4s linear;
+    }
+    @keyframes bounce {
+        40% { transform: scale(1.4); }
+        60% { transform: scale(.8); }
+        80% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+    @media (max-width: 768px) {
+        .landing-page .container { padding: 0 0.8rem; }
+        .welcome-message { font-size: 2rem; }
+        .intro-text { font-size: .95rem; max-width: 100%; }
+        .animated-button {
+            padding: 12px 28px;
+            font-size: 14px;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+        .animated-button .arr-1 { right: 12px; }
+        .animated-button .btn-text { transform: translateX(-8px); }
+        .animated-button:hover .btn-text { transform: translateX(8px); }
+        .animated-button:hover .circle { width: 180px; height: 180px; }
+        .credit-card {
+            width: 340px;
+            height: 200px;
+            padding: 20px;
+            margin: 0 auto 1.5rem;
+        }
+        .card-chip { width: 44px; height: 32px; }
+        .card-contactless { top: 20px; right: 20px; }
+        .card-contactless svg { width: 20px; height: 20px; }
+        .card-number { font-size: 1.2rem; letter-spacing: 3px; }
+        .card-details { font-size: .95rem; }
+        .card-logo { bottom: 15px; right: 15px; }
+        .social { display: none; }
+    }
+</style>
 <div class="landing-page position-relative overflow-hidden d-flex align-items-center justify-content-center">
     <div id="particles-js" class="position-absolute top-0 left-0 w-100 h-100 z-0"></div>
     <div class="container h-100 d-flex flex-column justify-content-between">
@@ -111,192 +299,4 @@
         "max-glare": 0.5,
     });
 </script>
-
-<style>
-.landing-page {
-    min-height: 90svh;
-    background: linear-gradient(145deg, #000 0%, #0a0a23 100%);
-}
-.landing-page .container{
-    padding:0 60px;
-}
-.welcome-message {
-    font: 700 2.8rem 'Helvetica Neue', Arial, sans-serif;
-    color: #fff;
-    margin-bottom: 1rem;
-    letter-spacing: -.5px;
-    text-shadow: 0 2px 8px rgba(0, 87, 255, .3);
-}
-.intro-text {
-    font: 1.1rem/1.5 'Helvetica Neue', Arial, sans-serif;
-    color: #d1d5db;
-    max-width: 480px;
-    margin-bottom: 1.5rem;
-}
-.credit-card {
-    width: 400px;
-    height: 250px;
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d44 100%);
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, .4), inset 0 1px 2px rgba(255, 255, 255, .1);
-    position: relative;
-    transition: all .3s ease;
-    overflow: hidden;
-}
-.credit-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, .5);
-}
-.card-chip {
-    width: 50px;
-    height: 35px;
-    background: linear-gradient(45deg, #d4af37, #f9e79f);
-    border-radius: 6px;
-    margin-bottom: 28px;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
-}
-.card-contactless {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-}
-.card-number {
-    font: 1.4rem 'Courier New', monospace;
-    color: #fff;
-    letter-spacing: 4px;
-    margin-bottom: 28px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, .5), 0 0 1px rgba(255, 255, 255, .2);
-}
-.card-details {
-    display: flex;
-    justify-content: space-between;
-    color: #e5e7eb;
-    font: 500 1.1rem 'Helvetica Neue', Arial, sans-serif;
-    text-transform: uppercase;
-}
-.card-holder, .card-expiry {
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, .3);
-}
-.card-logo {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-}
-
-.animated-button {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 16px 36px;
-    border: 4px solid transparent;
-    font: 600 16px 'Helvetica Neue', Arial, sans-serif;
-    border-radius: 100px;
-    color: #1a1a1a;
-    box-shadow: 0 0 0 2px #fff;
-    cursor: pointer;
-    overflow: hidden;
-    transition: all .6s cubic-bezier(.23,1,.32,1);
-}
-.animated-button svg {
-    position: absolute;
-    width: 24px;
-    fill: #1a1a1a;
-    z-index: 9;
-    transition: all .8s cubic-bezier(.23,1,.32,1);
-}
-.animated-button .arr-1 { right: 16px; }
-.animated-button .arr-2 { left: -25%; }
-.animated-button .circle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 20px;
-    height: 20px;
-    background: #cfd8dc;
-    border-radius: 50%;
-    opacity: 0;
-    transition: all .8s cubic-bezier(.23,1,.32,1);
-}
-.animated-button .btn-text {
-    position: relative;
-    z-index: 1;
-    transform: translateX(-12px);
-    transition: all .8s cubic-bezier(.23,1,.32,1);
-}
-.animated-button:hover {
-    box-shadow: 0 0 0 12px transparent;
-    border-radius: 12px;
-}
-.animated-button:hover .arr-1 { right: -25%; }
-.animated-button:hover .arr-2 { left: 16px; }
-.animated-button:hover .btn-text { transform: translateX(12px); }
-.animated-button:active {
-    scale: .95;
-    box-shadow: 0 0 0 4px #fff;
-}
-.animated-button:hover .circle {
-    width: 220px;
-    height: 220px;
-    opacity: 1;
-}
-.social {
-    position: absolute;
-    bottom: 2rem;
-    left: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-.social i, .social svg {
-    font-size: 2rem;
-    color: #fff;
-    opacity: .8;
-    transition: all .3s ease;
-}
-.social a:hover .fa-instagram { color: #E1306C; }
-.social a:hover .fa-whatsapp { color: #25D366; }
-.social .twitter-icon:hover svg path { fill: #1da1f2; }
-.social a:hover .fa-facebook { color: #1877F2; }
-.social i:hover, .social svg:hover {
-    transform: scale(1.2);
-    animation: bounce .4s linear;
-}
-@keyframes bounce {
-    40% { transform: scale(1.4); }
-    60% { transform: scale(.8); }
-    80% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-}
-@media (max-width: 768px) {
-    .landing-page .container { padding: 0 0.8rem; }
-    .welcome-message { font-size: 2rem; }
-    .intro-text { font-size: .95rem; max-width: 100%; }
-    .animated-button {
-        padding: 12px 28px;
-        font-size: 14px;
-        max-width: 280px;
-        margin: 0 auto;
-    }
-    .animated-button .arr-1 { right: 12px; }
-    .animated-button .btn-text { transform: translateX(-8px); }
-    .animated-button:hover .btn-text { transform: translateX(8px); }
-    .animated-button:hover .circle { width: 180px; height: 180px; }
-    .credit-card {
-        width: 340px;
-        height: 200px;
-        padding: 20px;
-        margin: 0 auto 1.5rem;
-    }
-    .card-chip { width: 44px; height: 32px; }
-    .card-contactless { top: 20px; right: 20px; }
-    .card-contactless svg { width: 20px; height: 20px; }
-    .card-number { font-size: 1.2rem; letter-spacing: 3px; }
-    .card-details { font-size: .95rem; }
-    .card-logo { bottom: 15px; right: 15px; }
-    .social { display: none; }
-}
-</style>
 {% endblock %}

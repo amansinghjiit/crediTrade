@@ -197,10 +197,10 @@ def ledger(request):
             balance += transaction.amount
         elif transaction.transaction_type == "debit":
             balance -= transaction.amount
-        transaction.balance = balance  
+        transaction.balance = int(balance)  
 
     # **Closing Balance Calculation**
-    closing_balance = balance
+    closing_balance = int(balance)
     
     if selected_user != "all":
         username = username_map.get(selected_user)
@@ -243,7 +243,7 @@ def ledger(request):
         return response
 
     
-    paginator = Paginator(transactions, 10)
+    paginator = Paginator(transactions, 100)
     page_obj = paginator.get_page(page_number)
     
     description_options = [
