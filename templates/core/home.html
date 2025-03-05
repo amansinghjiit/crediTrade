@@ -6,7 +6,7 @@
 {% block content %}
 <div class="landing-page position-relative overflow-hidden d-flex align-items-center justify-content-center">
     <div id="particles-js" class="position-absolute top-0 left-0 w-100 h-100 z-0"></div>
-    <div class="container h-100 d-flex flex-columnjustify-content-between">
+    <div class="container h-100 d-flex flex-column justify-content-between">
         <div class="social">
             <a href="https://www.instagram.com/dd_amansingh/" class="text-dark" target="_blank"><i class="fab fa-instagram"></i></a>
             <a href="https://wa.me/917982405815" class="text-dark" target="_blank"><i class="fab fa-whatsapp"></i></a>
@@ -20,7 +20,7 @@
         <div class="content-wrapper row align-items-center justify-content-center flex-grow-1">
             <div class="col-lg-6 col-12 text-center text-lg-start order-2 order-lg-1">
                 <h1 class="welcome-message">Welcome to CrediTrade</h1>
-                <p class="intro-text">Your one-stop destination for mastering credit cards with exclusive deals and smart insights.</p>
+                <p class="intro-text">Transform your credit card into a smart earning tool: gain access to exclusive deals and generate consistent earnings.</p>
                 <div class="cta-buttons mt-3">
                     <button {% if not user.is_authenticated %} id="animated-login-btn" {% else %} onclick="window.location.href='{% url 'dashboard' %}'" {% endif %} class="animated-button">
                         <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
@@ -107,7 +107,7 @@
 
 <style>
 .landing-page {
-    min-height: 90vh;
+    min-height: 90svh;
     background: linear-gradient(145deg, #000 0%, #0a0a23 100%);
 }
 .landing-page .container{
