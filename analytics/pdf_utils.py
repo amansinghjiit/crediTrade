@@ -6,9 +6,7 @@ from reportlab.lib.units import inch
 from io import BytesIO
 
 def generate_pdf(transactions, opening_balance, closing_balance, total_debit, total_credit, username, whatsapp_number, start_date, end_date, orders, buffer):
-    pdf_title = f"{username}_summary"
-    transactions = sorted(transactions, key=lambda t: t.date)
-    orders = sorted(orders, key=lambda o: o.date)
+    pdf_title = f"{username}_statement"
     pdf = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=0.75 * inch, leftMargin=0.75 * inch, topMargin=1 * inch, bottomMargin=0.75 * inch, title=pdf_title)
     styles = getSampleStyleSheet()
     
@@ -57,15 +55,18 @@ def generate_pdf(transactions, opening_balance, closing_balance, total_debit, to
     
     elements = []
     
-    # Page 1: Transaction History
     elements.append(Paragraph("Transaction History", header_style))
     
-    formatted_start_date = start_date.strftime("%d %B %Y") if start_date else "N/A"
-    formatted_end_date = end_date.strftime("%d %B %Y") if end_date else "N/A"
-    elements.append(Paragraph(f"{formatted_start_date} – {formatted_end_date}", subtitle_style))
+    if start_date or end_date:
+        formatted_start_date = start_date.strftime("%d %B %Y") if start_date else ""
+        formatted_end_date = end_date.strftime("%d %B %Y") if end_date else ""
+        if start_date == end_date and start_date is not None:
+            date_range_text = formatted_start_date
+        else:
+            date_range_text = f"{formatted_start_date} – {formatted_end_date}".strip(" – ")
+        elements.append(Paragraph(date_range_text, subtitle_style))
     elements.append(Spacer(1, 0.3 * inch))
     
-    # User info before table
     user_info_table = Table([
         [Paragraph(f"User: <b>{username}</b>", normal_style), 
          Paragraph(f"Whatsapp: <b>{whatsapp_number}</b>", ParagraphStyle(name='RightAlign', parent=normal_style, alignment=2))],
@@ -81,7 +82,6 @@ def generate_pdf(transactions, opening_balance, closing_balance, total_debit, to
     elements.append(user_info_table)
     elements.append(Spacer(1, 0.15 * inch))
     
-    # Transaction Table
     data = [["Date", "Description", "Credit", "Debit", "Balance"]]
     if transactions:
         for transaction in transactions:
@@ -96,25 +96,25 @@ def generate_pdf(transactions, opening_balance, closing_balance, total_debit, to
     
     table = Table(data, colWidths=transaction_col_widths)
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1E293B")),  # Header background
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#A5B4FC")),  # Header text color
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1E293B")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#A5B4FC")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-        ('ALIGN', (0, 1), (1, -1), 'LEFT'),    # Date, Description left-aligned
-        ('ALIGN', (2, 1), (-1, -1), 'RIGHT'),  # Credit, Debit, Balance right-aligned
+        ('ALIGN', (0, 1), (1, -1), 'LEFT'),
+        ('ALIGN', (2, 1), (-1, -1), 'RIGHT'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 10),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
-        ('BACKGROUND', (0, 1), (-1, -2), colors.HexColor("#111827")),  # Darker base for rows
+        ('BACKGROUND', (0, 1), (-1, -2), colors.HexColor("#111827")),
         ('TEXTCOLOR', (0, 1), (-1, -2), colors.HexColor("#D1D5DB")),
         ('GRID', (0, 1), (-1, -1), 0.3, colors.HexColor("#4B5563")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 9),
-        ('BACKGROUND', (0, -1), (-1, -1), colors.HexColor("#374151")),  # Footer row background
-        ('TEXTCOLOR', (0, -1), (-1, -1), colors.HexColor("#FFFFFF")),  # Footer row text color
+        ('BACKGROUND', (0, -1), (-1, -1), colors.HexColor("#374151")),
+        ('TEXTCOLOR', (0, -1), (-1, -1), colors.HexColor("#FFFFFF")),
         ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
-        ('TEXTCOLOR', (2, 1), (2, -1), colors.HexColor("#34D399")),  # Bright green for credits
-        ('TEXTCOLOR', (3, 1), (3, -1), colors.HexColor("#F87171")),  # Soft red for debits
-        ('TEXTCOLOR', (4, 1), (4, -1), colors.HexColor("#60A5FA")),  # Vibrant blue for balance
+        ('TEXTCOLOR', (2, 1), (2, -1), colors.HexColor("#34D399")),
+        ('TEXTCOLOR', (3, 1), (3, -1), colors.HexColor("#F87171")),
+        ('TEXTCOLOR', (4, 1), (4, -1), colors.HexColor("#60A5FA")),
         ('TOPPADDING', (0, 1), (-1, -1), 6),
         ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -125,7 +125,6 @@ def generate_pdf(transactions, opening_balance, closing_balance, total_debit, to
     
     elements.append(PageBreak())
     
-    # Page 2: Orders History
     elements.append(Paragraph("Orders History", header_style))
     elements.append(Spacer(1, 0.15 * inch))
     
@@ -137,7 +136,7 @@ def generate_pdf(transactions, opening_balance, closing_balance, total_debit, to
             total_return += return_amount
             orders_data.append([
                 order.date.strftime("%d %b %Y"),
-                order.user_profile.name[:15] if order.user_profile else "N/A",
+                order.name[:15],
                 order.model[:40],
                 f"{return_amount:,}",
                 order.pin
@@ -148,23 +147,23 @@ def generate_pdf(transactions, opening_balance, closing_balance, total_debit, to
     
     orders_table = Table(orders_data, colWidths=orders_col_widths)
     orders_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1E293B")),  # Header background
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#A5B4FC")),  # Header text color
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1E293B")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#A5B4FC")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-        ('ALIGN', (0, 1), (2, -1), 'LEFT'),    # Date, Name, Model left-aligned
-        ('ALIGN', (3, 1), (4, -1), 'RIGHT'),   # Return, Pin right-aligned
+        ('ALIGN', (0, 1), (2, -1), 'LEFT'),
+        ('ALIGN', (3, 1), (4, -1), 'RIGHT'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 10),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
-        ('BACKGROUND', (0, 1), (-1, -2), colors.HexColor("#111827")),  # Darker base for rows
+        ('BACKGROUND', (0, 1), (-1, -2), colors.HexColor("#111827")),
         ('TEXTCOLOR', (0, 1), (-1, -2), colors.HexColor("#D1D5DB")),
         ('GRID', (0, 1), (-1, -1), 0.3, colors.HexColor("#4B5563")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 9),
-        ('BACKGROUND', (0, -1), (-1, -1), colors.HexColor("#374151")),  # Footer row background
-        ('TEXTCOLOR', (0, -1), (-1, -1), colors.HexColor("#FFFFFF")),  # Footer row text color
+        ('BACKGROUND', (0, -1), (-1, -1), colors.HexColor("#374151")),
+        ('TEXTCOLOR', (0, -1), (-1, -1), colors.HexColor("#FFFFFF")),
         ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
-        ('TEXTCOLOR', (3, 1), (3, -1), colors.HexColor("#34D399")),  # Green for returns
+        ('TEXTCOLOR', (3, 1), (3, -1), colors.HexColor("#34D399")),
         ('TOPPADDING', (0, 1), (-1, -1), 6),
         ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -181,7 +180,6 @@ def generate_pdf(transactions, opening_balance, closing_balance, total_debit, to
         canvas.linearGradient(0, 10.25 * inch, 8.5 * inch, 10 * inch, 
                              [colors.HexColor("#1E293B"), colors.HexColor("#111827")], 
                              positions=[0, 1])
-        # Removed horizontal lines
         canvas.setFont('Helvetica-Bold', 8)
         canvas.setFillColor(colors.HexColor("#64748B"))
         page_num = canvas.getPageNumber()

@@ -11,6 +11,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from io import BytesIO
 from django.http import HttpResponse
 from .pdf_utils import generate_pdf
+from datetime import datetime
 
 @staff_member_required
 def order_insights(request):
@@ -131,7 +132,6 @@ def update_return_amount(request):
     
     return redirect(request.META.get('HTTP_REFERER'))
 
-from datetime import datetime
 @staff_member_required
 def ledger(request):
     date_range = request.GET.get("date_range", "").strip()
@@ -140,7 +140,8 @@ def ledger(request):
     page_number = request.GET.get("page", 1)
     export_pdf = request.GET.get("export_pdf", False)
 
-    filters = Q()
+    transaction_filters = Q()
+    order_filters = Q()
     start_date, end_date = None, None
 
     if date_range:
@@ -152,9 +153,11 @@ def ledger(request):
             start_date, end_date = None, None  
 
         if start_date and end_date:
-            filters &= Q(date__range=(start_date, end_date))
+            transaction_filters &= Q(date__range=(start_date, end_date))
+            order_filters &= Q(date__range=(start_date, end_date))
         elif start_date:
-            filters &= Q(date=start_date)
+            transaction_filters &= Q(date=start_date)
+            order_filters &= Q(date=start_date)
 
     users = (
         UserProfile.objects.annotate(latest_transaction=Max("transaction__date"))
@@ -173,77 +176,77 @@ def ledger(request):
     if selected_user != "all":
         username = username_map.get(selected_user)
         if username:
-            filters &= Q(user_profile__user__username=username)
+            transaction_filters &= Q(user_profile__user__username=username)
+            order_filters &= Q(user_profile__user__username=username)
             
     if selected_description != "all":
-        filters &= Q(description=selected_description)
+        transaction_filters &= Q(description=selected_description)
 
-    # **Opening Balance Calculation**
     user_filter = Q(user_profile__user__username=username) if selected_user != "all" else Q()
     past_transactions = Transaction.objects.filter(user_filter & Q(date__lt=start_date)) if start_date else Transaction.objects.none()
-    total_debit_before = past_transactions.filter(transaction_type="debit").aggregate(Sum("amount"))["amount__sum"] or 0
-    total_credit_before = past_transactions.filter(transaction_type="credit").aggregate(Sum("amount"))["amount__sum"] or 0
-    opening_balance = total_credit_before - total_debit_before
+    total_debit_before = int(past_transactions.filter(transaction_type="debit").aggregate(Sum("amount"))["amount__sum"] or 0)
+    total_credit_before = int(past_transactions.filter(transaction_type="credit").aggregate(Sum("amount"))["amount__sum"] or 0)
+    opening_balance = int(total_credit_before - total_debit_before)
 
-    # **Transactions in selected range**
-    transactions = Transaction.objects.filter(filters).order_by("-date", "id")
-    total_debit = transactions.filter(transaction_type="debit").aggregate(Sum("amount"))["amount__sum"] or 0
-    total_credit = transactions.filter(transaction_type="credit").aggregate(Sum("amount"))["amount__sum"] or 0
+    transactions_chronological = Transaction.objects.filter(transaction_filters).order_by("date", "id")
+    total_debit = int(transactions_chronological.filter(transaction_type="debit").aggregate(Sum("amount"))["amount__sum"] or 0)
+    total_credit = int(transactions_chronological.filter(transaction_type="credit").aggregate(Sum("amount"))["amount__sum"] or 0)
 
-    # **Running Balance Calculation**
     balance = opening_balance
-    for transaction in transactions:
+    for transaction in transactions_chronological:
+        amount = int(transaction.amount)
         if transaction.transaction_type == "credit":
-            balance += transaction.amount
+            balance += amount
+            transaction.credit = amount
+            transaction.debit = 0
         elif transaction.transaction_type == "debit":
-            balance -= transaction.amount
-        transaction.balance = int(balance)  
+            balance -= amount
+            transaction.debit = amount
+            transaction.credit = 0
+        transaction.balance = balance
 
-    # **Closing Balance Calculation**
-    closing_balance = int(balance)
-    
+    closing_balance = balance
+
+    transactions = list(transactions_chronological)[::-1]
+
     if selected_user != "all":
         username = username_map.get(selected_user)
         if username:
-            filters &= Q(user_profile__user__username=username)
-            
-            # Fetch WhatsApp number
             user_profile = UserProfile.objects.filter(user__username=username).first()
-            whatsapp_number = user_profile.whatsapp_number if user_profile else None
+            display_name = user_profile.name if user_profile and user_profile.name else username
+            whatsapp_number = user_profile.whatsapp_number if user_profile and user_profile.whatsapp_number else None
         else:
+            display_name = "Unknown"
             whatsapp_number = None
     else:
+        display_name = "All Users"
         whatsapp_number = None
 
-        
-    orders = DeliveredOrder.objects.filter(filters).order_by("-date")
+    orders = DeliveredOrder.objects.filter(order_filters).order_by("-date", "-id")
 
     if export_pdf:
-        # Create a BytesIO buffer for the PDF
         buffer = BytesIO()
-
-        # Generate the PDF
         generate_pdf(
             transactions, 
             opening_balance, 
             closing_balance, 
             total_debit, 
             total_credit, 
-            username, 
-            whatsapp_number,  # Now defined
+            display_name,
+            whatsapp_number,
             start_date, 
             end_date, 
-            orders,  # Pass the orders data
-            buffer  # Pass the buffer
+            orders,
+            buffer
         )
-
-        # Prepare the HTTP response
         response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="{username}_transaction_statement.pdf"'
+        if selected_user != "all" and username:
+            response['Content-Disposition'] = f'attachment; filename="{username}_statement.pdf"'
+        else:
+            response['Content-Disposition'] = 'attachment; filename="all_statement.pdf"'
         return response
-
-    
-    paginator = Paginator(transactions, 100)
+  
+    paginator = Paginator(transactions, 50)
     page_obj = paginator.get_page(page_number)
     
     description_options = [

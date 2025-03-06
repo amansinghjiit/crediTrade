@@ -11,37 +11,7 @@
         font-family: 'Inter', sans-serif;
         background-color: #0f172a;
         color: #e2e8f0;
-        display: flex;
-        flex-direction: column;
-        overflow-x: hidden;
-    }
-
-    .ledger-container .summary-card {
-        border-radius: 12px;
-        background-color: rgba(51, 65, 85, 0.5);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        padding: 20px;
-    }
-
-    .ledger-container .summary-card h6 {
-        font-size: 1rem;
-        color: #94a3b8;
-        font-weight: 500;
-    }
-
-    .ledger-container .summary-card h4 {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #e2e8f0;
-    }
-
-    .ledger-container h3 {
-        display: flex;
-        align-items: center;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #e2e8f0;
+        contain: paint;
     }
 
     .ledger-container .icon {
@@ -66,14 +36,12 @@
     .ledger-container .btn {
         background-color: rgba(51, 65, 85, 0.5);
         color: #e2e8f0;
-        backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 6px;
         padding: 6px 12px;
         font-size: 14px;
         font-weight: 500;
         letter-spacing: 0.5px;
-        transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s, border-color 0.3s;
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -82,8 +50,6 @@
     .ledger-container .btn:hover {
         background-color: rgba(37, 99, 235, 0.7);
         border-color: rgba(37, 99, 235, 0.7);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
 
     .ledger-container .btn i {
@@ -111,13 +77,30 @@
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
     }
 
+    .ledger-container .summary-card {
+        border-radius: 12px;
+        background-color: rgba(51, 65, 85, 0.5);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+    }
+
+    .ledger-container .summary-card h6 {
+        font-size: 1rem;
+        color: #94a3b8;
+        font-weight: 500;
+    }
+
+    .ledger-container .summary-card h4 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #e2e8f0;
+    }
+
     .ledger-table {
         flex-grow: 1;
         border-radius: 12px;
         background: #1e293b;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        overflow-y: auto;
-        overflow-x: auto;
         scrollbar-width: none;
         -ms-overflow-style: none;
     }
@@ -144,8 +127,6 @@
 
     .ledger-table  .table tbody td {
         background-color: rgba(51, 65, 85, 0.5);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     @media (max-width: 767px) {
@@ -202,9 +183,9 @@
     }
 </style>
 
-<div class="ledger-container">
+<div class="ledger-container d-flex flex-column overflow-y-auto overflow-x-hidden">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>
+        <h3 class="d-flex align-items-center fw-bold fs-4">
             <i class="fas fa-book icon" id="ledgerLogo"></i> Ledger
         </h3>
         <a href="?export_pdf=True&date_range={{ selected_date_range }}&user={{ selected_user }}&description={{ selected_description }}" class="btn btn-primary"><i class="fas fa-file-pdf"></i> Export</a>
@@ -236,24 +217,24 @@
         <div class="d-flex justify-content-between text-center">
             <div>
                 <h6>Opening Balance</h6>
-                <h4>₹{{ opening_balance }}</h4>
+                <h4>₹{{ opening_balance|intcomma }}</h4>
             </div>
             <div class="text-danger">
                 <h6>Total Debit</h6>
-                <h4>₹{{ total_debit }}</h4>
+                <h4>₹{{ total_debit|intcomma }}</h4>
             </div>
             <div class="text-success">
                 <h6>Total Credit</h6>
-                <h4>₹{{ total_credit }}</h4>
+                <h4>₹{{ total_credit|intcomma }}</h4>
             </div>
             <div class="closing-balance fw-bold">
                 <h6>Closing Balance</h6>
-                <h4>₹{{ closing_balance }}</h4>
+                <h4>₹{{ closing_balance|intcomma }}</h4>
             </div>
         </div>
     </div>
 
-    <div class="ledger-table">
+    <div class="ledger-table overflow-auto">
         <table class="table w-100 table-hover">
             <thead>
                 <tr>
@@ -269,8 +250,8 @@
                 <tr>
                     <td>{{ transaction.date }}</td>
                     <td>{{ transaction.description }}</td>
-                    <td class="text-success">{% if transaction.transaction_type == "credit" %}₹{{ transaction.amount|floatformat:0|intcomma }}{% endif %}</td>
-                    <td class="text-danger">{% if transaction.transaction_type == "debit" %}₹{{ transaction.amount|floatformat:0|intcomma }}{% endif %}</td>
+                    <td class="text-success">{% if transaction.credit != 0 %}₹{{ transaction.credit|intcomma }}{% else %}&nbsp;{% endif %}</td>
+                    <td class="text-danger">{% if transaction.debit != 0 %}₹{{ transaction.debit|intcomma }}{% else %}&nbsp;{% endif %}</td>
                     <td>₹{{ transaction.balance|intcomma }}</td>
                 </tr>
                 {% empty %}
