@@ -17,6 +17,9 @@ from .models import PendingOrder, DeliveredOrder, UserProfile, Transaction
 from .utils import paginate_queryset, login_required_message, validate_size
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.files.storage import default_storage
+from dotenv import load_dotenv
+
+load_dotenv()
 
 @login_required_message
 def dashboard(request):
@@ -53,8 +56,8 @@ def dashboard(request):
     })
     
 # WhatsApp API credentials
-WHATSAPP_ACCESS_TOKEN = "EAAPOdOemCTsBO3saTIlXNP32NUBEPZC3LPXfBTXWbI3yXb6ijwWKIxbU0gJqId2Ia3K56Gfm0eEptsE2YkpZBOPcoEpu27EPryNYPrJmBFlvfKMH6fveCeiUIbH4KmsQM7ZARvuqtGSDQe0ZBidypJa6nbBPgg4rZAt71Y3xSw6uh5MSUlJE1HZBoRucfD0ltX8Q31mJv5eT9gSzRCeIUnMNV1LUAZD"
-WHATSAPP_PHONE_NUMBER_ID = "542362108968277"
+WHATSAPP_ACCESS_TOKEN = os.getenv('WHATSAPP_ACCESS_TOKEN')
+WHATSAPP_PHONE_NUMBER_ID = os.getenv('WHATSAPP_NUMBER_ID')
 
 @login_required_message
 def handle_form_submission(request, instance=None):
@@ -63,14 +66,15 @@ def handle_form_submission(request, instance=None):
         pending_order = form.save(commit=False)
         pending_order.user_profile = request.user.userprofile
         pending_order.save()
-        
+
         pin_to_phone = {
-            'Jagdamba 766015': '91943736763', 'Delhi 110091': '917015194057', '416118 / 416115': '917982405815',
-            'Wholesale 492001': '91943736763', '228001 / 228159': '917982405815', 'Rabi 766015': '91943736763',
-            'Other': '917982405815'
+            'Jagdamba 766015': '919437367463', 
+            'Delhi 110091': '917015194057', 
+            'Wholesale 492001': '919437367463',  
+            'Rabi 766015': '919437367463', 
         }
         to_number = pin_to_phone.get(pending_order.pin, '917982405815')
-        
+
         payload = {
             "messaging_product": "whatsapp",
             "to": to_number,
@@ -79,7 +83,7 @@ def handle_form_submission(request, instance=None):
                 "body": f"{pending_order.name}\n{pending_order.tracking}\nOTP: {pending_order.otp}\nOBD: {pending_order.obd}\n{pending_order.model or 'N/A'}\nPin: {pending_order.pin}"
             }
         }
-        
+
         try:
             print(f"Sending to {to_number} with payload: {json.dumps(payload)}")
             response = requests.post(
@@ -93,7 +97,7 @@ def handle_form_submission(request, instance=None):
                 print(f"Failed to send to {to_number}. Status: {response.status_code}, Error: {response.json()}")
         except requests.exceptions.RequestException as e:
             print(f"Error sending to {to_number}: {e}")
-        
+
         messages.success(request, "Form Submitted")
         return redirect('pending')
     else:
