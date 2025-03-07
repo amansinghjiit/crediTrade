@@ -1,6 +1,8 @@
 import csv
 import os
 import re
+import json
+import requests
 from pathlib import Path
 from mimetypes import guess_type
 from decimal import Decimal
@@ -49,6 +51,10 @@ def dashboard(request):
         'pending_orders': pending_orders,
         'pending_orders_count': pending_orders_count
     })
+    
+# WhatsApp API credentials
+WHATSAPP_ACCESS_TOKEN = "EAAPOdOemCTsBO3saTIlXNP32NUBEPZC3LPXfBTXWbI3yXb6ijwWKIxbU0gJqId2Ia3K56Gfm0eEptsE2YkpZBOPcoEpu27EPryNYPrJmBFlvfKMH6fveCeiUIbH4KmsQM7ZARvuqtGSDQe0ZBidypJa6nbBPgg4rZAt71Y3xSw6uh5MSUlJE1HZBoRucfD0ltX8Q31mJv5eT9gSzRCeIUnMNV1LUAZD"
+WHATSAPP_PHONE_NUMBER_ID = "542362108968277"
 
 @login_required_message
 def handle_form_submission(request, instance=None):
@@ -57,6 +63,37 @@ def handle_form_submission(request, instance=None):
         pending_order = form.save(commit=False)
         pending_order.user_profile = request.user.userprofile
         pending_order.save()
+        
+        pin_to_phone = {
+            'Jagdamba 766015': '91943736763', 'Delhi 110091': '917015194057', '416118 / 416115': '917982405815',
+            'Wholesale 492001': '91943736763', '228001 / 228159': '917982405815', 'Rabi 766015': '91943736763',
+            'Other': '917982405815'
+        }
+        to_number = pin_to_phone.get(pending_order.pin, '917982405815')
+        
+        payload = {
+            "messaging_product": "whatsapp",
+            "to": to_number,
+            "type": "text",
+            "text": {
+                "body": f"{pending_order.name}\n{pending_order.tracking}\nOTP: {pending_order.otp}\nOBD: {pending_order.obd}\n{pending_order.model or 'N/A'}\nPin: {pending_order.pin}"
+            }
+        }
+        
+        try:
+            print(f"Sending to {to_number} with payload: {json.dumps(payload)}")
+            response = requests.post(
+                f"https://graph.facebook.com/v19.0/{WHATSAPP_PHONE_NUMBER_ID}/messages",
+                headers={"Authorization": f"Bearer {WHATSAPP_ACCESS_TOKEN}", "Content-Type": "application/json"},
+                data=json.dumps(payload)
+            )
+            if response.status_code == 200:
+                print(f"Form data sent via WhatsApp to {to_number}: {response.json()}")
+            else:
+                print(f"Failed to send to {to_number}. Status: {response.status_code}, Error: {response.json()}")
+        except requests.exceptions.RequestException as e:
+            print(f"Error sending to {to_number}: {e}")
+        
         messages.success(request, "Form Submitted")
         return redirect('pending')
     else:
