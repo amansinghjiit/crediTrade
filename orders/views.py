@@ -70,8 +70,9 @@ def handle_form_submission(request, instance=None):
         pin_to_phone = {
             'Jagdamba 766015': '919437367463', 
             'Delhi 110091': '917015194057', 
-            'Wholesale 492001': '919437367463',  
+            'Wholesale 492001': '919078979263',  
             'Rabi 766015': '919437367463', 
+            
         }
         to_number = pin_to_phone.get(pending_order.pin, '917982405815')
 
