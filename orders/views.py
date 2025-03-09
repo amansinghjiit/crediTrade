@@ -284,7 +284,8 @@ def make_payment(request, user_id):
             date=date,
             amount=amount,
             transaction_type=transaction_type,
-            description=description
+            description=description,
+            auto_created=False
         )
         
         return redirect('payments_dashboard')
