@@ -18,7 +18,7 @@
         top: 12vh;
         left: 50%;
         transform: translateX(-50%);
-        height: 86vh;
+        height: 86svh;
         display: flex;
         flex-direction: column;
     }
@@ -110,6 +110,11 @@
     }
 
     @media (max-width: 767px) {
+        .broadcast-container {
+            width: 94%;
+            max-width: none;
+        }
+        
         .broadcast-container h4 {
             font-size: 20px;
             letter-spacing: 0.8px;
