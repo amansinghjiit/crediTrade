@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Email Broadcast{% endblock %}
+
+{% block content %}
+<style>
+    .broadcast-container {
+        width: 90%;
+        max-width: 500px;
+        background: var(--white);
+        color: #333;
+        border-radius: 12px;
+        padding: 30px;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        position: absolute;
+        top: 12vh;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 86vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .broadcast-container h4 {
+        font-size: 24px;
+        color: #2a2a2a;
+    }
+
+    .broadcast-container .fas {
+        margin-right: 8px;
+        color: #2a2a2a;
+    }
+
+    .broadcast-container .form-control,
+    .broadcast-container .form-select,
+    .broadcast-container textarea {
+        border: 1px solid rgb(176, 176, 176);
+        transition: all 0.3s ease;
+        padding: 12px 14px;
+        font-size: 14px;
+        background-color: #f8f8f8;
+        color: #2a2a2a;
+    }
+
+    .broadcast-container .form-control:focus,
+    .broadcast-container .form-select:focus,
+    .broadcast-container textarea:focus {
+        border-color: #2a2a2a;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+        background-color: #fff;
+    }
+
+    .broadcast-container .form-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #4a4a4a;
+    }
+
+    .broadcast-container .message-wrapper {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .broadcast-container .message-wrapper textarea {
+        flex-grow: 1;
+        resize: none;
+        min-height: 150px;
+        font-size: 15px;
+        padding: 14px 16px;
+        line-height: 1.5;
+        border-radius: 6px;
+    }
+
+    .broadcast-container .btn {
+        font-size: 13px;
+        font-weight: 600;
+        padding: 8px 32px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .broadcast-container .btn-primary {
+        background: #2a2a2a;
+        border: none;
+        color: #fff;
+    }
+
+    .broadcast-container .btn-primary:hover {
+        background: #1a1a1a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .broadcast-container .btn-outline-secondary {
+        color: #5a5a5a;
+        border: 1px solid #5a5a5a;
+        background: transparent;
+    }
+
+    .broadcast-container .btn-outline-secondary:hover {
+        background: #5a5a5a;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 767px) {
+        .broadcast-container h4 {
+            font-size: 20px;
+            letter-spacing: 0.8px;
+        }
+
+        .broadcast-container .fas {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .broadcast-container .d-flex.justify-content-between {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .broadcast-container .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="broadcast-container">
+    <h4 class="text-center fw-bold mb-4"><i class="fas fa-bullhorn"></i> Email Broadcast</h4>
+
+    <form method="POST" id="broadcastForm" class="d-flex flex-column h-100">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="subject" class="form-label">Subject</label>
+            <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter Subject" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="min_orders" class="form-label">Target Audience</label>
+            <select class="form-select" id="min_orders" name="min_orders">
+                <option value="all">All Users ({{ all_users_count }})</option>
+                {% if less_than_five_orders_count > 0 %}
+                    <option value="less_than_5">Fewer than 5 Orders ({{ less_than_five_orders_count }})</option>
+                {% endif %}
+
+                {% for threshold, count in thresholds %}
+                    {% if count > 0 %}
+                        <option value="{{ threshold }}">{{ threshold }}+ Orders ({{ count }})</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="message-wrapper mb-3">
+            <label for="message_content" class="form-label">Message</label>
+            <textarea class="form-control" id="message_content" name="message_content" placeholder="Enter your message..." required></textarea>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Send</button>
+            <button type="reset" class="btn btn-outline-secondary" id="broadcast_resetBtn">↺ Reset</button>
+        </div>
+    </form>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('broadcastForm');
+        const subjectInput = document.getElementById('subject');
+        const resetButton = document.getElementById('broadcast_resetBtn');
+        subjectInput.focus();
+
+        form.addEventListener('submit', (e) => {
+            const errors = document.querySelectorAll('.alert-danger');
+            if (!errors.length) {
+                setTimeout(() => {
+                    form.reset();
+                    subjectInput.focus();
+                }, 1000);
+            }
+        });
+    
+        resetButton.addEventListener('click', () => {
+            form.reset();
+            subjectInput.focus();
+        });
+    });
+    
+</script>
+{% endblock %}

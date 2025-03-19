@@ -19,8 +19,10 @@
                         <li class="nav__item dropdown {% if request.path|slice:":10" == '/analytics' %}active{% endif %}">
                             <a class="nav__link dropdown-toggle" href="#" role="button" id="analyticsDropdown" data-bs-toggle="dropdown" aria-expanded="false">Analytics</a>
                             <ul class="dropdown-menu" aria-labelledby="analyticsDropdown">
-                                <li><a class="dropdown-item nav__link {% if request.path == '/order_insights/' %}active{% endif %}" href="{% url 'order_insights' %}">Order Insights</a></li>
+                                <li><a class="dropdown-item nav__link" href="{% url 'admin:index' %}">Admin</a></li>
                                 <li><a class="dropdown-item nav__link {% if request.path == '/ledger/' %}active{% endif %}" href="{% url 'ledger' %}">Ledger</a></li>
+                                <li><a class="dropdown-item nav__link {% if request.path == '/order_insights/' %}active{% endif %}" href="{% url 'order_insights' %}">Order Insights</a></li>
+                                <li><a class="dropdown-item nav__link {% if request.path == '/ledger/' %}active{% endif %}" href="{% url 'email_broadcast' %}">Email Broadcast</a></li>
                             </ul>
                         </li>                                        
                     {% endif %}

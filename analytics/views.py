@@ -12,6 +12,9 @@ from io import BytesIO
 from django.http import HttpResponse
 from .pdf_utils import generate_pdf
 from datetime import datetime
+from django.core.mail import EmailMessage
+from django.contrib.auth.models import User
+from django.db.models import Count
 
 @staff_member_required
 def order_insights(request):
@@ -272,3 +275,44 @@ def ledger(request):
     }
 
     return render(request, "analytics/ledger.html", context)
+
+@staff_member_required
+def email_broadcast(request):
+    users_with_orders = User.objects.filter(is_active=True).annotate(order_count=Count('userprofile__deliveredorder'))
+    all_users_count, less_than_five_orders_count = users_with_orders.count(), users_with_orders.filter(order_count__lt=5).count()
+    thresholds = [(t, users_with_orders.filter(order_count__gte=t).count()) for t in range(5, 51, 5)]
+
+    if request.method == 'POST':
+        subject, message_content, min_orders = request.POST.get('subject', ''), request.POST.get('message_content', ''), request.POST.get('min_orders', 'all')
+
+        if not message_content:
+            messages.error(request, 'Message cannot be empty')
+            return redirect('email_broadcast')
+
+        users = (
+            users_with_orders if min_orders == 'all'
+            else users_with_orders.filter(order_count__lt=5) if min_orders == 'less_than_5'
+            else users_with_orders.filter(order_count__gte=int(min_orders))
+        )
+        
+        email_list = [user.email for user in users]
+
+        from_email = 'CrediTrade <noreply@creditrade.in>'
+        email_messages = [
+            EmailMessage(subject=subject, body=message_content, from_email=from_email, to=[user.email], reply_to=['noreply@creditrade.in'])
+            for user in users
+        ]
+        
+        try:
+            [email.send(fail_silently=False) for email in email_messages]
+            messages.success(request, f'Successfully sent to {len(email_list)} users')
+        except Exception as e:
+            messages.error(request, f'Error sending mail: {str(e)}')
+
+        return redirect('email_broadcast')
+
+    return render(request, 'analytics/email_broadcast.html', {
+        'all_users_count': all_users_count,
+        'less_than_five_orders_count': less_than_five_orders_count,
+        'thresholds': thresholds
+    })
