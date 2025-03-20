@@ -25,7 +25,6 @@ class PendingOrder(models.Model):
         ('Delhi 110091', 'Delhi 110091'),
         ('416118 / 416115' , '416118 / 416115'),
         ('Wholesale 492001', 'Wholesale 492001'),
-        ('228001 / 228159', '228001 / 228159'),
         ('Rabi 766015', 'Rabi 766015'),
         ('Other', 'Other'),
     ]

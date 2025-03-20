@@ -71,8 +71,8 @@ def handle_form_submission(request, instance=None):
             'Jagdamba 766015': '919437367463', 
             'Delhi 110091': '917015194057', 
             'Wholesale 492001': '919078979263',  
-            'Rabi 766015': '919437367463', 
-            
+            'Rabi 766015': '919437367463',
+            '416118 / 416115': '918237084370',
         }
         to_number = pin_to_phone.get(pending_order.pin, '917982405815')
 
@@ -121,8 +121,6 @@ def pending_orders_view(request):
     elif request.user.username == 'sumeet2796':
         pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['Jagdamba 766015', 'Rabi 766015','Wholesale 492001'])).order_by('-id')
     elif request.user.username == 'flirtoxiz':
-        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='228001 / 228159')).order_by('-id')
-    elif request.user.username == 'mhetarashu':
         pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='416118 / 416115')).order_by('-id')
     elif request.user.username == 'kr.somesh007':
         pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='110091')).order_by('-id')
