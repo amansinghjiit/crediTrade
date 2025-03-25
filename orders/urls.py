@@ -10,6 +10,7 @@ urlpatterns = [
     path('upload_invoice/', views.upload_invoice, name='upload_invoice'),
     path('remove_invoice/', views.remove_invoice, name='remove_invoice'),
     path('view_invoice/<int:order_id>/', views.view_invoice, name='view_invoice'),
+    path('trackmatch/', views.trackmatch, name='trackmatch'),
     path('export_pending_orders_csv/', views.export_pending_orders_csv, name='export_pending_orders_csv'),
     path('export_delivered_orders_csv/', views.export_delivered_orders_csv, name='export_delivered_orders_csv'),
     path('dashboard/', views.dashboard, name='dashboard'),

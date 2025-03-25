@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}TrackMatch{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <div class="order-table">
+        <div class="col-sm-12">
+            <div class="card border-0 rounded-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3 mx-2">
+                        <h5 class="fw-bolder mb-0" style="font-size: 18px; color: #333; text-transform: uppercase; letter-spacing: 1px;">TrackMatch</h5>
+                        <div class="text-nowrap">
+                            <button style="font-size:12px;" class="btn btn-danger fw-bold" id="toggleButton" onclick="toggleMissingTable()">Missing</button>
+                            <button style="font-size:12px;" class="btn btn-primary fw-bold" onclick="copyTableData()">Copy</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        {% if error %}
+                            <div class="alert alert-danger text-center">{{ error }}</div>
+                        {% else %}
+                            <table class="table px-3 py-2 text-center border" style="font-size:14px" id="trackmatch-table">
+                                <thead>
+                                    <tr class="table-heading fw-bolder">
+                                        <th class="text-nowrap">Date</th>
+                                        <th class="text-nowrap">User</th>
+                                        <th class="text-nowrap">Tracking</th>
+                                        <th class="text-nowrap">Model</th>
+                                        <th class="text-nowrap">Product</th>
+                                        <th class="text-nowrap">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in table_data %}
+                                    <tr class="{% if row.match %}table-success{% else %}table-danger{% endif %}">
+                                        <td class="text-nowrap">{{ row.date }}</td>
+                                        <td class="text-nowrap">{{ row.name }}</td>
+                                        <td class="text-nowrap">{{ row.tracking }}</td>
+                                        <td class="text-nowrap">{{ row.model }}</td>
+                                        <td class="text-nowrap">{{ row.product_name|default:"-" }}</td>
+                                        <td class="text-nowrap">{{ row.price|floatformat:0|default:"-" }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6">No pending orders found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <table class="table px-3 py-2 text-center border table-striped" id="missing-table" style="font-size:14px; display: none;">
+                                <thead>
+                                    <tr class="table-heading fw-bolder">
+                                        <th class="text-nowrap">Date</th>
+                                        <th class="text-nowrap">Product</th>
+                                        <th class="text-nowrap">Tracking</th>
+                                        <th class="text-nowrap">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in missing_data %}
+                                    <tr>
+                                        <td class="text-nowrap">{{ row.date }}</td>
+                                        <td class="text-nowrap">{{ row.product_name }}</td>
+                                        <td class="text-nowrap">{{ row.tracking }}</td>
+                                        <td class="text-nowrap">{{ row.price|floatformat:0 }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4">No missing trackings found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyTableData() {
+        const table = document.getElementById("trackmatch-table");
+        let rows = table.querySelectorAll("tbody tr");
+        let copyText = "";
+
+        rows.forEach(row => {
+            const date = row.children[0].innerText.trim();
+            const user = row.children[1].innerText.trim();
+            const tracking = row.children[2].innerText.trim();
+            const model = row.children[3].innerText.trim();
+            copyText += `${date}\t${user}\t${tracking}\t${model}\n`;
+        });
+
+        const tempTextArea = document.createElement("textarea");
+        tempTextArea.value = copyText;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempTextArea);
+    }
+
+    function toggleMissingTable() {
+        const missingTable = document.getElementById("missing-table");
+        const mainTable = document.getElementById("trackmatch-table");
+        const toggleButton = document.getElementById("toggleButton");
+        
+        if (missingTable.style.display === "none" || missingTable.style.display === "") {
+            missingTable.style.display = "table";
+            mainTable.style.display = "none";
+            toggleButton.textContent = "Pending";
+            toggleButton.classList.remove("btn-danger");
+            toggleButton.classList.add("btn-warning");
+        } else {
+            missingTable.style.display = "none";
+            mainTable.style.display = "table";
+            toggleButton.textContent = "Missing";
+            toggleButton.classList.remove("btn-warning");
+            toggleButton.classList.add("btn-danger");
+        }
+    }
+</script>
+{% endblock %}

@@ -13,7 +13,11 @@
                         <h5 class="offcanvas-title fw-bolder mb-0" style="font-size: 18px; color: #333; text-transform: uppercase; letter-spacing: 1px;">Pending Orders</h5>
                         <div class="text-nowrap">
                             <a href="{% url 'export_pending_orders_csv' %}" class="export-btn me-1">Export</a>
-                            <a href="{% url 'delivery_form' %}" class="btn-new-order">New Order</a>
+                            {% if is_staff %}
+                                <a href="{% url 'trackmatch' %}" class="btn-new-order">Match</a>
+                            {% else %}
+                                <a href="{% url 'delivery_form' %}" class="btn-new-order">New Order</a>
+                            {% endif %}
                         </div>
                     </div>                
                     <div class="table-responsive">

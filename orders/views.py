@@ -3,6 +3,7 @@ import os
 import re
 import json
 import requests
+import logging
 from pathlib import Path
 from mimetypes import guess_type
 from decimal import Decimal
@@ -18,7 +19,9 @@ from .utils import paginate_queryset, login_required_message, validate_size
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.files.storage import default_storage
 from dotenv import load_dotenv
+from datetime import datetime, timedelta
 
+logger = logging.getLogger(__name__)
 load_dotenv()
 
 @login_required_message
@@ -126,7 +129,7 @@ def pending_orders_view(request):
         pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='110091')).order_by('-id')
     else:
         pending_orders = PendingOrder.objects.filter(user_profile=request.user.userprofile).order_by('-id')
-    return render(request, 'orders/pending.html', {'pending_orders': pending_orders})
+    return render(request, 'orders/pending.html', {'pending_orders': pending_orders,'is_staff': request.user.is_staff})
 
 @login_required_message
 def delete_entry(request, id):
@@ -218,6 +221,84 @@ def view_invoice(request, order_id):
 
     return redirect('delivered')
 
+@staff_member_required
+def trackmatch(request):
+    try:
+        api_url = "https://trackmatch-production.up.railway.app/api/"
+        response = requests.get(api_url, timeout=30)
+        response.raise_for_status()
+        scraped_data = response.json().get('data', [])
+        
+        pending_orders = PendingOrder.objects.filter(pin="Delhi 110091", status='Pending').only('tracking', 'name', 'model')
+        pending_tracking_set = {order.tracking for order in pending_orders}
+        scraped_tracking_map = {item['tracking']: item for item in scraped_data}
+
+        table_data = []
+        for order in pending_orders:
+            scraped_item = scraped_tracking_map.get(order.tracking)
+            if scraped_item:
+                raw_date = scraped_item['date']
+                try:
+                    dt = datetime.strptime(raw_date, "%b %d, %Y %I:%M:%S %p")
+                    formatted_date = dt.strftime("%d %b")
+                except ValueError:
+                    formatted_date = raw_date
+
+                table_data.append({
+                    'tracking': order.tracking,
+                    'name': order.name,
+                    'model': order.model or "N/A",
+                    'match': True,
+                    'date': formatted_date,
+                    'product_name': scraped_item['product_name'],
+                    'price': scraped_item['price']
+                })
+            else:
+                table_data.append({
+                    'tracking': order.tracking,
+                    'name': order.name,
+                    'model': order.model or "N/A",
+                    'match': False,
+                    'date': "-"
+                })
+
+        missing_data = []
+        five_days_ago = datetime.now() - timedelta(days=5)
+        for item in scraped_data:
+            if item['tracking'] not in pending_tracking_set:
+                raw_date = item['date']
+                try:
+                    dt = datetime.strptime(raw_date, "%b %d, %Y %I:%M:%S %p")
+                    formatted_date = dt.strftime("%d %b")
+                    if dt >= five_days_ago:
+                        missing_data.append({
+                            'date': formatted_date,
+                            'product_name': item['product_name'],
+                            'tracking': item['tracking'],
+                            'price': item['price']
+                        })
+                except ValueError:
+                    formatted_date = raw_date
+                    missing_data.append({
+                        'date': formatted_date,
+                        'product_name': item['product_name'],
+                        'tracking': item['tracking'],
+                        'price': item['price']
+                    })
+
+        context = {
+            'table_data': table_data,
+            'missing_data': missing_data,
+        }
+        return render(request, 'orders/trackmatch.html', context)
+
+    except requests.RequestException as e:
+        logger.error(f"API request failed: {str(e)}", exc_info=True)
+        return render(request, 'orders/trackmatch.html', {'error': 'Failed to fetch data.'})
+    except Exception as e:
+        logger.error(f"Trackmatch error: {str(e)}", exc_info=True)
+        return render(request, 'orders/trackmatch.html', {'error': 'An unexpected error occurred.'})
+    
 @login_required_message
 def export_pending_orders_csv(request):
     user_profile = request.user.userprofile
