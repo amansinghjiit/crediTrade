@@ -228,14 +228,15 @@ def trackmatch(request):
         response = requests.get(api_url, timeout=30)
         response.raise_for_status()
         scraped_data = response.json().get('data', [])
-        
-        pending_orders = PendingOrder.objects.filter(pin="Delhi 110091", status='Pending').only('tracking', 'name', 'model')
-        pending_tracking_set = {order.tracking for order in pending_orders}
+
+        pending_orders = PendingOrder.objects.filter(pin="Delhi 110091", status='Pending').order_by('-id')
         scraped_tracking_map = {item['tracking']: item for item in scraped_data}
 
         table_data = []
+
         for order in pending_orders:
             scraped_item = scraped_tracking_map.get(order.tracking)
+
             if scraped_item:
                 raw_date = scraped_item['date']
                 try:
@@ -264,8 +265,9 @@ def trackmatch(request):
 
         missing_data = []
         five_days_ago = datetime.now() - timedelta(days=5)
+
         for item in scraped_data:
-            if item['tracking'] not in pending_tracking_set:
+            if not PendingOrder.objects.filter(tracking=item['tracking']).exists():
                 raw_date = item['date']
                 try:
                     dt = datetime.strptime(raw_date, "%b %d, %Y %I:%M:%S %p")
@@ -278,9 +280,8 @@ def trackmatch(request):
                             'price': item['price']
                         })
                 except ValueError:
-                    formatted_date = raw_date
                     missing_data.append({
-                        'date': formatted_date,
+                        'date': raw_date,
                         'product_name': item['product_name'],
                         'tracking': item['tracking'],
                         'price': item['price']
