@@ -4,13 +4,17 @@
 {% block title %}Pending Orders{% endblock %}
 
 {% block content %}
+<style>
+@media (max-width: 767px) { .order-head { display: none; } }
+</style>
+
 <div class="table-container">
     <div class="order-table">
         <div class="col-sm-12">
             <div class="card border-0 rounded-0">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3 mx-2">  
-                        <h5 class="offcanvas-title fw-bolder mb-0" style="font-size: 18px; color: #333; text-transform: uppercase; letter-spacing: 1px;">Pending Orders</h5>
+                        <h5 class="offcanvas-title fw-bolder mb-0" style="font-size: 18px; color: #333; text-transform: uppercase; letter-spacing: 1px;">Pending <span class="order-head">Orders</span></h5>
                         <div class="text-nowrap">
                             <a href="{% url 'export_pending_orders_csv' %}" class="export-btn me-1">Export</a>
                             {% if is_staff %}

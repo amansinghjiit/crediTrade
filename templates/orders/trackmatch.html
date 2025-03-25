@@ -24,6 +24,7 @@
                             <table class="table px-3 py-2 text-center border" style="font-size:14px" id="trackmatch-table">
                                 <thead>
                                     <tr class="table-heading fw-bolder">
+                                        <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th>
                                         <th class="text-nowrap">Date</th>
                                         <th class="text-nowrap">User</th>
                                         <th class="text-nowrap">Tracking</th>
@@ -35,6 +36,7 @@
                                 <tbody>
                                     {% for row in table_data %}
                                     <tr class="{% if row.match %}table-success{% else %}table-danger{% endif %}">
+                                        <td><input type="checkbox" class="row-select"></td>
                                         <td class="text-nowrap">{{ row.date }}</td>
                                         <td class="text-nowrap">{{ row.name }}</td>
                                         <td class="text-nowrap">{{ row.tracking }}</td>
@@ -44,7 +46,7 @@
                                     </tr>
                                     {% empty %}
                                     <tr>
-                                        <td colspan="6">No pending orders found.</td>
+                                        <td colspan="7">No pending orders found.</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -89,19 +91,31 @@
         let copyText = "";
 
         rows.forEach(row => {
-            const date = row.children[0].innerText.trim();
-            const user = row.children[1].innerText.trim();
-            const tracking = row.children[2].innerText.trim();
-            const model = row.children[3].innerText.trim();
-            copyText += `${date}\t${user}\t${tracking}\t${model}\n`;
+            const checkbox = row.querySelector(".row-select");
+            if (checkbox.checked) {
+                const user = row.children[2].innerText.trim();
+                const tracking = row.children[3].innerText.trim();
+                const model = row.children[4].innerText.trim();
+                copyText += `${user}\t${tracking}\t${model}\n`;
+            }
         });
 
-        const tempTextArea = document.createElement("textarea");
-        tempTextArea.value = copyText;
-        document.body.appendChild(tempTextArea);
-        tempTextArea.select();
-        document.execCommand("copy");
-        document.body.removeChild(tempTextArea);
+        if (copyText) {
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = copyText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempTextArea);
+        }
+    }
+
+    function toggleSelectAll() {
+        const selectAll = document.getElementById("selectAll");
+        const checkboxes = document.querySelectorAll(".row-select");
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAll.checked;
+        });
     }
 
     function toggleMissingTable() {

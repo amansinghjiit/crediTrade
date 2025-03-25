@@ -5,6 +5,9 @@
 {% block title %}Delivered Orders{% endblock %}
 
 {% block content %}
+<style>
+@media (max-width: 767px) { .order-head { display: none; } }
+</style>
 
 <div class="table-container">
     <div class="order-table">
@@ -12,7 +15,7 @@
             <div class="card border-0 rounded-0">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3 mx-2"> 
-                        <h5 class="offcanvas-title fw-bolder mb-0" style="font-size: 18px; color: #333; text-transform: uppercase; letter-spacing: 1px;">Delivered Orders</h5>
+                        <h5 class="offcanvas-title fw-bolder mb-0" style="font-size: 18px; color: #333; text-transform: uppercase; letter-spacing: 1px;">Delivered <span class="order-head">Orders</span></h5>
                         <div class='d-flex align-items-center search-bar'>
                             <input class="form-control me-2 search-input border-3 py-1" type="search" placeholder="Search" aria-label="Search" name="q" id="search-input">
                             <a href="{% url 'export_delivered_orders_csv' %}" class="btn btn-primary btn-new-order">Export</a>
