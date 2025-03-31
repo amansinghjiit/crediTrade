@@ -54,6 +54,7 @@ img {
   overflow-y: scroll;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  padding-bottom: 0;
 }
 
 .main::-webkit-scrollbar {
