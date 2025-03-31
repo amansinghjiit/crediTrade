@@ -93,3 +93,88 @@
         </div>
     </div>
 </div>
+<nav class="bottom-nav fixed-bottom bg-white shadow-lg">
+    <a href="{% url 'home' %}" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}">
+        <i class="fas fa-home"></i>
+    </a>
+    <a href="{% url 'profile' %}" class="bottom-nav-item {% if request.path == '/profile/' %}active{% endif %}">
+        <i class="fas fa-user"></i>
+    </a>
+    <a href="{% url 'dashboard' %}" class="bottom-nav-item {% if request.path == '/orders/dashboard/' %}active{% endif %}">
+        <i class="fas fa-chart-line"></i> <!-- Better for dashboard -->
+    </a>
+    <a href="{% url 'delivery_form' %}" class="bottom-nav-item {% if request.path == '/orders/delivery-form/' %}active{% endif %}">
+        <i class="fas fa-shipping-fast"></i> <!-- More dynamic delivery icon -->
+    </a>
+    <a href="{% url 'delivered' %}" class="bottom-nav-item {% if request.path == '/orders/delivered/' %}active{% endif %}">
+        <i class="fas fa-box-open"></i> <!-- More relevant for delivered orders -->
+    </a>
+</nav>
+
+
+<style>
+    .bottom-nav {
+        display: none;
+        justify-content: space-around;
+        align-items: center;
+        height: 60px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        z-index: var(--z-fixed);
+    }
+
+    .is-pwa .bottom-nav {
+        display: flex;
+    }
+
+    .bottom-nav.hidden {
+        transform: translateY(100%);
+    }
+
+    .bottom-nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 10px 0;
+        color: var(--text-color);
+        transition: color 0.3s ease;
+    }
+
+    .bottom-nav-item i {
+        font-size: 1.5rem;
+    }
+
+    .bottom-nav-item.active,
+    .bottom-nav-item:hover {
+        color: var(--blue);
+    }
+
+    .main {
+        padding-bottom: 0;
+    }
+
+    .is-pwa .main {
+        margin-bottom: 60px;
+    }
+
+    @media (min-width: 768px) {
+        .bottom-nav {
+            display: none !important;
+        }
+        .main {
+            padding-bottom: 0 !important;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const isPWA = () => (
+            window.matchMedia('(display-mode: standalone)').matches ||
+            window.matchMedia('(display-mode: fullscreen)').matches ||
+            navigator.standalone === true
+        );
+    
+        if (isPWA()) document.body.classList.add('is-pwa');
+    });
+    
+</script>
