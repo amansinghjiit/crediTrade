@@ -1,53 +1,52 @@
 {% load static %}
 <style>
-    .bottom-nav { 
-        display: none; 
-        justify-content: space-around; 
-        align-items: center; 
-        height: 60px; 
+    .bottom-nav {
+        display: none;
+        justify-content: space-around;
+        align-items: center;
+        height: 60px;
         padding-bottom: env(safe-area-inset-bottom, 0);
-        border-top: 1px solid rgba(0, 0, 0, 0.1); 
-        transition: transform 0.3s ease-in-out; 
-        z-index: var(--z-fixed); 
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        z-index: var(--z-fixed);
         background: #fff;
     }
 
-    .is-pwa .bottom-nav { 
-        display: flex; 
+    .bottom-nav.hidden {
+        transform: translateY(100%);
     }
 
-    .bottom-nav.hidden { 
-        transform: translateY(100%); 
+    .bottom-nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 10px 0;
+        color: var(--text-color);
+        transition: color 0.3s ease;
     }
 
-    .bottom-nav-item { 
-        flex: 1; 
-        text-align: center; 
-        padding: 10px 0; 
-        color: var(--text-color); 
-        transition: color 0.3s ease; 
-    }
-
-    .bottom-nav-item i { 
-        font-size: 1.5rem; 
+    .bottom-nav-item i {
+        font-size: 1.5rem;
     }
 
     .bottom-nav-item.active, 
-    .bottom-nav-item:hover { 
-        color: var(--blue); 
+    .bottom-nav-item:hover {
+        color: var(--blue);
     }
 
-    .is-pwa .main { 
-        margin-bottom: calc(60px + env(safe-area-inset-bottom, 0));
-    }
+    /* PWA mode on small screens */
+    @media (max-width: 767px) {
+        .is-pwa .bottom-nav {
+            display: flex;
+        }
+        
+        .is-pwa .main {
+            margin-bottom: calc(60px + env(safe-area-inset-bottom, 0));
+        }
 
-    .is-pwa .order-table, 
-    .is-pwa .payment-table { 
-        padding-bottom: calc(40px + env(safe-area-inset-bottom, 0));
-    }
-
-    .is-pwa #nav-toggle { 
-        display: none; 
+        .is-pwa .order-table, 
+        .is-pwa .payment-table {
+            padding-bottom: calc(40px + env(safe-area-inset-bottom, 0));
+        }
     }
 </style>
 <header class="header fixed-top w-100 d-flex align-items-center justify-content-center bg-body" id="header">
