@@ -33,10 +33,6 @@
         color: var(--blue);
     }
 
-    .animate__fadeIn, .animate__fadeOut {
-        animation-duration: 0.2s !important;
-    }
-
     /* PWA mode on small screens */
     @media (max-width: 767px) {
         .is-pwa .bottom-nav {
@@ -155,25 +151,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-      if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
-        document.body.classList.add('is-pwa');
-      }
-  
-      document.querySelectorAll('.bottom-nav-item').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const href = link.getAttribute('href');
-  
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-  
-          const mainContent = document.getElementById('main-content');
-          mainContent.classList.add('animate__animated', 'animate__fadeOut');
-          mainContent.addEventListener('animationend', () => (window.location.href = href), { once: true });
-        });
-      });
-  
-      document.getElementById('main-content').classList.add('animate__animated', 'animate__fadeIn');
+        const isPWA = () => (
+            window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true
+        );
+        if (isPWA()) document.body.classList.add('is-pwa');
     });
-  </script>
-  
-  
+</script>

@@ -19,7 +19,6 @@ const urlsToCache = [
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css',
   'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
-  'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css',
 ];
 
 self.addEventListener('install', event => {
