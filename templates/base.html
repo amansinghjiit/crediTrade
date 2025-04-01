@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
 
@@ -33,7 +34,7 @@
   {% include "core/header.html" %}
   
   <!-- Main Content -->
-  <main class="main">
+  <main class="main" id="main-content">
     {% block content %}{% endblock %}
   </main>
 

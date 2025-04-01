@@ -33,6 +33,10 @@
         color: var(--blue);
     }
 
+    .animate__fadeIn, .animate__fadeOut {
+        animation-duration: 0.2s !important;
+    }
+
     /* PWA mode on small screens */
     @media (max-width: 767px) {
         .is-pwa .bottom-nav {
@@ -139,18 +143,37 @@
     </div>
 </div>
 
-<nav class="bottom-nav fixed-bottom bg-white shadow-lg">
-    <a href="{% url 'home' %}" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}"><i class="fas fa-home"></i></a>
-    <a href="{% url 'profile' %}" class="bottom-nav-item {% if request.path == '/profile/' %}active{% endif %}"><i class="fas fa-user"></i></a>
-    <a href="{% url 'dashboard' %}" class="bottom-nav-item {% if request.path == '/orders/dashboard/' %}active{% endif %}"><i class="fas fa-chart-line"></i></a>
-    <a href="{% url 'delivery_form' %}" class="bottom-nav-item {% if request.path == '/orders/delivery-form/' %}active{% endif %}"><i class="fas fa-shipping-fast"></i></a>
-    <a href="{% url 'delivered' %}" class="bottom-nav-item {% if request.path == '/orders/delivered/' %}active{% endif %}"><i class="fas fa-box-open"></i></a>
+{% if user.is_authenticated %}
+<nav class="bottom-nav fixed-bottom bg-white shadow-lg logged-in">
+  <a href="{% url 'home' %}" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}"><i class="fas fa-home"></i></a>
+  <a href="{% url 'profile' %}" class="bottom-nav-item {% if request.path == '/profile/' %}active{% endif %}"><i class="fas fa-user"></i></a>
+  <a href="{% url 'dashboard' %}" class="bottom-nav-item {% if request.path == '/orders/dashboard/' %}active{% endif %}"><i class="fas fa-chart-line"></i></a>
+  <a href="{% url 'delivery_form' %}" class="bottom-nav-item {% if request.path == '/orders/delivery-form/' %}active{% endif %}"><i class="fas fa-shipping-fast"></i></a>
+  <a href="{% url 'delivered' %}" class="bottom-nav-item {% if request.path == '/orders/delivered/' %}active{% endif %}"><i class="fas fa-box-open"></i></a>
 </nav>
+{% endif %}
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const isPWA = () => (
-            window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true
-        );
-        if (isPWA()) document.body.classList.add('is-pwa');
+      if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
+        document.body.classList.add('is-pwa');
+      }
+  
+      document.querySelectorAll('.bottom-nav-item').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const href = link.getAttribute('href');
+  
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+          const mainContent = document.getElementById('main-content');
+          mainContent.classList.add('animate__animated', 'animate__fadeOut');
+          mainContent.addEventListener('animationend', () => (window.location.href = href), { once: true });
+        });
+      });
+  
+      document.getElementById('main-content').classList.add('animate__animated', 'animate__fadeIn');
     });
-</script>
+  </script>
+  
+  
