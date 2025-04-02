@@ -14,35 +14,6 @@
         display: none;
     }
     
-    .main-loading-spinner {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 9999;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-    
-    .main-loading-spinner.active {
-        opacity: 1;
-    }
-    
-    .spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid rgba(0, 0, 0, 0.1);
-        border-top: 4px solid var(--blue);
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-    }
-    
-    @keyframes spin { 
-        to { 
-            transform: rotate(360deg); 
-        } 
-    }
-    
     .main.loading {
         opacity: 0.7;
         transition: opacity 0.3s ease;
@@ -225,38 +196,19 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
-            document.body.classList.add('is-pwa');
-        }
-        
-        NProgress.configure({ 
-            showSpinner: false, 
-            trickleSpeed: 200, 
-            minimum: 0.3 
-        });
-        
-        const mainElement = document.querySelector('.main');
-        const spinnerElement = document.querySelector('.main-loading-spinner');
-        const bottomNavLinks = document.querySelectorAll('.bottom-nav-item');
-        
-        function handleNavigation(event) {
-            if (event.ctrlKey || event.metaKey || event.button === 1) return;
-            event.preventDefault();
-            const href = this.getAttribute('href');
+        (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) && document.body.classList.add('is-pwa');
+        NProgress.configure({showSpinner: false, trickle: true, trickleSpeed: 200, minimum: 0.1});
+        const main = document.querySelector('.main'), nav_links = document.querySelectorAll('.bottom-nav-item'), handleClick = e => {
+            if (e.ctrlKey || e.metaKey || e.button !== 0) return;
+            e.preventDefault();
             NProgress.start();
-            spinnerElement.classList.add('active');
-            mainElement.classList.add('loading');
-            setTimeout(() => (window.location.href = href), 300);
-        }
-        
-        if (document.body.classList.contains('is-pwa')) {
-            bottomNavLinks.forEach(link => link.addEventListener('click', handleNavigation));
-        }
-        
+            main.classList.add('loading');
+            window.location.href = e.currentTarget.href;
+        };
+        nav_links.forEach(link => link.addEventListener('click', handleClick));
         window.addEventListener('load', () => {
             NProgress.done();
-            spinnerElement.classList.remove('active');
-            mainElement.classList.remove('loading');
+            main.classList.remove('loading');
         });
-    });    
+    });
 </script>
