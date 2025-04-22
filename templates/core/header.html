@@ -56,7 +56,8 @@
         .is-pwa .bottom-nav {
             display: flex;
         }
-        
+
+        {% if user.is_authenticated %}
         .is-pwa .main {
             margin-bottom: calc(60px + env(safe-area-inset-bottom, 0));
         }
@@ -65,6 +66,7 @@
         .is-pwa .payment-table {
             padding-bottom: calc(40px + env(safe-area-inset-bottom, 0));
         }
+        {% endif %}
     }
 </style>
 
