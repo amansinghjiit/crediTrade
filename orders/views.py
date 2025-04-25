@@ -71,11 +71,15 @@ def handle_form_submission(request, instance=None):
         pending_order.save()
 
         pin_to_phone = {
-            'Jagdamba 766015': '919437367463', 
+            'Jagdamba 766015': '919437367463',
+            'Wholesale 492001': '919078979263', 
+            'Pansari 767001': '919078979263',
+            'Rabi 766015': '919437367463', 
             'Delhi 110091': '917015194057', 
-            'Wholesale 492001': '919078979263',  
-            'Rabi 766015': '919437367463',
             '416118 / 416115': '918237084370',
+            '228001 / 228159': '918418948086',
+            '226020 / 226021': '918418948086',
+            '225001': '918418948086',
         }
         to_number = pin_to_phone.get(pending_order.pin, '917982405815')
 
@@ -122,11 +126,13 @@ def pending_orders_view(request):
     if request.user.is_staff:
         pending_orders = PendingOrder.objects.all().order_by('-id')
     elif request.user.username == 'sumeet2796':
-        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['Jagdamba 766015', 'Rabi 766015','Wholesale 492001'])).order_by('-id')
+        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['Jagdamba 766015', 'Rabi 766015','Wholesale 492001','Pansari 767001'])).order_by('-id')
     elif request.user.username == 'mhetarashu':
         pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='416118 / 416115')).order_by('-id')
     elif request.user.username == 'kr.somesh007':
         pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='110091')).order_by('-id')
+    elif request.user.username == 'help228159':
+        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['228001 / 228159', '226020 / 226021', '225001'])).order_by('-id')
     else:
         pending_orders = PendingOrder.objects.filter(user_profile=request.user.userprofile).order_by('-id')
     return render(request, 'orders/pending.html', {'pending_orders': pending_orders,'is_staff': request.user.is_staff})
