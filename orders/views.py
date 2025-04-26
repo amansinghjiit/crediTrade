@@ -74,7 +74,6 @@ def handle_form_submission(request, instance=None):
             'Jagdamba 766015': '919437367463',
             'Wholesale 492001': '919078979263', 
             'Pansari 767001': '919078979263',
-            'Rabi 766015': '919437367463', 
             'Delhi 110091': '917015194057', 
             '416118 / 416115': '918237084370',
             '228001 / 228159': '918418948086',
@@ -126,7 +125,7 @@ def pending_orders_view(request):
     if request.user.is_staff:
         pending_orders = PendingOrder.objects.all().order_by('-id')
     elif request.user.username == 'sumeet2796':
-        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['Jagdamba 766015', 'Rabi 766015','Wholesale 492001','Pansari 767001'])).order_by('-id')
+        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['Jagdamba 766015','Wholesale 492001','Pansari 767001'])).order_by('-id')
     elif request.user.username == 'mhetarashu':
         pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='416118 / 416115')).order_by('-id')
     elif request.user.username == 'kr.somesh007':
@@ -158,7 +157,7 @@ def delivered_orders_view(request):
     if request.user.is_staff:
         delivered_orders = DeliveredOrder.objects.all().order_by('-id') 
     elif request.user.username == 'sumeet2796':
-        delivered_orders = DeliveredOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['Jagdamba 766015', 'Rabi 766015','Wholesale 492001'])).order_by('-id')
+        delivered_orders = DeliveredOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['Jagdamba 766015','Wholesale 492001'])).order_by('-id')
     else:
         delivered_orders = DeliveredOrder.objects.filter(user_profile=request.user.userprofile).order_by('-id')
     
