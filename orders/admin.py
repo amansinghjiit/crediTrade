@@ -45,7 +45,7 @@ class DeliveredOrderAdmin(GetUserProfileNameMixin, ExportCSVActionMixin, admin.M
     search_fields = ('user_profile__name', 'name', 'model')
     list_per_page = 50
     list_display = (
-        'get_user_profile_name', 'date', 'name', 'model', 'pin', 'return_amount'
+        'get_user_profile_name', 'date', 'name','tracking','model', 'pin', 'return_amount'
     )
     list_filter = ('date', 'pin')
     list_editable = ('return_amount',)

@@ -10,8 +10,9 @@ def handle_pending_order_status(sender, instance, **kwargs):
         DeliveredOrder.objects.create(
             user_profile=instance.user_profile,
             name=instance.name,
+            tracking=instance.tracking,
             model=instance.model,
-            pin=instance.pin
+            pin=instance.pin,
         )
         instance.delete()
 

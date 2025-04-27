@@ -166,7 +166,8 @@ def delivered_orders_view(request):
         delivered_orders = delivered_orders.filter(
             Q(name__icontains=query) |
             Q(model__icontains=query) |
-            Q(pin__icontains=query)
+            Q(pin__icontains=query) |
+            Q(tracking__icontains=query)
         )
 
     page_number = request.GET.get('page')
@@ -326,11 +327,13 @@ def export_delivered_orders_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=delivered_orders.csv'
     writer = csv.writer(response)
-    writer.writerow(['User', 'Date', 'Name', 'Model', 'Pin', 'Invoice', 'Return'])
+    writer.writerow(['User', 'Date', 'Name', 'Model', 'Pin', 'Tracking', 'Return'])
+
     if request.user.is_superuser:
         delivered_orders = DeliveredOrder.objects.all().order_by('-id')
     else:
         delivered_orders = DeliveredOrder.objects.filter(user_profile=user_profile).order_by('-id')
+
     for order in delivered_orders:
         formatted_date = order.date.strftime('%d %B')
         writer.writerow([
@@ -339,7 +342,7 @@ def export_delivered_orders_csv(request):
             order.name,
             order.model,
             order.pin,
-            '1' if order.invoice else '0',
+            order.tracking,
             order.return_amount
         ])
     return response

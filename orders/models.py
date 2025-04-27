@@ -37,6 +37,7 @@ class DeliveredOrder(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
     name = models.CharField(max_length=25)
+    tracking = models.CharField(max_length=15, blank=True, null=True)
     model = models.CharField(max_length=50)
     pin = models.CharField(max_length=20)
     invoice = models.FileField(upload_to='invoices/', validators=[validate_size], blank=True)
