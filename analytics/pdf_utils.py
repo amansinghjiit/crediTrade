@@ -128,7 +128,7 @@ def generate_pdf(transactions, opening_balance, closing_balance, total_debit, to
     elements.append(Paragraph("Orders History", header_style))
     elements.append(Spacer(1, 0.15 * inch))
     
-    orders_data = [["Date", "Name", "Model", "Return", "Pin"]]
+    orders_data = [["Date", "Tracking", "Model", "Return", "Pin"]]
     if orders:
         total_return = 0
         for order in orders:
@@ -136,7 +136,7 @@ def generate_pdf(transactions, opening_balance, closing_balance, total_debit, to
             total_return += return_amount
             orders_data.append([
                 order.date.strftime("%d %b %Y"),
-                order.name[:15],
+                order.tracking if order.tracking else "None",
                 order.model[:40],
                 f"{return_amount:,}",
                 order.pin
