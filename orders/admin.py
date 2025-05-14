@@ -42,7 +42,7 @@ class PendingOrderAdmin(GetUserProfileNameMixin, ExportCSVActionMixin, admin.Mod
     mark_as_delivered.short_description = "Mark as Delivered"
 
 class DeliveredOrderAdmin(GetUserProfileNameMixin, ExportCSVActionMixin, admin.ModelAdmin):
-    search_fields = ('user_profile__name', 'name', 'model')
+    search_fields = ('user_profile__name', 'name', 'model', 'tracking')
     list_per_page = 50
     list_display = (
         'get_user_profile_name', 'date', 'name','tracking','model', 'pin', 'return_amount'
