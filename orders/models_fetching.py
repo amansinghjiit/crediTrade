@@ -7,7 +7,7 @@ from django.core.cache import cache
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SPREADSHEET_ID = "1uXF3d9sXBKtiFPRR9efKlCsAz3kKzfqa7G67LXpIZi0"
-RANGE_NAME = 'Sheet1!A1:A20'
+RANGE_NAME = 'Sheet1!A:A'
 
 SERVICE_ACCOUNT_INFO = {
     "type": "service_account",
