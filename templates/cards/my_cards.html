@@ -70,7 +70,7 @@
 
         .mycards-header .form-select,
         .mycards-header .btn {
-            height: 36px;
+            height: 38px;
             font-size: 0.8rem;
             padding: 0.25rem 0.5rem;
         }
@@ -232,17 +232,31 @@
                 </div>
             {% endfor %}
         {% else %}
-            <div class="col-12">
-                <div class="card bg-dark text-center border-0">
-                    <div class="card-body py-5">
-                        <i class="ri-bank-card-line fs-1 text-secondary mb-3"></i>
-                        <h5 class="text-white mb-3">No cards saved</h5>
-                        <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#addCardForm">
-                            <i class="ri-add-line me-1"></i>Add Card
-                        </button>
+        <div class="w-100 h-100 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+            <div class="text-center w-100 px-3" style="max-width: 500px;">
+                <div class="p-5 rounded-4 shadow-lg border border-dark-subtle"
+                        style="
+                            background: rgba(255, 255, 255, 0.035);
+                            backdrop-filter: blur(14px);
+                            border: 1px solid rgba(255, 255, 255, 0.06);
+                        ">
+                    <i class="ri-bank-card-line display-4 text-primary mb-4 d-block"></i>
+                    <h5 class="text-white fw-semibold mb-2">No cards added yet</h5>
+                    <p class="text-white-50 mb-4 small">Securely save your card to easily access details when needed.</p>
+                    <button class="btn btn-outline-primary rounded-pill px-4 py-2 mb-3" data-bs-toggle="collapse" data-bs-target="#addCardForm">
+                        <i class="ri-add-line me-1"></i> Add Your First Card
+                    </button>
+
+                    <div class="text-start mt-4 pt-3 border-top border-secondary-subtle">
+                        <p class="text-white-50 small mb-2 fw-bold">🔐 Your Security is Our Priority</p>
+                        <ul class="list-unstyled text-white-50 small mb-0" style="line-height: 1.6;">
+                            <li><i class="ri-lock-line text-primary me-1"></i> Only you can view your saved cards — not even admin.</li>
+                            <li><i class="ri-shield-check-line text-primary me-1"></i> Card details are stored in fully encrypted form.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
+        </div>
         {% endif %}
     </div>
 </div>
