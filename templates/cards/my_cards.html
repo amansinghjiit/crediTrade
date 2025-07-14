@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Cards{% endblock %}
+
+{% block content %}
+<style>
+    #cards-container .card.card-item {
+        position: relative;
+        border-radius: 1rem;
+        padding: 1rem;
+        background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.015));
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(14px);
+    }
+
+    #cards-container .card-number-display {
+        font-family: monospace;
+        font-size: 1.15rem;
+        margin: 1rem 0 0.75rem;
+        letter-spacing: 1px;
+    }
+
+    .card-actions {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        display: flex;
+        gap: 8px;
+    }
+
+    .card-actions a {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: white;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .card-actions a.copy-action:hover {
+        color: #0dcaf0;
+        box-shadow: 0 0 6px rgba(13, 202, 240, 0.5);
+    }
+
+    .card-actions a.delete-action:hover {
+        color: #ff4d4f;
+        box-shadow: 0 0 6px rgba(255, 77, 79, 0.5);
+    }
+
+    .card-body {
+        padding: 0;
+        color: #fff;
+    }
+
+    #addCardForm ::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        opacity: 1;
+    }
+
+    @media (max-width: 796px) {
+        .mycards-title {
+            font-size: 1.5rem;
+        }
+
+        .mycards-header .form-select,
+        .mycards-header .btn {
+            height: 36px;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        #addCardForm .form-label {
+            font-size: 0.7rem;
+            margin-bottom: 0.2rem;
+        }
+
+        #addCardForm .form-control,
+        #addCardForm .form-select {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.55rem;
+            height: auto;
+        }
+
+        #addCardForm .card-title {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        #addCardForm .card-title i {
+            font-size: 1.2rem;
+        }
+
+        #addCardForm .btn {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.8rem;
+        }
+
+        #addCardForm .card-body {
+            padding: 1rem !important;
+        }
+
+        #addCardForm .row.gy-3 {
+            --bs-gutter-y: 0.75rem;
+        }
+
+        #addCardForm .row.line-1 > .col-6,
+        #addCardForm .row.line-3 > .col-6 {
+            padding-right: 0.35rem;
+            padding-left: 0.35rem;
+        }
+
+        #addCardForm .row.line-2 > .col-12,
+        #addCardForm .row.line-2 > .col-md {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container-fluid p-3 p-md-4">
+    <div class="mycards-header d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mycards-title fw-bold fa-2x text-white mb-0">My Cards</h2>
+        <div class="d-flex gap-2">
+            <select class="form-select bg-dark text-white border-secondary" id="bank-filter" style="width: 180px;">
+                <option value="">All Banks</option>
+                {% for bank in banks %}
+                    <option value="{{ bank }}">{{ bank }}</option>
+                {% endfor %}
+            </select>
+            <button id="toggleAddCardBtn" class="btn btn-outline-primary" data-bs-toggle="collapse"
+                    data-bs-target="#addCardForm" aria-expanded="false" title="Add Card">
+                <i class="ri-add-line fs-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="collapse mb-4" id="addCardForm">
+        <div class="card bg-dark text-white border-secondary">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4 d-flex align-items-center gap-2">
+                    <i class="ri-bank-card-line fs-4 text-primary"></i> Add New Card
+                </h5>
+                <form method="POST" action="{% url 'add_card' %}">
+                    {% csrf_token %}
+                    <div class="row gy-3 gx-2 line-1">
+                        <div class="col-6">
+                            <label class="form-label text-white-50 small">Bank</label>
+                            <select name="bank" class="form-select bg-transparent text-white border-white rounded">
+                                {% for choice in form.bank.field.choices %}
+                                    <option value="{{ choice.0 }}" style="color: #ddd; background-color: #222;">{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label text-white-50 small">Variant</label>
+                            <input type="text" name="card_variant"
+                                   class="form-control bg-transparent text-white border-white rounded"
+                                   placeholder="SimplyClick (Optional)">
+                        </div>
+                    </div>
+
+                    <div class="row gy-3 line-2 mt-2">
+                        <div class="col-12">
+                            <label class="form-label text-white-50 small">Card Number</label>
+                            <input type="text" id="card_number_input" name="card_number" maxlength="19"
+                                   class="form-control bg-transparent text-white border-white rounded"
+                                   placeholder="1234 5678 9012 3456" required>
+                        </div>
+                    </div>
+
+                    <div class="row gy-3 gx-2 line-3 mt-2">
+                        <div class="col-6">
+                            <label class="form-label text-white-50 small">Expiry</label>
+                            <input type="text" id="expiry_input" name="expiry" maxlength="5"
+                                   class="form-control bg-transparent text-white border-white rounded"
+                                   placeholder="MM/YY" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label text-white-50 small">CVV</label>
+                            <input type="text" name="cvv" maxlength="3"
+                                   class="form-control bg-transparent text-white border-white rounded"
+                                   placeholder="123" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-outline-light" data-bs-toggle="collapse" data-bs-target="#addCardForm">Cancel</button>
+                        <button type="submit" class="btn btn-primary px-4">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3" id="cards-container">
+        {% if cards %}
+            {% for card in cards %}
+                <div class="col">
+                    <div class="card bg-dark text-white border-secondary shadow-sm card-item" data-bank="{{ card.bank }}">
+                        <div class="card-actions">
+                            <a href="#" class="copy-action" title="Copy"
+                               data-bank="{{ card.bank }}"
+                               data-variant="{{ card.card_variant|default:'' }}"
+                               data-number="{{ card.card_number }}"
+                               data-expiry="{{ card.expiry }}"
+                               data-cvv="{{ card.cvv }}">
+                                <i class="ri-file-copy-line"></i>
+                            </a>
+                            <a href="{% url 'delete_card' card.id %}" class="delete-action" title="Delete" data-url="{% url 'delete_card' card.id %}">
+                                <i class="ri-delete-bin-line"></i>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+                                <span class="fw-semibold small text-truncate" style="max-width: 120px;">{{ card.bank }}</span>
+                                {% if card.card_variant %}
+                                    <span class="badge bg-secondary text-uppercase small">{{ card.card_variant }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="card-number-display" data-number="{{ card.card_number }}"></div>
+                            <div class="d-flex justify-content-between text-white-50 small">
+                                <span>Expiry: <span class="text-white">{{ card.expiry }}</span></span>
+                                <span>CVV: <span class="text-white">{{ card.cvv }}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="card bg-dark text-center border-0">
+                    <div class="card-body py-5">
+                        <i class="ri-bank-card-line fs-1 text-secondary mb-3"></i>
+                        <h5 class="text-white mb-3">No cards saved</h5>
+                        <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#addCardForm">
+                            <i class="ri-add-line me-1"></i>Add Card
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="remove-confirmation" id="deleteCardModal" style="display:none;">
+    <div class="remove-content">
+        <p class="remove-heading">Delete Card</p>
+        <p class="remove-description">Are you sure you want to delete this card?</p>
+    </div>
+    <div class="remove-button-wrapper">
+      <form id="deleteCardForm" method="post">
+        {% csrf_token %}
+        <div class="remove-button-wrapper">
+          <button type="submit" class="remove-button px-4 primary">Delete</button>
+          <button type="button" class="remove-button px-4 secondary" id="cancelDeleteCard">Cancel</button>
+          <button type="button" class="exit-button" id="closeDeleteCard">&#10006;</button>
+        </div>
+      </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cardInput = document.getElementById("card_number_input");
+        const expiryInput = document.getElementById("expiry_input");
+        const toggleBtn = document.getElementById("toggleAddCardBtn");
+
+        document.getElementById("bank-filter").addEventListener("change", function () {
+            const bank = this.value;
+            document.querySelectorAll(".card.card-item").forEach(card => {
+                const cardBank = card.dataset.bank || '';
+                card.closest(".col").style.display = !bank || cardBank === bank ? "block" : "none";
+            });
+        });
+
+        if (cardInput) {
+            cardInput.addEventListener("input", function () {
+                this.value = this.value.replace(/\D/g, "").substring(0, 16).match(/.{1,4}/g)?.join(" ") || "";
+            });
+        }
+
+        if (expiryInput) {
+            expiryInput.addEventListener("input", function () {
+                let value = this.value.replace(/\D/g, "").substring(0, 4);
+                this.value = value.length >= 3 ? value.substring(0, 2) + '/' + value.substring(2) : value;
+            });
+        }
+
+        document.querySelectorAll(".card-number-display").forEach(el => {
+            const raw = el.dataset.number || "";
+            const cleaned = raw.replace(/\D/g, "").substring(0, 16);
+            el.textContent = cleaned.replace(/(.{4})/g, "$1 ").trim();
+        });
+
+        document.querySelectorAll(".copy-action").forEach(el => {
+            el.addEventListener("click", function (e) {
+                e.preventDefault();
+                const bank = this.dataset.bank;
+                const variant = this.dataset.variant;
+                const number = this.dataset.number;
+                const expiry = this.dataset.expiry;
+                const cvv = this.dataset.cvv;
+                const title = variant ? `${bank} ${variant}` : bank;
+                const textToCopy = `${title}\n${number}\n${expiry}\n${cvv}`;
+                navigator.clipboard.writeText(textToCopy).then(() => toastr.success('Copied'));
+            });
+        });
+
+        document.getElementById('addCardForm').addEventListener('shown.bs.collapse', () => {
+            toggleBtn.innerHTML = `<i class="ri-close-line fs-5"></i>`;
+        });
+
+        document.getElementById('addCardForm').addEventListener('hidden.bs.collapse', () => {
+            toggleBtn.innerHTML = `<i class="ri-add-line fs-5"></i>`;
+        });
+
+        document.querySelectorAll(".delete-action").forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.preventDefault();
+                const url = this.dataset.url;
+                const form = document.getElementById("deleteCardForm");
+                form.action = url;
+                document.getElementById("deleteCardModal").style.display = "block";
+            });
+        });
+
+        document.getElementById("cancelDeleteCard").addEventListener("click", () => {
+            document.getElementById("deleteCardModal").style.display = "none";
+        });
+        document.getElementById("closeDeleteCard").addEventListener("click", () => {
+            document.getElementById("deleteCardModal").style.display = "none";
+        });
+    });
+</script>
+{% endblock %}
