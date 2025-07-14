@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'orders',
     'analytics',
     'anymail',
+    'cards',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +57,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'crediTrade.wsgi.application'
+
+from cryptography.fernet import Fernet
+FIELD_ENCRYPTION_KEY = os.getenv('FIELD_ENCRYPTION_KEY')
 
 DATABASES = {
     'default': {
