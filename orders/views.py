@@ -129,7 +129,7 @@ def pending_orders_view(request):
     elif request.user.username == 'mhetarashu':
         pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='416118 / 416115')).order_by('-id')
     elif request.user.username == 'kr.somesh007':
-        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='110091')).order_by('-id')
+        pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin='Delhi 110091')).order_by('-id')
     elif request.user.username == 'help228159':
         pending_orders = PendingOrder.objects.filter(Q(user_profile=request.user.userprofile) | Q(pin__in=['228001 / 228159', '226020 / 226021', '225001'])).order_by('-id')
     else:

@@ -2,118 +2,148 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="display" content="standalone">
-  <meta name="orientation" content="portrait">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="apple-mobile-web-app-title" content="CrediTrade">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="application-name" content="CrediTrade">  
-  <meta name="theme-color" content="#1a73e8">
-  <meta name="keywords" content="CrediTrade, credits, trading, platform, trade credits, credit trading platform, buying credits, selling credits, credit marketplace, credit exchange, asset-backed trading, receivables trading, invoice trading, trade finance, credit risk management, working capital solutions, liquidity management, financial instruments trading, debt trading, how to trade credits online, best platform for credit trading, secure credit trading marketplace, benefits of trading credits, risks of credit trading, trading credits for small businesses, increase working capital through credit trading, manage credit risk with CrediTrade, find buyers for trade credits, sell receivables on CrediTrade, how to value trade credits, online credit trading for [your target industry], alternative finance solutions, business finance, financial services, investment platform, asset management, supply chain finance, B2B marketplace, financial technology (FinTech), digital finance, online trading, alternative investments, credit card rewards, earn rewards with credit card, cashback credit card, credit card points, credit card benefits, rewards platform, maximize credit card rewards, best rewards credit cards, credit card offers, credit card incentives, earn money with credit cards, credit card loyalty programs, credit card affiliate programs, credit card rewards system">
-  <meta name="description" content="Trade credits securely with CrediTrade! Buy, sell, and manage your trade credits efficiently. Discover the best platform for credit exchange and finance solutions.">
-  <meta name="author" content="Aman Singh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="display" content="standalone" />
+    <meta name="orientation" content="portrait" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-title" content="CrediTrade" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="CrediTrade" />
+    <meta name="theme-color" content="#1a73e8" />
+    <meta
+      name="keywords"
+      content="CrediTrade, credits, trading, platform, trade credits, credit trading platform, buying credits, selling credits, credit marketplace, credit exchange, asset-backed trading, receivables trading, invoice trading, trade finance, credit risk management, working capital solutions, liquidity management, financial instruments trading, debt trading, how to trade credits online, best platform for credit trading, secure credit trading marketplace, benefits of trading credits, risks of credit trading, trading credits for small businesses, increase working capital through credit trading, manage credit risk with CrediTrade, find buyers for trade credits, sell receivables on CrediTrade, how to value trade credits, online credit trading for [your target industry], alternative finance solutions, business finance, financial services, investment platform, asset management, supply chain finance, B2B marketplace, financial technology (FinTech), digital finance, online trading, alternative investments, credit card rewards, earn rewards with credit card, cashback credit card, credit card points, credit card benefits, rewards platform, maximize credit card rewards, best rewards credit cards, credit card offers, credit card incentives, earn money with credit cards, credit card loyalty programs, credit card affiliate programs, credit card rewards system" />
+    <meta
+      name="description"
+      content="Trade credits securely with CrediTrade! Buy, sell, and manage your trade credits efficiently. Discover the best platform for credit exchange and finance solutions." />
+    <meta name="author" content="Aman Singh" />
 
-  <link rel="manifest" href="{% static 'manifest.json' %}">
-  <link rel="icon" href="{% static 'images/ddfavicon.png' %}" type="image/x-icon">
-  <link rel="apple-touch-startup-image" href="{% static 'images/logo.png' %}">
-  <link rel="apple-touch-icon" href="{% static 'images/ddicon.png' %}">
-  <title>{% block title %}{% endblock %}</title>
+    <link rel="manifest" href="{% static 'manifest.json' %}" />
+    <link
+      rel="icon"
+      href="{% static 'images/ddfavicon.png' %}"
+      type="image/x-icon" />
+    <link
+      rel="apple-touch-startup-image"
+      href="{% static 'images/logo.png' %}" />
+    <link rel="apple-touch-icon" href="{% static 'images/ddicon.png' %}" />
+    <title>{% block title %}{% endblock %}</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
-  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-</head>
+    <!-- CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/styles.css' %}" />
+  </head>
 
-<body>
-  <!-- Header -->
-  {% include "core/header.html" %}
-  
-  <!-- Main Content -->
-  <main class="main">
-    {% block content %}{% endblock %}
-  </main>
+  <body>
+    <!-- Header -->
+    {% include "core/header.html" %}
 
-  <!-- JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="{% static 'js/scripts.js' %}"></script>
-  <script>
-    $(document).ready(() => {
-      // Toastr messages
-      toastr.options = {
-        positionClass: "toast-bottom-center",
-        timeOut: 2000
+    <!-- Main Content -->
+    <main class="main">{% block content %}{% endblock %}</main>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+          // AJAX Pagination
+      window.navigatePage = function (page) {
+          const url = `${window.location.pathname}?page=${page}`;
+
+          $.ajax({
+              url: url,
+              type: 'GET',
+              success: (data) => {
+                  $('#search-results').html($(data).find('#search-results').html());
+                  $('#pagination-container').html($(data).find('#pagination-container').html());
+              },
+              error: (xhr) => {
+                  console.error(xhr.responseText);
+              }
+          });
       };
-      
-      {% if messages %}
-        {% for message in messages %}
-          toastr.{{ message.tags }}('{{ message }}');
-        {% endfor %}
-      {% endif %}
-  
-      // Search functionality
-      $('#search-input').on('input', function() {
-        const searchTerm = $(this).val().toLowerCase();
-        $('#search-results tr').each(function() {
-          const name = $(this).find('.search-name').text().toLowerCase();
-          const model = $(this).find('.search-model').text().toLowerCase();
-          const pin = $(this).find('.search-pin').text().toLowerCase();
-          
-          if (name.indexOf(searchTerm) === -1 && model.indexOf(searchTerm) === -1 && pin.indexOf(searchTerm) === -1) {
-            $(this).hide();
-          } else {
-            $(this).show();
-          }
+
+      $(document).ready(() => {
+        // Toastr messages
+        toastr.options = {
+          positionClass: "toast-bottom-center",
+          timeOut: 2000
+        };
+
+        {% if messages %}
+          {% for message in messages %}
+            toastr.{{ message.tags }}('{{ message }}');
+          {% endfor %}
+        {% endif %}
+
+        // Search functionality
+        $('#search-input').on('input', function() {
+          const searchTerm = $(this).val().toLowerCase();
+          $('#search-results tr').each(function() {
+            const name = $(this).find('.search-name').text().toLowerCase();
+            const model = $(this).find('.search-model').text().toLowerCase();
+            const pin = $(this).find('.search-pin').text().toLowerCase();
+
+            if (name.indexOf(searchTerm) === -1 && model.indexOf(searchTerm) === -1 && pin.indexOf(searchTerm) === -1) {
+              $(this).hide();
+            } else {
+              $(this).show();
+            }
+          });
         });
       });
-  
-      // AJAX Pagination
-      const navigatePage = (page) => {
-        const url = `${window.location.pathname}?page=${page}`;
-        $.ajax({
-          url: url,
-          type: 'GET',
-          success: (data) => {
-            $('#search-results').html($(data).find('#search-results').html());
-            $('#pagination-container').html($(data).find('#pagination-container').html());
-          },
-          error: (xhr) => {
-            console.error(xhr.responseText);
-          }
-        });
-      };
-    });
-  
-    // Service Worker Registration
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/static/serviceworker.js')
-          .then(reg => {
-            reg.update();
-            setInterval(() => reg.update(), 24 * 60 * 60 * 1000);
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
+
+      // Service Worker Registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/static/serviceworker.js')
+            .then(reg => {
+              reg.update();
+              setInterval(() => reg.update(), 24 * 60 * 60 * 1000);
+              navigator.serviceWorker.addEventListener('controllerchange', () => {
+                window.location.reload();
+              });
+            })
+            .catch(err => console.error('Service Worker registration failed:', err));
+
+          navigator.serviceWorker.addEventListener('message', event => {
+            if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
               window.location.reload();
-            });
-          })
-          .catch(err => console.error('Service Worker registration failed:', err));
-  
-        navigator.serviceWorker.addEventListener('message', event => {
-          if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
-            window.location.reload();
-          }
+            }
+          });
         });
-      });
-    }
-  </script>   
-</body>
+      }
+    </script>
+  </body>
 </html>
