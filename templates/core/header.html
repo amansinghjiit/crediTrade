@@ -177,40 +177,51 @@
 </div>
 
 {% if user.is_authenticated %}
-    <nav class="bottom-nav fixed-bottom bg-white shadow-lg logged-in">
-        <a href="{% url 'home' %}" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}">
-            <i class="fas fa-home"></i>
-        </a>
-        <a href="{% url 'profile' %}" class="bottom-nav-item {% if request.path == '/profile/' %}active{% endif %}">
-            <i class="fas fa-user"></i>
-        </a>
-        <a href="{% url 'dashboard' %}" class="bottom-nav-item {% if request.path == '/orders/dashboard/' %}active{% endif %}">
-            <i class="fas fa-chart-line"></i>
-        </a>
-        <a href="{% url 'delivery_form' %}" class="bottom-nav-item {% if request.path == '/orders/delivery-form/' %}active{% endif %}">
-            <i class="fas fa-shipping-fast"></i>
-        </a>
-        <a href="{% url 'delivered' %}" class="bottom-nav-item {% if request.path == '/orders/delivered/' %}active{% endif %}">
-            <i class="fas fa-box-open"></i>
-        </a>
-    </nav>
+<nav class="bottom-nav fixed-bottom bg-white shadow-lg logged-in">
+    <a href="{% url 'home' %}" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}">
+        <i class="fas fa-home"></i>
+    </a>
+    <a href="{% url 'profile' %}" class="bottom-nav-item {% if request.path == '/profile/' %}active{% endif %}">
+        <i class="fas fa-user"></i>
+    </a>
+    <a href="{% url 'dashboard' %}" class="bottom-nav-item {% if request.path == '/orders/dashboard/' %}active{% endif %}">
+        <i class="fas fa-chart-line"></i>
+    </a>
+    <a href="{% url 'delivery_form' %}" class="bottom-nav-item {% if request.path == '/orders/delivery-form/' %}active{% endif %}">
+        <i class="fas fa-shipping-fast"></i>
+    </a>
+    <a href="{% url 'delivered' %}" class="bottom-nav-item {% if request.path == '/orders/delivered/' %}active{% endif %}">
+        <i class="fas fa-box-open"></i>
+    </a>
+</nav>
 {% endif %}
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) && document.body.classList.add('is-pwa');
-        NProgress.configure({showSpinner: false, trickle: true, trickleSpeed: 200, minimum: 0.1});
-        const main = document.querySelector('.main'), nav_links = document.querySelectorAll('.bottom-nav-item'), handleClick = e => {
-            if (e.ctrlKey || e.metaKey || e.button !== 0) return;
-            e.preventDefault();
-            NProgress.start();
-            main.classList.add('loading');
-            window.location.href = e.currentTarget.href;
-        };
-        nav_links.forEach(link => link.addEventListener('click', handleClick));
-        window.addEventListener('load', () => {
-            NProgress.done();
-            main.classList.remove('loading');
-        });
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+    document.documentElement.classList.add('is-pwa');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    NProgress.configure({showSpinner: false, trickle: true, trickleSpeed: 200, minimum: 0.1});
+
+    const main = document.querySelector('.main');
+    const nav_links = document.querySelectorAll('.bottom-nav-item');
+
+    const handleClick = e => {
+        if (e.ctrlKey || e.metaKey || e.button !== 0) return;
+
+        e.preventDefault();
+        NProgress.start();
+        main.classList.add('loading');
+
+        window.location.href = e.currentTarget.href;
+    };
+
+    nav_links.forEach(link => link.addEventListener('click', handleClick));
+
+    window.addEventListener('load', () => {
+        NProgress.done();
+        main.classList.remove('loading');
     });
+});
 </script>
