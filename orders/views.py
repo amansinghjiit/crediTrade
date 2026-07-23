@@ -39,10 +39,9 @@ def _pending_orders_queryset(request):
         return PendingOrder.objects.filter(
             Q(user_profile=request.user.userprofile) | Q(pin='Delhi 110091')
         ).order_by('-id')
-    if request.user.username == 'help228159':
+    if request.user.username == 'mohitnigam0778':
         return PendingOrder.objects.filter(
-            Q(user_profile=request.user.userprofile) |
-            Q(pin__in=['228001 / 228159', '226020 / 226021', '225001'])
+            Q(user_profile=request.user.userprofile) | Q(pin='274305/274306')
         ).order_by('-id')
     return PendingOrder.objects.filter(user_profile=request.user.userprofile).order_by('-id')
 
@@ -124,9 +123,7 @@ def handle_form_submission(request, instance=None):
             'Pansari 767001': '919078979263',
             'Delhi 110091': '917015194057', 
             '416118 / 416115': '918237084370',
-            '228001 / 228159': '918418948086',
-            '226020 / 226021': '918418948086',
-            '225001': '918418948086',
+            '274305'/'274306': '918181070148',
         }
         to_number = pin_to_phone.get(pending_order.pin, '917982405815')
 
