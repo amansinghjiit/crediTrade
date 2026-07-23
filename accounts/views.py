@@ -32,7 +32,9 @@ def home(request):
             },
             'is_authenticated': False
         }
-    return render(request, 'core/home.html', context)
+    is_htmx = request.headers.get('HX-Request') == 'true'
+    template = 'partials/core/home.html' if is_htmx else 'core/home.html'
+    return render(request, template, context)
 
 def signup(request):
     if request.method == 'POST':
@@ -120,6 +122,7 @@ def logout(request):
 @login_required_message
 def profile(request):
     user_profile = request.user.userprofile
+    is_htmx = request.headers.get('HX-Request') == 'true'
     
     if request.method == 'POST':
         user_profile.name = request.POST.get('name', '')
@@ -132,9 +135,16 @@ def profile(request):
         user_profile.phonepe_number = request.POST.get('phonepeNumber', '')   
 
         user_profile.save()
-        messages.success(request, 'Changes Saved')
+        if not is_htmx:
+            messages.success(request, 'Changes Saved')
 
-    return render(request, 'accounts/profile.html', {'user_profile': user_profile})
+    template = 'partials/accounts/profile.html' if is_htmx else 'accounts/profile.html'
+    response = render(request, template, {'user_profile': user_profile})
+
+    if is_htmx and request.method == 'POST':
+        response['HX-Trigger'] = '{"showToast": {"message": "Changes Saved", "type": "success"}}'
+
+    return response
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = CustomSetPasswordForm

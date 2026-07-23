@@ -1,0 +1,95 @@
+{% load humanize %}
+    <div class="ledger-table overflow-auto">
+        <table class="table w-100 table-hover">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Credit</th>
+                    <th>Debit</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.date }}</td>
+                    <td>{{ transaction.description }}</td>
+                    <td class="text-success">{% if transaction.credit != 0 %}₹{{ transaction.credit|intcomma }}{% else %}&nbsp;{% endif %}</td>
+                    <td class="text-danger">{% if transaction.debit != 0 %}₹{{ transaction.debit|intcomma }}{% else %}&nbsp;{% endif %}</td>
+                    <td>₹{{ transaction.balance|intcomma }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No transactions found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div id="pagination-container">
+            {% if transactions.has_other_pages %}
+            <ul class="pagination justify-content-center">
+                <!-- Previous Page -->
+                {% if transactions.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}{% if selected_description != 'all' %}&description={{ selected_description }}{% endif %}" hx-get="?page=1{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}{% if selected_description != 'all' %}&description={{ selected_description }}{% endif %}" hx-target="#ledger-results" hx-swap="innerHTML" hx-push-url="true" aria-label="First">
+                        &laquo;
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ transactions.previous_page_number }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}{% if selected_description != 'all' %}&description={{ selected_description }}{% endif %}" hx-get="?page={{ transactions.previous_page_number }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}{% if selected_description != 'all' %}&description={{ selected_description }}{% endif %}" hx-target="#ledger-results" hx-swap="innerHTML" hx-push-url="true" aria-label="Previous">
+                        &lsaquo;
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">&lsaquo;</span>
+                </li>
+                {% endif %}
+
+                <!-- Page Numbers -->
+                {% for i in transactions.paginator.page_range %}
+                {% if i == transactions.number %}
+                <li class="page-item active">
+                    <span class="page-link">{{ i }}</span>
+                </li>
+                {% elif i > transactions.number|add:'-3' and i < transactions.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}{% if selected_description != 'all' %}&description={{ selected_description }}{% endif %}" hx-get="?page={{ i }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}{% if selected_description != 'all' %}&description={{ selected_description }}{% endif %}" hx-target="#ledger-results" hx-swap="innerHTML" hx-push-url="true">{{ i }}</a>
+                </li>
+                {% elif i == transactions.number|add:'-3' or i == transactions.number|add:'3' %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                <!-- Next Page -->
+                {% if transactions.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ transactions.next_page_number }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}{% if selected_description != 'all' %}&description={{ selected_description }}{% endif %}" hx-get="?page={{ transactions.next_page_number }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}{% if selected_description != 'all' %}&description={{ selected_description }}{% endif %}" hx-target="#ledger-results" hx-swap="innerHTML" hx-push-url="true" aria-label="Next">
+                        &rsaquo;
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ transactions.paginator.num_pages }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}{% if selected_description != 'all' %}&description={{ selected_description }}{% endif %}" hx-get="?page={{ transactions.paginator.num_pages }}{% if selected_date_range %}&date_range={{ selected_date_range }}{% endif %}{% if selected_user != 'all' %}&user={{ selected_user }}{% endif %}{% if selected_description != 'all' %}&description={{ selected_description }}{% endif %}" hx-target="#ledger-results" hx-swap="innerHTML" hx-push-url="true" aria-label="Last">
+                        &raquo;
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&rsaquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;</span>
+                </li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>

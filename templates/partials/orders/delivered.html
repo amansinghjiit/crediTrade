@@ -1,0 +1,58 @@
+{% load static %}
+{% load humanize %}
+<div class="table-container">
+    <div class="order-table">
+        <div class="col-sm-12">
+            <div class="card border-0 rounded-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3 mx-2">
+                        <h5 class="offcanvas-title fw-bolder mb-0" style="font-size: 18px; color: #333; text-transform: uppercase; letter-spacing: 1px;">Delivered Orders</h5>
+                        <div class="d-flex align-items-center search-bar">
+                            <input class="form-control me-2 search-input border-3 py-1"
+                                   type="search"
+                                   placeholder="Search"
+                                   aria-label="Search"
+                                   name="q"
+                                   id="search-input"
+                                   value="{{ query|default_if_none:'' }}"
+                                   hx-get="{% url 'delivered' %}"
+                                   hx-trigger="keyup changed delay:300ms, search"
+                                   hx-target="#delivered-results"
+                                   hx-swap="innerHTML"
+                                   hx-replace-url="true"
+                                   hx-indicator="#delivered-results">
+                            <a href="{% url 'export_delivered_orders_csv' %}" class="btn btn-primary btn-new-order">Export</a>
+                        </div>
+                    </div>
+                    <div id="delivered-results">
+                        {% include "partials/orders/delivered_results.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="remove-confirmation" id="removeConfirmation" style="display:none;">
+        <div class="remove-content">
+            <p class="remove-heading">Delete file</p>
+            <p class="remove-description">Are you sure you want to delete this file?</p>
+        </div>
+        <div class="remove-button-wrapper">
+            <button id="delete-btn" class="remove-button primary">Delete</button>
+            <button id="cancel-btn" class="remove-button secondary">Cancel</button>
+            <button id="exit-btn" class="exit-button">&#10006;</button>
+        </div>
+    </div>
+
+    <div class="upload-confirmation" id="uploadConfirmation" style="display:none;">
+        <div class="upload-content">
+            <p class="upload-heading">Upload File</p>
+            <span class="file-name"></span>
+        </div>
+        <div class="upload-button-wrapper">
+            <button id="confirm-button" class="upload-button secondary">Confirm</button>
+            <button id="cancel-button" class="upload-button primary">Cancel</button>
+            <button id="exit-button" class="exit-button">&#10006;</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="wrapper">
+  <h1>Delivery Details</h1>
+  <form method="post"
+        action="{% if form.instance.pk %}{% url 'edit_entry' form.instance.pk %}{% else %}{% url 'delivery_form' %}{% endif %}"
+        id="delivery-form"
+        hx-post="{% if form.instance.pk %}{% url 'edit_entry' form.instance.pk %}{% else %}{% url 'delivery_form' %}{% endif %}"
+        hx-target="#main-content"
+        hx-swap="innerHTML"
+        onsubmit="disableSubmitButton(this)">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="input-box">{{ field }}</div>
+    {% endfor %}
+    <button class="btn" type="submit">Submit</button>
+  </form>
+  <p class="edit-form fw-semibold">Need to make changes?
+    <a href="{% url 'pending' %}"
+       hx-get="{% url 'pending' %}"
+       hx-target="#main-content"
+       hx-swap="innerHTML"
+       hx-push-url="true">Edit here</a>
+  </p>
+</div>

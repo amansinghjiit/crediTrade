@@ -14,6 +14,7 @@ urlpatterns = [
     path('export_pending_orders_csv/', views.export_pending_orders_csv, name='export_pending_orders_csv'),
     path('export_delivered_orders_csv/', views.export_delivered_orders_csv, name='export_delivered_orders_csv'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/transactions/', views.dashboard_transactions, name='dashboard_transactions'),
     path('payments-dashboard/', views.payments_dashboard, name='payments_dashboard'),
     path('user-payment-details/<int:user_id>/', views.user_payment_details, name='user_payment_details'),
     path('make-payment/<int:user_id>/', views.make_payment, name='make_payment'),

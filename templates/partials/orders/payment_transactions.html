@@ -1,0 +1,31 @@
+{% load humanize %}
+<div class="table-responsive">
+    <table class="table table-striped" style="font-size: 0.9rem; color: #000;">
+        <thead>
+            <tr style="background-color: #000; color: #fff;">
+                <th>Date</th>
+                <th class="text-center">Description</th>
+                <th class="text-end">Amount</th>
+            </tr>
+        </thead>
+        <tbody class="reversed">
+            {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.date|date:"d M" }}</td>
+                    <td class="text-center">{{ transaction.description }}</td>
+                    <td class="text-end">
+                        {% if transaction.transaction_type == 'debit' %}
+                            <span class="text-danger">- ₹{{ transaction.amount|intcomma }}</span>
+                        {% else %}
+                            <span class="text-success">₹{{ transaction.amount|intcomma }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center">No transactions found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

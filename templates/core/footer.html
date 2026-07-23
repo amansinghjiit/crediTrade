@@ -10,10 +10,26 @@
 
         <div class="box">
             <h3>Quick Links</h3>
-            <a href="{% url 'dashboard' %}"><i class="fas fa-chevron-circle-right"></i> Dashboard</a>
-            <a href="{% url 'profile' %}"><i class="fas fa-chevron-circle-right"></i> Profile</a>
-            <a href="{% url 'delivery_form' %}"><i class="fas fa-chevron-circle-right"></i> Delivery Details</a>
-            <a href="{% url 'delivered' %}"><i class="fas fa-chevron-circle-right"></i> Delivered Orders</a>
+            <a href="{% url 'dashboard' %}"
+               hx-get="{% url 'dashboard' %}"
+               hx-target="#main-content"
+               hx-swap="innerHTML"
+               hx-push-url="true"><i class="fas fa-chevron-circle-right"></i> Dashboard</a>
+            <a href="{% url 'profile' %}"
+               hx-get="{% url 'profile' %}"
+               hx-target="#main-content"
+               hx-swap="innerHTML"
+               hx-push-url="true"><i class="fas fa-chevron-circle-right"></i> Profile</a>
+            <a href="{% url 'delivery_form' %}"
+               hx-get="{% url 'delivery_form' %}"
+               hx-target="#main-content"
+               hx-swap="innerHTML"
+               hx-push-url="true"><i class="fas fa-chevron-circle-right"></i> Delivery Details</a>
+            <a href="{% url 'delivered' %}"
+               hx-get="{% url 'delivered' %}"
+               hx-target="#main-content"
+               hx-swap="innerHTML"
+               hx-push-url="true"><i class="fas fa-chevron-circle-right"></i> Delivered Orders</a>
         </div>
 
         <div class="box">

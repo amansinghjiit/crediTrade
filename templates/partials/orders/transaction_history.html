@@ -1,0 +1,26 @@
+<div class="table-responsive">
+    <table class="table table-striped" style="font-size: 0.9rem; color: #000;">
+        <thead>
+            <tr style="background-color: #000; color: #fff;">
+                <th>Date</th>
+                <th class="text-center">Description</th>
+                <th class="text-end">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transaction_history %}
+            <tr>
+                <td>{{ transaction.date|date:"d M" }}</td>
+                <td class="text-center">{{ transaction.description }}</td>
+                <td class="text-end {% if transaction.transaction_type == 'credit' %}text-danger{% else %}text-success{% endif %}">
+                    {% if transaction.transaction_type == 'credit' %}-{% endif %}₹{{ transaction.amount }}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center text-muted">No transactions</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

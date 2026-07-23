@@ -1,0 +1,79 @@
+<div class="table-container">
+    <div class="order-table">
+        <div class="col-sm-12">
+            <div class="card border-0 rounded-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3 mx-2">
+                        <h5 class="fw-bolder mb-0" style="font-size: 18px; color: #333; text-transform: uppercase; letter-spacing: 1px;">TrackMatch</h5>
+                        <div class="text-nowrap">
+                            <button type="button" style="font-size:12px;" class="btn btn-danger fw-bold" id="toggleButton" onclick="toggleTrackmatchMissingTable()">Missing</button>
+                            <button type="button" style="font-size:12px;" class="btn btn-primary fw-bold" onclick="copyTrackmatchTableData()">Copy</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        {% if error %}
+                            <div class="alert alert-danger text-center">{{ error }}</div>
+                        {% else %}
+                            <table class="table px-3 py-2 text-center border" style="font-size:14px" id="trackmatch-table">
+                                <thead>
+                                    <tr class="table-heading fw-bolder">
+                                        <th><input type="checkbox" id="trackmatchSelectAll" aria-label="Select all rows" onclick="toggleTrackmatchSelectAll()"></th>
+                                        <th class="text-nowrap">Date</th>
+                                        <th class="text-nowrap">User</th>
+                                        <th class="text-nowrap">Tracking</th>
+                                        <th class="text-nowrap">Model</th>
+                                        <th class="text-nowrap">Product</th>
+                                        <th class="text-nowrap">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in table_data %}
+                                    <tr class="{% if row.match %}table-success{% else %}table-danger{% endif %}">
+                                        <td><input type="checkbox" class="row-select" aria-label="Select row"></td>
+                                        <td class="text-nowrap">{{ row.date }}</td>
+                                        <td class="text-nowrap">{{ row.name }}</td>
+                                        <td class="text-nowrap">{{ row.tracking }}</td>
+                                        <td class="text-nowrap">{{ row.model }}</td>
+                                        <td class="text-nowrap">{{ row.product_name|default:"-" }}</td>
+                                        <td class="text-nowrap">{{ row.price|floatformat:0|default:"-" }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7">No pending orders found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <table class="table px-3 py-2 text-center border table-striped" id="missing-table" style="font-size:14px; display: none;">
+                                <thead>
+                                    <tr class="table-heading fw-bolder">
+                                        <th class="text-nowrap">Date</th>
+                                        <th class="text-nowrap">Product</th>
+                                        <th class="text-nowrap">Tracking</th>
+                                        <th class="text-nowrap">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in missing_data %}
+                                    <tr>
+                                        <td class="text-nowrap">{{ row.date }}</td>
+                                        <td class="text-nowrap">{{ row.product_name }}</td>
+                                        <td class="text-nowrap">{{ row.tracking }}</td>
+                                        <td class="text-nowrap">{{ row.price|floatformat:0 }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4">No missing trackings found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
