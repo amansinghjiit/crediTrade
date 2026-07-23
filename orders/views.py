@@ -123,7 +123,7 @@ def handle_form_submission(request, instance=None):
             'Pansari 767001': '919078979263',
             'Delhi 110091': '917015194057', 
             '416118 / 416115': '918237084370',
-            '274305'/'274306': '918181070148',
+            '274305 / 274306': '918181070148',
         }
         to_number = pin_to_phone.get(pending_order.pin, '917982405815')
 
