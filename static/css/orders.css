@@ -7,7 +7,7 @@
   background: var(--white);
   color: #333;
   border-radius: 10px;
-  padding: 30px 40px;
+  padding: 20px 40px 0px;
   border: 2px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), 0 0 0 1px #737478;
   font-family: "Montserrat", sans-serif;
@@ -15,7 +15,7 @@
   top: 12vh;
   left: 50%;
   transform: translateX(-50%);
-  height: 86svh;
+  height: auto;
 }
 
 .wrapper h1 {
@@ -36,7 +36,7 @@
   width: 100%;
   border: 1px solid hsl(230, 12%, 40%);
   border-radius: 20px;
-  font-size: 15px;
+  font-size: 14px;
   color: #737478;
   padding: 19px;
   outline: none;

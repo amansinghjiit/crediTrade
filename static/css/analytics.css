@@ -9,8 +9,10 @@
 }
 
 .sidebar-container {
+    display:flex;
     width: 22%;
-    gap: 0.6rem;
+    flex-direction:column;
+    gap:.6rem;
 }
 
 .sidebar-filter, .sidebar-stats {
@@ -21,14 +23,9 @@
     gap: 0.6rem;
 }
 
-.sidebar-filter {
-    height: 54%;
-}
-
-.sidebar-stats {
-    height: 46%;
-    display: flex;
-    flex-direction: column;
+.sidebar-filter,.sidebar-stats {
+    flex:1;
+    height:auto;
 }
 
 .sidebar-filter h5 {
@@ -115,7 +112,7 @@
     -ms-overflow-style: none;
 }
 
-.main-body::webkit-scrollbar {
+.main-body::-webkit-scrollbar {
     display: none;
 }
 
