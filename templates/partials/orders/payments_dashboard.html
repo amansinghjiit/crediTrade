@@ -17,30 +17,17 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {% for user_profile in user_profiles %}
-                                    <tr>
-                                        <td><a href="#" class="user-link text-dark fw-medium" data-bs-toggle="modal" data-bs-target="#profileModal{{ user_profile.id }}">{{ user_profile.name }}</a></td>
-                                        <td>
-                                            <a href="#"
-                                               class="due-amount-link"
-                                               data-bs-toggle="modal"
-                                               data-bs-target="#transactionHistoryModal{{ user_profile.id }}"
-                                               data-user-id="{{ user_profile.id }}"
-                                               hx-get="{% url 'transaction_history' user_profile.id %}"
-                                               hx-target="#txn-history-body-{{ user_profile.id }}"
-                                               hx-swap="innerHTML">
-                                                <span class="{% if user_profile.amount_due > 0 %}text-danger{% else %}text-success{% endif %}">{{ user_profile.amount_due|intcomma }}</span>
-                                            </a>
-                                        </td>
-                                        <td><button type="button" class="btn btn-outline-dark btn-sm fw-bold border-2" data-bs-toggle="modal" data-bs-target="#paymentModal{{ user_profile.id }}">Pay</button></td>
-                                    </tr>
-                                {% empty %}
-                                    <tr>
-                                        <td colspan="3" class="text-center text-muted">No outstanding dues.</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
+                                <tbody>
+                                    {% for user_profile in user_profiles %}
+                                        {% include "partials/orders/payment_row.html" %}
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted">
+                                                No outstanding dues.
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -115,8 +102,8 @@
                     <form method="post"
                           action="{% url 'make_payment' user_profile.id %}"
                           hx-post="{% url 'make_payment' user_profile.id %}"
-                          hx-target="#main-content"
-                          hx-swap="innerHTML"
+                          hx-target="#payment-row-{{ user_profile.id }}"
+                          hx-swap="outerHTML"
                           onsubmit="disableSubmitButton(this)">
                         {% csrf_token %}
                         <div class="modal-body">

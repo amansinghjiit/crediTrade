@@ -100,8 +100,8 @@ def dashboard_transactions(request):
         transactions = Transaction.objects.filter(
             user_profile=request.user.userprofile
         ).order_by('-date', '-id')[:100]
-    return render(request, 'partials/orders/transaction_history.html', {
-        'transaction_history': transactions,
+    return render(request, 'partials/orders/payment_transactions.html', {
+        'transactions': transactions,
     })
     
 # WhatsApp API credentials
@@ -455,18 +455,25 @@ def make_payment(request, user_id):
             description=description,
             auto_created=False
         )
-
+        
         if is_htmx:
-            # Re-render from DB after signal recalc — no client-side amount math
-            response = render(request, 'partials/orders/payments_dashboard.html', {
-                'user_profiles': _payments_dashboard_profiles(),
-            })
-            response['HX-Trigger'] = json.dumps({
-                'showToast': {'message': 'Payment recorded', 'type': 'success'}
+            user_profile.refresh_from_db()
+
+            response = render(
+                request,
+                "partials/orders/payment_row.html",
+                {"user_profile": user_profile},
+            )
+            response["HX-Trigger"] = json.dumps({
+                "showToast": {
+                    "message": "Payment recorded",
+                    "type": "success"
+                },
+                "closePaymentModal": True
             })
             return response
-        
-        return redirect('payments_dashboard')
+
+        return redirect("payments_dashboard")
     else:
         return render(request, 'orders/payments_dashboard.html', {'user_profile': user_profile})
 
