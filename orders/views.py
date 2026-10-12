@@ -41,7 +41,7 @@ def _pending_orders_queryset(request):
         ).order_by('-id')
     if request.user.username == 'mohitnigam0778':
         return PendingOrder.objects.filter(
-            Q(user_profile=request.user.userprofile) | Q(pin='274305/274306')
+            Q(user_profile=request.user.userprofile) | Q(pin='274305 / 274306')
         ).order_by('-id')
     return PendingOrder.objects.filter(user_profile=request.user.userprofile).order_by('-id')
 
