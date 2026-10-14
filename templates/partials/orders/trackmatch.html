@@ -36,7 +36,7 @@
                                         <td class="text-nowrap">{{ row.tracking }}</td>
                                         <td class="text-nowrap">{{ row.model }}</td>
                                         <td class="text-nowrap">{{ row.product_name|default:"-" }}</td>
-                                        <td class="text-nowrap">{{ row.price|floatformat:0|default:"-" }}</td>
+                                        <td class="text-nowrap">{{ row.price|default:"-" }}</td>
                                     </tr>
                                     {% empty %}
                                     <tr>
@@ -61,7 +61,7 @@
                                         <td class="text-nowrap">{{ row.date }}</td>
                                         <td class="text-nowrap">{{ row.product_name }}</td>
                                         <td class="text-nowrap">{{ row.tracking }}</td>
-                                        <td class="text-nowrap">{{ row.price|floatformat:0 }}</td>
+                                        <td class="text-nowrap">{{ row.price|default:"-" }}</td>
                                     </tr>
                                     {% empty %}
                                     <tr>
